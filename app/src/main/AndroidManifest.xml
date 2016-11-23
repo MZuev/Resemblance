@@ -28,7 +28,9 @@
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings" />
         <activity android:name=".RegistrationActivity" />
-        <activity android:name=".PasswordChangeActivity"></activity>
+        <activity android:name=".PasswordChangeActivity" />
+        <activity android:name=".CreateSetCardsActivity" />
+        <activity android:name=".ListOfSetsActivity"></activity>
     </application>
 
 </manifest>

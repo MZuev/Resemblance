@@ -2,10 +2,13 @@ package ru.spbau.resemblance;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+
+import java.io.File;
 
 public class MainActivity extends AppCompatActivity {
     private static final String RATING_PREFIX = "Рейтинг: ";
@@ -19,6 +22,8 @@ public class MainActivity extends AppCompatActivity {
 
         nicknameText = (TextView)findViewById(R.id.mainNickname);
         ratingText = (TextView)findViewById(R.id.mainRating);
+
+        ImageStorage.createImageStorage(this);
     }
 
     @Override
@@ -53,5 +58,10 @@ public class MainActivity extends AppCompatActivity {
     public void onSettingsClick(View v) {
         Intent settings = new Intent(this, SettingsActivity.class);
         startActivity(settings);
+    }
+
+    public void onSetCardsClick(View v) {
+        Intent setCards = new Intent(this, CreateSetCardsActivity.class);
+        startActivity(setCards);
     }
 }
