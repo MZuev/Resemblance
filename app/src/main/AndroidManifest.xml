@@ -30,7 +30,8 @@
         <activity android:name=".RegistrationActivity" />
         <activity android:name=".PasswordChangeActivity" />
         <activity android:name=".CreateSetCardsActivity" />
-        <activity android:name=".ListOfSetsActivity"></activity>
+        <activity android:name=".ListOfSetsActivity" />
+        <activity android:name=".ShowImageFromListActivity"></activity>
     </application>
 
 </manifest>

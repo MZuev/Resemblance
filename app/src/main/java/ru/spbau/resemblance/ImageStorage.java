@@ -8,6 +8,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -39,6 +41,9 @@ public class ImageStorage {
             imageBuffer = new byte[context.getResources().getInteger(R.integer.maxImageSize)];
         }
         SetCardsWrapped setCards = new SetCardsWrapped();
+        Log.d(LOG_TAG, String.valueOf(imageDB.getWritableDatabase().delete(IMAGE_TABLE, null, null)));
+        Log.d(LOG_TAG, String.valueOf(imageDB.getWritableDatabase().delete(SET_CARDS_TABLE, null, null)));
+        Log.d(LOG_TAG, String.valueOf(imageDB.getWritableDatabase().delete(MAP_TABLE, null, null)));
         setCards.setNameSetCards("testSet");
         setCards.addSetCards();
         for (int i = 1; i < 9; i++) {
@@ -47,6 +52,34 @@ public class ImageStorage {
             ImageWrapped curImage = addImageByUri(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + resources.getResourcePackageName(curId) + '/' + resources.getResourceTypeName(curId) + '/' + resources.getResourceEntryName(curId), context);
             setCards.addCardToSet(curImage);
         }
+        printToLogAll(IMAGE_TABLE);
+        printToLogAll(SET_CARDS_TABLE);
+        printToLogAll(MAP_TABLE);
+    }
+
+    private static void printToLogCur(Cursor c) {
+        StringBuilder newLog = new StringBuilder();
+        for (String columnName : c.getColumnNames()) {
+            newLog.append(columnName + " = " + c.getString(c.getColumnIndex(columnName)) + " ; ");
+        }
+        Log.d(LOG_TAG, newLog.toString());
+    }
+
+    private static void printToLogAll(Cursor c) {
+        if (c.moveToFirst()) {
+            do {
+                printToLogCur(c);
+            } while (c.moveToNext());
+            c.close();
+        }
+    }
+    private static void printToLogAll(String nameTable) {
+        imageDB.close();
+        Log.d(LOG_TAG, " -- Print table " + nameTable + " -- ");
+        Cursor c = imageDB.getReadableDatabase().query(nameTable, null, null, null, null, null, null);
+        printToLogAll(c);
+        Log.d(LOG_TAG, " -- End to print table " + nameTable + " -- ");
+        imageDB.close();
     }
 
     private static long calcHashByUri(String uriImage, Context context) {
@@ -79,11 +112,8 @@ public class ImageStorage {
         public void onCreate(SQLiteDatabase db) {
             Log.d(LOG_TAG, "  ---  Create DB  ---  ");
             db.execSQL("create table " + IMAGE_TABLE + " (id integer primary key autoincrement, uri text, hash integer);");
-            Log.d(LOG_TAG, "asd");
             db.execSQL("create table " + SET_CARDS_TABLE + " (id integer primary key autoincrement, hash integer, name text, size integer);");
-            Log.d(LOG_TAG, "asd");
             db.execSQL("create table " + MAP_TABLE + " (idSet integer, idImage integer);");
-            Log.d(LOG_TAG, "asd");
         }
 
         @Override
@@ -103,14 +133,17 @@ public class ImageStorage {
             return null;
         }
         newImage.setHashImage(hashImage);
-        newImage.setNotEmpty();
         newImage.setUriImage(uriImage);
         newImage.addImage();
+        newImage.setNotEmpty();
         return newImage;
     }
 
     private static boolean checkExistenceByHash(long hashObject, String nameTable) {
-        return checkExistenceByStringField(String.valueOf(hashObject), "hash", nameTable);
+        Cursor c = imageDB.getReadableDatabase().query(nameTable, null, "hash = " + hashObject, null, null, null,null);
+        boolean ans = c.moveToFirst();
+        c.close();
+        return ans;
     }
 
     private static boolean checkExistenceByStringField(String valueField, String nameField, String nameTable) {
@@ -129,14 +162,43 @@ public class ImageStorage {
         return ans;
     }
 
-    private static Cursor getImageInfoByHash(long imageHash) {
-        Log.d(LOG_TAG, " -- Get image info by Hash -- ");
-        return imageDB.getReadableDatabase().query(IMAGE_TABLE, null, "hash = " + imageHash, null, null, null, null);
+    private static Cursor getImageInfo(ImageWrapped curImage) {
+     //   Log.d(LOG_TAG, " -- Get image info -- ");
+        Cursor c = imageDB.getReadableDatabase().query(IMAGE_TABLE, null, "hash = " + curImage.hashImage, null, null, null, null);
+        if (c.moveToFirst()) {
+            return c;
+        }
+        if (curImage.uriImage != null) {
+            c = imageDB.getReadableDatabase().query(IMAGE_TABLE, null, "uri = '" + curImage.uriImage + "'", null, null, null, null);
+            if (c.moveToFirst()) {
+                return c;
+            }
+        }
+        c = imageDB.getReadableDatabase().query(IMAGE_TABLE, null, "id = " + curImage.idImage, null, null, null, null);
+        if (c.moveToFirst()) {
+            return c;
+        }
+        return null;
     }
 
-    private static Cursor getSetCardsInfoByHash(long setCardsHash) {
-        Log.d(LOG_TAG, " -- Get set cards info by Hash -- ");
-        return imageDB.getReadableDatabase().query(SET_CARDS_TABLE, null, "hash = " + setCardsHash, null, null, null, null);
+    private static Cursor getSetCardsInfo(SetCardsWrapped curSetCard) {
+       // Log.d(LOG_TAG, " -- Get set cards info -- ");
+        Cursor c = null;
+        if (curSetCard.nameSetCards != null) {
+            c = imageDB.getReadableDatabase().query(SET_CARDS_TABLE, null, "name = '" + curSetCard.nameSetCards + "'", null, null, null, null);
+            if (c.moveToFirst()) {
+                return c;
+            }
+        }
+        c = imageDB.getReadableDatabase().query(SET_CARDS_TABLE, null, "id = " + curSetCard.idSetCards, null, null, null, null);
+        if (c.moveToFirst()) {
+            return c;
+        }
+        c = imageDB.getReadableDatabase().query(SET_CARDS_TABLE, null, "hash = " + curSetCard.hashSetCards, null, null, null, null);
+        if (c.moveToFirst()) {
+            return c;
+        }
+        return null;
     }
 
     private static Cursor getIdCardsByIdSet(long idSetCards) {
@@ -149,13 +211,13 @@ public class ImageStorage {
 
     private static long getHashImageById(long idImage) {
         Cursor c = imageDB.getReadableDatabase().query(IMAGE_TABLE, null, "id = " + idImage, null, null, null, null);
+        c.moveToFirst();
         long hashImage = c.getLong(c.getColumnIndex("hash"));
         c.close();
         return hashImage;
     }
 
-
-    public static class ImageWrapped{
+    public static class ImageWrapped {
         private long hashImage = 0;
         private String uriImage = null;
         private long idImage = 0;
@@ -188,16 +250,21 @@ public class ImageStorage {
 
         public void setNotEmpty() { isEmptyImage = false; }
 
+        public String getUriImage() { return uriImage; }
+        public  int getIdImage() { return (int)idImage; }
+
         public boolean checkExistenceImage() {
-            return !isEmptyImage && (checkExistenceByHash(hashImage, IMAGE_TABLE) || checkExistenceByStringField(uriImage, "uri", IMAGE_TABLE));
+            return checkExistenceByHash(hashImage, IMAGE_TABLE)
+                            || checkExistenceByStringField(uriImage, "uri", IMAGE_TABLE)
+                            || checkExistenceByStringField(String.valueOf(idImage), "id", IMAGE_TABLE);
         }
 
-        private void setImageInfoByHash() {
+        public void setImageInfo() {
             if (!isEmptyImage) {
                 return;
             }
-            Cursor c = getImageInfoByHash(hashImage);
-            if (c.moveToFirst()) {
+            Cursor c = getImageInfo(this);
+            if (c != null && c.moveToFirst()) {
                 uriImage = c.getString(c.getColumnIndex("uri"));
                 idImage = c.getLong(c.getColumnIndex("id"));
                 c.close();
@@ -214,22 +281,24 @@ public class ImageStorage {
                 return null;
             }
             if (isEmptyImage) {
-                setImageInfoByHash();
+                setImageInfo();
             }
             ImageView imageView = new ImageView(context);
             imageView.setImageURI(Uri.parse(uriImage));
             return imageView;
         }
 
-        public void addImage() {
+        public boolean addImage() {
             if (checkExistenceImage()) {
-                return;
+                setImageInfo();
+                return false;
             }
             ContentValues cv = new ContentValues();
             cv.put("uri", uriImage);
             cv.put("hash", hashImage);
             setIdImage(imageDB.getWritableDatabase().insert(IMAGE_TABLE, null, cv));
             imageDB.close();
+            return true;
         }
 
         public void deleteImage() {
@@ -237,7 +306,7 @@ public class ImageStorage {
                 return;
             }
             if (isEmptyImage) {
-                setImageInfoByHash();
+                setImageInfo();
             }
             imageDB.getWritableDatabase().delete(IMAGE_TABLE, "hash = " + hashImage, null);
             imageDB.getWritableDatabase().delete(MAP_TABLE, "idImage = " + idImage, null);
@@ -293,15 +362,17 @@ public class ImageStorage {
         }
 
         public boolean checkExistenceSet() {
-            return !isEmptySetCards && (checkExistenceByHash(hashSetCards, SET_CARDS_TABLE) || checkExistenceByStringField(nameSetCards, "name", SET_CARDS_TABLE));
+            return checkExistenceByHash(hashSetCards, SET_CARDS_TABLE)
+                            || checkExistenceByStringField(nameSetCards, "name", SET_CARDS_TABLE)
+                            || checkExistenceByStringField(String.valueOf(idSetCards), "id", SET_CARDS_TABLE);
         }
 
-        private void setSetCardsInfoByHash() {
+        public void setSetCardsInfo() {
             if (!isEmptySetCards) {
                 return;
             }
-            Cursor c = getImageInfoByHash(hashSetCards);
-            if (c.moveToFirst()) {
+            Cursor c = getSetCardsInfo(this);
+            if (c != null && c.moveToFirst()) {
                 idSetCards = c.getLong(c.getColumnIndex("id"));
                 nameSetCards = c.getString(c.getColumnIndex("name"));
                 sizeSetCards = c.getInt(c.getColumnIndex("size"));
@@ -321,7 +392,7 @@ public class ImageStorage {
                 return false;
             }
             if (isEmptySetCards) {
-                setSetCardsInfoByHash();
+                setSetCardsInfo();
             }
             Cursor c = getIdCardsByIdSet(idSetCards);
             long sumImageHash = 0;
@@ -339,6 +410,7 @@ public class ImageStorage {
         }
 
         public void updateCardsSet() {
+            setSetCardsInfo();
             Cursor c = getIdCardsByIdSet(idSetCards);
             long sumImageHash = 0;
             int cntFound = 0;
@@ -359,9 +431,10 @@ public class ImageStorage {
             imageDB.close();
         }
 
-        public void addSetCards() {
+        public boolean addSetCards() {
             if (checkExistenceSet()) {
-                return;
+                setSetCardsInfo();
+                return false;
             }
             setNotEmpty();
             ContentValues cv = new ContentValues();
@@ -370,11 +443,15 @@ public class ImageStorage {
             cv.put("size", sizeSetCards);
             setIdSetCards(imageDB.getWritableDatabase().insert(SET_CARDS_TABLE, null, cv));
             imageDB.close();
+            return true;
         }
 
-        public void addCardToSet(ImageWrapped newImage) {
+        public boolean addCardToSet(ImageWrapped newImage) {
             if (!newImage.checkExistenceImage()) {
                 newImage.addImage();
+            }
+            else {
+                newImage.setImageInfo();
             }
             if (!checkExistenceByStringField("idSet = " + idSetCards + " and idImage = " + newImage.idImage, MAP_TABLE)) {
                 ContentValues cv = new ContentValues();
@@ -388,13 +465,21 @@ public class ImageStorage {
                 cv.put("size", sizeSetCards);
                 imageDB.getWritableDatabase().update(SET_CARDS_TABLE, cv, "id = " + idSetCards, null);
                 imageDB.close();
+                return true;
+            }
+            else {
+                return false;
             }
         }
 
-        public void addCardsToSet(Collection<ImageWrapped> allNewCards) {
+        public int addCardsToSet(Collection<ImageWrapped> allNewCards) {
+            int cntAddedCard = 0;
             for (ImageWrapped curCard : allNewCards) {
-                addCardToSet(curCard);
+                if (addCardToSet(curCard)) {
+                    cntAddedCard++;
+                }
             }
+            return cntAddedCard;
         }
 
         public void deleteCardFromSet(ImageWrapped deletedImage) {
@@ -421,7 +506,7 @@ public class ImageStorage {
                 return;
             }
             if (isEmptySetCards) {
-                setSetCardsInfoByHash();
+                setSetCardsInfo();
             }
             imageDB.getWritableDatabase().delete(SET_CARDS_TABLE, "hash = " + hashSetCards, null);
             imageDB.getWritableDatabase().delete(MAP_TABLE, "idSet = " + idSetCards, null);
@@ -447,25 +532,30 @@ public class ImageStorage {
     }
     public static ArrayList<SetCardsWrapped> getAllSetsCards() {
         ArrayList<SetCardsWrapped> ansList = new ArrayList<SetCardsWrapped>();
-        Log.d(LOG_TAG, "a");
         Cursor c = imageDB.getReadableDatabase().query(SET_CARDS_TABLE, null, null, null, null, null, null);
-        Log.d(LOG_TAG, "b");
         if (c.moveToFirst()) {
-            Log.d(LOG_TAG, "c");
             do {
-                Log.d(LOG_TAG, "d");
                 SetCardsWrapped curSet = new SetCardsWrapped(c);
                 curSet.updateCardsSet();
                 ansList.add(curSet);
                 break;
             } while (c.moveToNext());
-            Log.d(LOG_TAG, "e");
             c.close();
-            Log.d(LOG_TAG, "f");
         }
-        Log.d(LOG_TAG, "g");
         imageDB.close();
-        Log.d(LOG_TAG, "h");
+        return ansList;
+    }
+    public static ArrayList<ImageWrapped> getAllImages() {
+        ArrayList<ImageWrapped> ansList = new ArrayList<>();
+        Cursor c = imageDB.getReadableDatabase().query(IMAGE_TABLE, null, null, null, null, null, null);
+        if (c.moveToFirst()) {
+            do {
+                ImageWrapped curImage = new ImageWrapped(c);
+                ansList.add(curImage);
+            } while (c.moveToNext());
+            c.close();
+        }
+        imageDB.close();
         return ansList;
     }
 }

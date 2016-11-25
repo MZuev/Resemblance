@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
+import java.util.ArrayList;
+
 public class CreateSetCardsActivity extends AppCompatActivity {
 
     @Override
@@ -24,9 +26,14 @@ public class CreateSetCardsActivity extends AppCompatActivity {
     }
 
     public void onListOfCardsClick(View v) {
-        //TODO
-      /*  Intent listOfCards = new Intent(this, ListOfCardsActivity.class);
-        startActivity(listOfCards);*/
+        Intent showCards = new Intent(this, ShowImageFromListActivity.class);
+        ArrayList<ImageStorage.ImageWrapped> listImages = ImageStorage.getAllImages();
+        ArrayList<Integer> idImagesList = new ArrayList<Integer>();
+        for (ImageStorage.ImageWrapped curImage : listImages) {
+            idImagesList.add(curImage.getIdImage());
+        }
+        showCards.putExtra("listImage", idImagesList);
+        startActivity(showCards);
     }
 
     public void onAddCardsClick(View v) {
