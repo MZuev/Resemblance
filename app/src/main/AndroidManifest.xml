@@ -33,7 +33,10 @@
         <activity android:name=".ListOfSetsActivity" />
         <activity android:name=".ShowImageFromListActivity" />
         <activity android:name=".GameIntermediateActivity" />
-        <activity android:name=".LeadingCardsGridActivity"></activity>
+        <activity android:name=".LeadingCardsGridActivity" />
+        <activity android:name=".LeadingAssociationActivity" />
+        <activity android:name=".CardPickerActivity" />
+        <activity android:name=".CardViewerActivity"></activity>
     </application>
 
 </manifest>
