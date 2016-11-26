@@ -41,9 +41,9 @@ public class ImageStorage {
             imageBuffer = new byte[context.getResources().getInteger(R.integer.maxImageSize)];
         }
         SetCardsWrapped setCards = new SetCardsWrapped();
-        Log.d(LOG_TAG, String.valueOf(imageDB.getWritableDatabase().delete(IMAGE_TABLE, null, null)));
-        Log.d(LOG_TAG, String.valueOf(imageDB.getWritableDatabase().delete(SET_CARDS_TABLE, null, null)));
-        Log.d(LOG_TAG, String.valueOf(imageDB.getWritableDatabase().delete(MAP_TABLE, null, null)));
+       // Log.d(LOG_TAG, String.valueOf(imageDB.getWritableDatabase().delete(IMAGE_TABLE, null, null)));
+        //Log.d(LOG_TAG, String.valueOf(imageDB.getWritableDatabase().delete(SET_CARDS_TABLE, null, null)));
+        //Log.d(LOG_TAG, String.valueOf(imageDB.getWritableDatabase().delete(MAP_TABLE, null, null)));
         setCards.setNameSetCards("testSet");
         setCards.addSetCards();
         for (int i = 1; i < 9; i++) {
