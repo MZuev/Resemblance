@@ -27,11 +27,8 @@ public class ShowImageFromListActivity extends AppCompatActivity {
         TableRow curTableRow = new TableRow(this);
         showImageTable.addView(curTableRow);
         for (Integer curIdImage : allIdImageList) {
-            ImageStorage.ImageWrapped curImage = new ImageStorage.ImageWrapped();
-            curImage.setIdImage(curIdImage);
-            curImage.setImageInfo();
-            ImageView imageView = new ImageView(this);
-            imageView.setImageURI(Uri.parse(curImage.getUriImage()));
+            ImageStorage.ImageWrapped curImage = ImageStorage.ImageWrapped.createById(curIdImage);
+            ImageView imageView = curImage.getImageView(this);
             if (curColumn == maxColumn) {
                 curTableRow = new TableRow(this);
                 showImageTable.addView(curTableRow, tableLParams);

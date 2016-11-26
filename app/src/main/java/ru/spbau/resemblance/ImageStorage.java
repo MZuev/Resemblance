@@ -320,6 +320,13 @@ public class ImageStorage {
             imageView.setImageURI(Uri.parse(getUriImage()));
             return imageView;
         }
+
+        public  static ImageWrapped createById(int idNewImage) {
+            ImageWrapped newImage = new ImageWrapped();
+            newImage.setIdImage(idNewImage);
+            newImage.setImageInfo();
+            return newImage;
+        }
     }
 
     public static class SetCardsWrapped{
@@ -367,6 +374,10 @@ public class ImageStorage {
 
         public int getSizeSetCards() {
             return sizeSetCards;
+        }
+
+        public int getIdSetCards() {
+            return (int)idSetCards;
         }
 
         public boolean checkExistenceSet() {
@@ -536,6 +547,12 @@ public class ImageStorage {
             }
             imageDB.close();
             return ansList;
+        }
+        public static SetCardsWrapped createById(int idSetCards) {
+            SetCardsWrapped newSetCards = new SetCardsWrapped();
+            newSetCards.setIdSetCards(idSetCards);
+            newSetCards.setSetCardsInfo();
+            return newSetCards;
         }
     }
     public static ArrayList<SetCardsWrapped> getAllSetsCards() {
