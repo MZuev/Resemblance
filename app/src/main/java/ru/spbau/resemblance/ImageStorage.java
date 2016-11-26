@@ -271,7 +271,7 @@ public class ImageStorage {
                 isEmptyImage = false;
             }
             else {
-                Log.d(LOG_TAG, "Wrong image hash " + hashImage);
+                Log.d(LOG_TAG, "Wrong image");
             }
             imageDB.close();
         }
@@ -311,6 +311,14 @@ public class ImageStorage {
             imageDB.getWritableDatabase().delete(IMAGE_TABLE, "hash = " + hashImage, null);
             imageDB.getWritableDatabase().delete(MAP_TABLE, "idImage = " + idImage, null);
             imageDB.close();
+        }
+        public ImageView getImageView(Context context) {
+            if (isEmptyImage) {
+                setImageInfo();
+            }
+            ImageView imageView = new ImageView(context);
+            imageView.setImageURI(Uri.parse(getUriImage()));
+            return imageView;
         }
     }
 
