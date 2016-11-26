@@ -10,6 +10,7 @@ public class RandomGameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_random_game);
         //TODO ask server to put us in the waiting list
+        Thread.sleep(1000);
     }
 
     @Override
