@@ -2,6 +2,7 @@ package ru.spbau.resemblance;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -37,5 +38,9 @@ public class CreateGameActivity extends AppCompatActivity implements SeekBar.OnS
     public void onProgressChanged(SeekBar bar, int val, boolean byUser) {
         roundsNumber = val;
         roundsText.setText(ROUNDS_TEXT_PREFIX + String.valueOf(roundsNumber));
+    }
+
+    public void onCardSetsClick(View v) {
+
     }
 }
