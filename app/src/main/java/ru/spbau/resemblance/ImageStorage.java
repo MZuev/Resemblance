@@ -271,7 +271,7 @@ public class ImageStorage {
                 isEmptyImage = false;
             }
             else {
-                Log.d(LOG_TAG, "Wrong image hash " + hashImage);
+                Log.d(LOG_TAG, "Wrong image");
             }
             imageDB.close();
         }
@@ -311,6 +311,21 @@ public class ImageStorage {
             imageDB.getWritableDatabase().delete(IMAGE_TABLE, "hash = " + hashImage, null);
             imageDB.getWritableDatabase().delete(MAP_TABLE, "idImage = " + idImage, null);
             imageDB.close();
+        }
+        public ImageView getImageView(Context context) {
+            if (isEmptyImage) {
+                setImageInfo();
+            }
+            ImageView imageView = new ImageView(context);
+            imageView.setImageURI(Uri.parse(getUriImage()));
+            return imageView;
+        }
+
+        public  static ImageWrapped createById(int idNewImage) {
+            ImageWrapped newImage = new ImageWrapped();
+            newImage.setIdImage(idNewImage);
+            newImage.setImageInfo();
+            return newImage;
         }
     }
 
@@ -359,6 +374,10 @@ public class ImageStorage {
 
         public int getSizeSetCards() {
             return sizeSetCards;
+        }
+
+        public int getIdSetCards() {
+            return (int)idSetCards;
         }
 
         public boolean checkExistenceSet() {
@@ -528,6 +547,12 @@ public class ImageStorage {
             }
             imageDB.close();
             return ansList;
+        }
+        public static SetCardsWrapped createById(int idSetCards) {
+            SetCardsWrapped newSetCards = new SetCardsWrapped();
+            newSetCards.setIdSetCards(idSetCards);
+            newSetCards.setSetCardsInfo();
+            return newSetCards;
         }
     }
     public static ArrayList<SetCardsWrapped> getAllSetsCards() {
