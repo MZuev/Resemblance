@@ -2,13 +2,10 @@ package ru.spbau.resemblance;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.media.Image;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
-
-import java.io.File;
 
 public class MainActivity extends AppCompatActivity {
     private static final String RATING_PREFIX = "Рейтинг: ";
@@ -24,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
         ratingText = (TextView)findViewById(R.id.mainRating);
 
         ImageStorage.createImageStorage(this);
+        SendMessageModule.sendMessage(Message.TEST_MESSAGE);
     }
 
     @Override
