@@ -10,18 +10,17 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="ru.spbau.resemblance.ShowImageFromListActivity">
     <ScrollView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content">
-        <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TableLayout
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/showImageTable">
+                android:orientation="vertical"
+                android:id="@+id/showImageVerticalLayout">
 
-            </TableLayout>
-        </HorizontalScrollView>
+            </LinearLayout>
+
     </ScrollView>
 
 

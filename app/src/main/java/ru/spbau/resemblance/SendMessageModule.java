@@ -12,7 +12,7 @@ import java.net.URL;
 public class SendMessageModule {
     final private static String LOG_TAG = "Messager log";
     final private static int serverPort = 6662;
-    final private static String address = "10.0.0.2";
+    final private static String address = "10.0.2.2";
     private static InetAddress ipAddress = null;
     final private static int maxNumberOfAttempts = 10;
     private static Socket socket = null;
