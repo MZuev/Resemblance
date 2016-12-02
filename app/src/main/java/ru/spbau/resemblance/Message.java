@@ -2,91 +2,100 @@ package ru.spbau.resemblance;
 
 import android.util.Log;
 
-import java.net.Socket;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
 public class Message {
-    final private static String LOG_TAG = "messageLog";
-    final private static String PING_TYPE = "ping";
-    final private static String REGISTER_TYPE = "register";
-    final private static String LOGIN_TYPE = "login";
-    final private static String TEST_TYPE = "test";
+    final private static String LOG_TAG = "Message";
 
-    private Socket from = null;
-    private String type = null;
-    private String textMessage = null;
-    Message(String allTextMessage) {
-        int indOfPref = allTextMessage.indexOf(' ');
-        if (indOfPref > 0) {
-            type = allTextMessage.substring(0, indOfPref - 1);
-            textMessage = allTextMessage.substring(indOfPref + 1);
-        }
-    }
-    Message(String allTextMessage, Socket from) {
-        if (allTextMessage != null) {
-            int indOfPref = allTextMessage.indexOf(' ');
-            if (indOfPref > 0) {
-                type = allTextMessage.substring(0, indOfPref - 1);
-                textMessage = allTextMessage.substring(indOfPref + 1);
-            }
-        }
-        this.from = from;
-    }
-    Message(String type, String textMessage) {
+    final public static int TEST_TYPE = 0;
+    final public static int REGISTER_TYPE = 1;
+    final public static int LOGIN_TYPE = 2;
+
+    private int type = 0;
+
+    Message(int type) {
         this.type = type;
-        this.textMessage = textMessage;
     }
 
-    public Socket getFrom() {
-        return from;
-    }
-    public String getType() {
+    public int getType() {
         return type;
     }
-    public String getText() {
-        return textMessage;
-    }
 
-    public void setType(String newType) {
+    public void setType(int newType) {
         type = newType;
     }
-    public void setTextMessage(String newTextMessage) {
-        textMessage = newTextMessage;
-    }
-    public void setFrom(Socket from) {
-        this.from = from;
-    }
 
-    public String getStringMessage() {
-        if (type != null && textMessage != null) {
-            return type + ' ' + textMessage;
-        }
-        return null;
-    }
-
-
-    public void applyMessage() {
+    public void readMessage(DataInputStream in) {
         switch (type) {
+            case TEST_TYPE:
+                readTestMessage(in);
+                break;
             case REGISTER_TYPE:
-                applyRegister();
+                readRegisterMessage(in);
                 break;
             case LOGIN_TYPE:
-                applyLogin();
-                break;
-            case TEST_TYPE:
-                applyTest();
+                readLoginMessage(in);
                 break;
         }
     }
 
-    private void applyRegister() {
-        //// TODO: 28.11.2016
-    }
-    private void applyLogin() {
-        //// TODO: 28.11.2016
-    }
-    private void applyTest() {
-        Log.d(LOG_TAG, "test");
+    private void readTestMessage(DataInputStream in) {
+        String testMessage = null;
+        try {
+            synchronized (in) {
+                testMessage = in.readUTF();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        applyTest(testMessage);
     }
 
-    public static Message TEST_MESSAGE = new Message("test test");
+    private void readRegisterMessage(DataInputStream in) {
+        String login = null;
+        long hashPassword = 0;
+        try {
+            synchronized (in) {
+                login = in.readUTF();
+                hashPassword = in.readLong();
+            }
+            //applyRegister(login, hashPassword);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void readLoginMessage(DataInputStream in) {
+        String login = null;
+        long hashPassword = 0;
+        try {
+            synchronized (in) {
+                login = in.readUTF();
+                hashPassword = in.readLong();
+            }
+            //applyLogin(login, hashPassword);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void applyTest(String textMessage) {
+        Log.d(LOG_TAG, textMessage);
+    }
+
+    public void sendTestMessage(String textMessage) {
+        ByteArrayOutputStream byteOS = new ByteArrayOutputStream(100);
+        DataOutputStream out = new DataOutputStream(byteOS);
+        try {
+            out.writeInt(TEST_TYPE);
+            out.writeUTF(textMessage);
+            out.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        SendMessageModule.sendMessage(byteOS.toByteArray());
+    }
 }
