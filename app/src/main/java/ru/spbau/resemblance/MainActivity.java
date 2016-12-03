@@ -21,7 +21,8 @@ public class MainActivity extends AppCompatActivity {
         ratingText = (TextView)findViewById(R.id.mainRating);
 
         ImageStorage.createImageStorage(this);
-        SendMessageModule.sendMessage(Message.TEST_MESSAGE);
+        SendMessageModule.connectToServer();
+        new Message(Message.TEST_TYPE).sendTestMessage("test message from client");
     }
 
     @Override

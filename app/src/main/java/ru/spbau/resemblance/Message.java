@@ -8,8 +8,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class Message {
-    final private static String LOG_TAG = "Message";
-
     final public static int TEST_TYPE = 0;
     final public static int REGISTER_TYPE = 1;
     final public static int LOGIN_TYPE = 2;
@@ -83,7 +81,7 @@ public class Message {
     }
 
     private void applyTest(String textMessage) {
-        Log.d(LOG_TAG, textMessage);
+        System.out.println(textMessage);
     }
 
     public void sendTestMessage(String textMessage) {

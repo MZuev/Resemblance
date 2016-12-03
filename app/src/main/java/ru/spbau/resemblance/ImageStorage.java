@@ -34,7 +34,7 @@ public class ImageStorage {
             imageDB = new ImageDB(context);
         }
         if (imageBuffer == null) {
-            imageBuffer = new byte[context.getResources().getInteger(R.integer.maxImageSize)];
+            imageBuffer = new byte[context.getResources().getInteger(R.integer.max_image_size)];
         }
         SetCardsWrapped setCards = new SetCardsWrapped();
        // Log.d(LOG_TAG, String.valueOf(imageDB.getWritableDatabase().delete(IMAGE_TABLE, null, null)));
