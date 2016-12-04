@@ -40,7 +40,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onRandomGameClick(View v) {
-        Intent randomGame = new Intent(this, RandomGameActivity.class);
+        //Intent randomGame = new Intent(this, RandomGameActivity.class);
+        //startActivity(randomGame);
+
+        Intent randomGame = new Intent(this, GameExpectationActivity.class);
+        randomGame.putExtra(GameExpectationActivity.RANDOM_GAME_EXTRA, true);
         startActivity(randomGame);
     }
 
