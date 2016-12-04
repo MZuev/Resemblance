@@ -8,6 +8,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ListAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CardPickerActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
@@ -22,11 +23,15 @@ public class CardPickerActivity extends AppCompatActivity implements AdapterView
 
         GridView grid = (GridView) findViewById(R.id.cardPickedGrid);
 
-        List<Integer> cardIds = getIntent().getIntegerArrayListExtra(GameIntermediateActivity.OUR_CARDS_PARAM);
+        List <Long> cardIds = new ArrayList<>();
+        long[] cardsArr = getIntent().getLongArrayExtra(GameIntermediateActivity.OUR_CARDS_PARAM);
+        for(long card: cardsArr) {
+            cardIds.add(card);
+        }
 
         cardViews = new ImageStorage.ImageWrapped[cardIds.size()];
         for (int i = 0; i < cardIds.size(); i++) {
-            cardViews[i] = ImageStorage.ImageWrapped.createById(cardIds.get(i));
+            cardViews[i] = ImageStorage.ImageWrapped.createById((int)(long)cardIds.get(i));
         }
 
         ListAdapter cardsAdapter = new CardsAdapter(this, cardViews);
