@@ -19,7 +19,7 @@ public class RandomGameActivity extends AppCompatActivity {
         //Bundle bundle = new Bundle();
         //bundle.pu
         Intent intent = new Intent(this, GameIntermediateActivity.class);
-        intent.putExtra(GameIntermediateActivity.CARD_SET_PARAM, 0);
+        //intent.putExtra(GameIntermediateActivity.CARD_SET_PARAM, 0);
         startActivity(intent);
     }
 

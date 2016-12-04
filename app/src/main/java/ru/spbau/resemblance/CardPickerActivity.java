@@ -3,10 +3,13 @@ package ru.spbau.resemblance;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ListAdapter;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,13 +18,20 @@ public class CardPickerActivity extends AppCompatActivity implements AdapterView
     public static String PICTURE_PARAM = "picture_id";
     private ImageStorage.ImageWrapped[] cardViews;
     private final int COLUMNS_NUMBER = 3;
+    private final int CARD_REQUEST = 1;
+
+    private TextView suggestion;
+    private GridView grid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card_picker);
 
-        GridView grid = (GridView) findViewById(R.id.cardPickedGrid);
+        grid = (GridView) findViewById(R.id.cardPickedGrid);
+        suggestion = (TextView) findViewById(R.id.cardPickerText);
+
+        suggestion.setText(getIntent().getStringExtra(GameIntermediateActivity.SUGGESTION_PARAM));
 
         List <Long> cardIds = new ArrayList<>();
         long[] cardsArr = getIntent().getLongArrayExtra(GameIntermediateActivity.OUR_CARDS_PARAM);
@@ -34,11 +44,11 @@ public class CardPickerActivity extends AppCompatActivity implements AdapterView
             cardViews[i] = ImageStorage.ImageWrapped.createById((int)(long)cardIds.get(i));
         }
 
-        ListAdapter cardsAdapter = new CardsAdapter(this, cardViews);
-
+        ListAdapter cardsAdapter = new CardsAdapter(this, cardViews,
+                getResources().getDisplayMetrics().widthPixels / COLUMNS_NUMBER);
         grid.setAdapter(cardsAdapter);
         grid.setNumColumns(COLUMNS_NUMBER);
-        //grid.setVerticalSpacing(-200);
+
         grid.setOnItemClickListener(this);
     }
 
@@ -46,7 +56,7 @@ public class CardPickerActivity extends AppCompatActivity implements AdapterView
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent showPicture = new Intent(this, CardViewerActivity.class);
         showPicture.putExtra(LeadingAssociationActivity.IMAGE_PARAM, id);
-        startActivityForResult(showPicture, GameIntermediateActivity.USUAL_ASSOCIATION_REQUEST);
+        startActivityForResult(showPicture, CARD_REQUEST);
         //finish();
         //Toast.makeText(this, String.valueOf(id), Toast.LENGTH_LONG).show();
     }
@@ -57,8 +67,13 @@ public class CardPickerActivity extends AppCompatActivity implements AdapterView
         long pictureId = data.getLongExtra(PICTURE_PARAM, -1L);
         //Toast.makeText(this, association + String.valueOf(pictureId), Toast.LENGTH_SHORT).show();
         if (pictureId >= 0) {
-            setResult(RESULT_OK, data);
+            Intent ret = new Intent();
+            ret.putExtra(LeadingCardsGridActivity.PICTURE_PARAM, pictureId);
+            setResult(RESULT_OK, ret);
             finish();
         }
     }
+
+    @Override
+    public void onBackPressed() {}
 }

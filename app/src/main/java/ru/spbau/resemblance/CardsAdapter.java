@@ -4,14 +4,18 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.GridView;
+import android.widget.ImageView;
 
 public class CardsAdapter extends BaseAdapter {
     private Context context = null;
     private ImageStorage.ImageWrapped[] cards = null;
+    private int cardSide;
 
-    public CardsAdapter(Context context, ImageStorage.ImageWrapped[] cards) {
+    public CardsAdapter(Context context, ImageStorage.ImageWrapped[] cards, int cardSide) {
         this.context = context;
         this.cards = cards;
+        this.cardSide = cardSide;
     }
 
     @Override
@@ -31,6 +35,11 @@ public class CardsAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        return cards[position].getImageView(context);
+        //return cards[position].getImageView(context);
+        ImageView view = cards[position].getImageView(context);
+        view.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        view.setLayoutParams(new GridView.LayoutParams(cardSide, cardSide));
+
+        return view;
     }
 }

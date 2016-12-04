@@ -49,7 +49,8 @@ public class LeadingCardsGridActivity extends AppCompatActivity implements Adapt
             cardViews[i] = ImageStorage.ImageWrapped.createById((int)(long)cardIds.get(i));
         }
 
-        ListAdapter cardsAdapter = new CardsAdapter(this, cardViews);
+        ListAdapter cardsAdapter = new CardsAdapter(this, cardViews,
+                getResources().getDisplayMetrics().widthPixels / COLUMNS_NUMBER);
 
         grid.setAdapter(cardsAdapter);
         grid.setNumColumns(COLUMNS_NUMBER);
@@ -76,4 +77,7 @@ public class LeadingCardsGridActivity extends AppCompatActivity implements Adapt
             finish();
         }
     }
+
+    @Override
+    public void onBackPressed() {}
 }

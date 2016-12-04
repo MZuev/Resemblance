@@ -32,7 +32,6 @@ public class LeadingAssociationActivity extends AppCompatActivity {
 
         image = ImageStorage.ImageWrapped.createById((int)getIntent().getLongExtra(IMAGE_PARAM, -1L));
         imageView.setImageURI(Uri.parse(image.getUriImage()));
-        Toast.makeText(this, String.valueOf(getIntent().getLongExtra(IMAGE_PARAM, -1)), Toast.LENGTH_SHORT).show();
     }
 
     public void onDoneClick(View v) {

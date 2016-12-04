@@ -1,21 +1,22 @@
 package ru.spbau.resemblance;
 
 import android.content.Intent;
-import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class GameIntermediateActivity extends AppCompatActivity {
-    public static final String CARD_SET_PARAM = "cards_set";
+    //public static final String CARD_SET_PARAM = "cards_set";
     public static final String OUR_CARDS_PARAM = "our_cards";
+    public static final String SUGGESTION_PARAM = "suggestion";
     public static final int LEADING_ASSOCIATION_REQUEST = 1;
-    public static final int USUAL_ASSOCIATION_REQUEST = 2;
+    public static final int CHOICE_REQUEST = 2;
+    public static final int VOTE_REQUEST = 3;
 
+    private static final String CHOOSE_SUGGESTION = "Ваша карта. Ассоциация: ";
+    private static final String VOTE_SUGGESTION = "Голосование. Ассоциация: ";
     private ArrayList<Long> cards = new ArrayList<>();
 
     @Override
@@ -42,46 +43,57 @@ public class GameIntermediateActivity extends AppCompatActivity {
         startActivityForResult(lead, LEADING_ASSOCIATION_REQUEST);
     }
 
-    public void chooseCard() {
+    public void chooseCard(String association) {
         Intent choose = new Intent(this, CardPickerActivity.class);
+        choose.putExtra(SUGGESTION_PARAM, CHOOSE_SUGGESTION + association);
         choose.putExtra(OUR_CARDS_PARAM, getCardsArr());
-        startActivityForResult(choose, USUAL_ASSOCIATION_REQUEST);
+        startActivityForResult(choose, CHOICE_REQUEST);
     }
 
-    public void vote() {
+    public void vote(String association) {
         Intent vote = new Intent(this, CardPickerActivity.class);
+        vote.putExtra(SUGGESTION_PARAM, VOTE_SUGGESTION + association);
         vote.putExtra(OUR_CARDS_PARAM, getCardsArr());
-        startActivityForResult(vote, USUAL_ASSOCIATION_REQUEST);
+        startActivityForResult(vote, VOTE_REQUEST);
+    }
+
+    public void addCard(long card) {
+        cards.add(card);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == LEADING_ASSOCIATION_REQUEST) {
-            //Now we need to send the association and remove the card fom our cards list.
-            String association = data.getStringExtra(LeadingCardsGridActivity.ASSOCIATION_PARAM);
-            long pictureId = data.getLongExtra(LeadingCardsGridActivity.PICTURE_PARAM, -1L);
+        switch (requestCode) {
+            case LEADING_ASSOCIATION_REQUEST: {
+                //Now we need to send the association and remove the card fom our cards list.
+                String association = data.getStringExtra(LeadingCardsGridActivity.ASSOCIATION_PARAM);
+                long pictureId = data.getLongExtra(LeadingCardsGridActivity.PICTURE_PARAM, -1L);
 
-            int cardIndex = 0;
-            while (cards.get(cardIndex) != pictureId) {
-                cardIndex++;
+                cards.remove(cards.indexOf(pictureId));
+
+                //TODO: send the association
+                Toast.makeText(this, association + String.valueOf(pictureId), Toast.LENGTH_SHORT).show();
+                break;
             }
-            cards.remove(cardIndex);
 
-            //TODO: send the association
-            Toast.makeText(this, association + String.valueOf(pictureId), Toast.LENGTH_SHORT).show();
-        }
-        if (requestCode == USUAL_ASSOCIATION_REQUEST) {
-            //Sending player's choice and removing the chosen card.
-            long pictureId = data.getLongExtra(LeadingCardsGridActivity.PICTURE_PARAM, -1L);
+            case CHOICE_REQUEST: {
+                //Sending player's choice and removing the chosen card.
+                long pictureId = data.getLongExtra(LeadingCardsGridActivity.PICTURE_PARAM, -1L);
 
-            int cardIndex = 0;
-            while (cards.get(cardIndex) != pictureId) {
-                cardIndex++;
+                cards.remove(cards.indexOf(pictureId));
+
+                //TODO: send choice
+                Toast.makeText(this, String.valueOf(pictureId), Toast.LENGTH_SHORT).show();
+                break;
             }
-            cards.remove(cardIndex);
 
-            //TODO: send choice
-            Toast.makeText(this, String.valueOf(pictureId), Toast.LENGTH_SHORT).show();
+            case VOTE_REQUEST: {
+                long pictureId = data.getLongExtra(LeadingCardsGridActivity.PICTURE_PARAM, -1L);
+
+                //TODO: send choice
+                Toast.makeText(this, String.valueOf(pictureId), Toast.LENGTH_SHORT).show();
+                break;
+            }
         }
     }
 
@@ -101,22 +113,22 @@ public class GameIntermediateActivity extends AppCompatActivity {
             }
 
             try {
-                Thread.sleep(2000);
+                Thread.sleep(1000);
             } catch (Exception e) {}
 
             lead();
 
             try {
-                Thread.sleep(2000);
+                Thread.sleep(3000);
             } catch (Exception e) {}
 
-            chooseCard();
+            chooseCard("name");
 
             try {
-                Thread.sleep(2000);
+                Thread.sleep(3000);
             } catch (Exception e) {}
 
-            vote();
+            vote("name");
         }
     }
 }
