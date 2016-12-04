@@ -25,6 +25,7 @@ public class GameExpectationActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+        super.onResume();
         expecting = this;
     }
 
@@ -43,6 +44,6 @@ public class GameExpectationActivity extends AppCompatActivity {
             //Tell server that we're not about to play anymore
             Message.sendQuitRandomGameMessage();
         }
-        super.onDestroy();
+        super.onPause();
     }
 }
