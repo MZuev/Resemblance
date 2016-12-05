@@ -40,8 +40,7 @@ public class LoginActivity extends AppCompatActivity {
             Log.d("MD5", "MD5 Algorithm not found.");
         }
 
-
-        //SendMessageModule.sendMessage();
+        Message.sendLoginMessage(nickname, passwordHash);
 
         SharedPreferences prefs = getSharedPreferences(SettingsActivity.PREFERENCES, MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();

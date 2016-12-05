@@ -79,28 +79,26 @@ public class Message {
     }
 
     private void readRegisterMessage(DataInputStream in) {
-        String login = null;
-        long hashPassword = 0;
+        Log.d("asd", "2");
+        int resultCode = -1;
         try {
             synchronized (in) {
-                login = in.readUTF();
-                hashPassword = in.readLong();
+                resultCode = in.readInt();
             }
-            //applyRegister(login, hashPassword);
+            applyRegister(resultCode);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     private void readLoginMessage(DataInputStream in) {
-        String login = null;
+        int resultCode = -1;
         long hashPassword = 0;
         try {
             synchronized (in) {
-                login = in.readUTF();
-                hashPassword = in.readLong();
+                resultCode = in.readInt();
             }
-            //applyLogin(login, hashPassword);
+            applyLogin(resultCode);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -140,9 +138,56 @@ public class Message {
         } catch (IOException e) {}
     }
 
+    //----------------------------------------------------
+
+
     private void applyTest(String textMessage) {
         System.out.println(textMessage);
     }
+
+    private void applyRegister(int resultCode) {
+        Log.d("asd", "3");
+        Log.d("qwe", "" + resultCode);
+        final int networkError = -1;
+        final int successfulRegistration = 0;
+        final int nicknameError = 1;
+
+        switch (resultCode) {
+            case successfulRegistration:
+                //// TODO: 05.12.2016
+                break;
+            case networkError:
+                // TODO: 05.12.2016
+                break;
+            case nicknameError:
+                // TODO: 05.12.2016
+                break;
+        }
+    }
+
+    private void applyLogin(int resultCode) {
+        final int networkError = -1;
+        final int successfulLogin = 0;
+        final int nicknameError = 1;
+        final int passwordError = 2;
+
+        switch (resultCode) {
+            case successfulLogin:
+                //// TODO: 05.12.2016
+                break;
+            case networkError:
+                // TODO: 05.12.2016
+                break;
+            case nicknameError:
+                // TODO: 05.12.2016
+                break;
+            case passwordError:
+                // TODO: 05.12.2016
+                break;
+        }
+    }
+
+    //----------------------------------------------------
 
     public void sendTestMessage(String textMessage) {
         ByteArrayOutputStream byteOS = new ByteArrayOutputStream(100);
@@ -214,6 +259,36 @@ public class Message {
         try {
             out.writeInt(VOTE_TYPE);
             out.writeLong(card);
+            out.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        SendMessageModule.sendMessage(byteOS.toByteArray());
+    }
+
+    public static void sendLoginMessage(String nickname, String password) {
+        ByteArrayOutputStream byteOS = new ByteArrayOutputStream(150);
+        DataOutputStream out = new DataOutputStream(byteOS);
+        try {
+            out.writeInt(LOGIN_TYPE);
+            out.writeUTF(nickname);
+            out.writeUTF(password);
+            out.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        SendMessageModule.sendMessage(byteOS.toByteArray());
+    }
+
+    public static void sendRegisterMessage(String nickname, String password) {
+        Log.d("asd", "1");
+
+        ByteArrayOutputStream byteOS = new ByteArrayOutputStream(150);
+        DataOutputStream out = new DataOutputStream(byteOS);
+        try {
+            out.writeInt(REGISTER_TYPE);
+            out.writeUTF(nickname);
+            out.writeUTF(password);
             out.flush();
         } catch (IOException e) {
             e.printStackTrace();
