@@ -1,11 +1,20 @@
 package ru.spbau.resemblance;
 
+import android.app.Service;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.IBinder;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+
+import static android.content.Context.MODE_PRIVATE;
+import static java.security.AccessController.getContext;
 
 public class Message {
     final public static int TEST_TYPE = 0;
@@ -22,6 +31,7 @@ public class Message {
     final public static int VOTE_REQUEST_TYPE = 11;
     final public static int VOTE_TYPE = 12;
     final public static int LEADERS_ASSOCIATION_TYPE = 13;
+    final public static int RATING_TYPE = 14;
 
     private int type = 0;
 
@@ -62,6 +72,12 @@ public class Message {
                 break;
             case VOTE_REQUEST_TYPE:
                 readVoteRequestMessage(in);
+                break;
+            case LEADERS_ASSOCIATION_TYPE:
+                readLeadersAssociationMessage(in);
+                break;
+            case RATING_TYPE:
+                readRatingMessage(in);
                 break;
         }
     }
@@ -138,6 +154,23 @@ public class Message {
         } catch (IOException e) {}
     }
 
+    public void readRatingMessage(DataInputStream stream) {
+        try {
+            int newRating = stream.readInt();
+            //TODO process
+            //SharedPreferences prefs = getContext().getSharedPreferences(SettingsActivity.PREFERENCES, MODE_PRIVATE);
+            //SharedPreferences.Editor editor = prefs.edit();
+            //editor.putInt(SettingsActivity.RATING_PREF, newRating);
+            //editor.commit();
+        } catch (IOException e) {}
+    }
+
+    public void readLeadersAssociationMessage(DataInputStream stream) {
+        //try {
+            //TODO
+        //} catch (IOException e) {}
+    }
+
     //----------------------------------------------------
 
 
@@ -146,6 +179,7 @@ public class Message {
     }
 
     private void applyRegister(int resultCode) {
+        /*
         Log.d("asd", "3");
         Log.d("qwe", "" + resultCode);
         final int networkError = -1;
@@ -163,9 +197,12 @@ public class Message {
                 // TODO: 05.12.2016
                 break;
         }
+        */
+        RegistrationActivity.onResponse(resultCode);
     }
 
     private void applyLogin(int resultCode) {
+        /*
         final int networkError = -1;
         final int successfulLogin = 0;
         final int nicknameError = 1;
@@ -185,6 +222,8 @@ public class Message {
                 // TODO: 05.12.2016
                 break;
         }
+        */
+        LoginActivity.onResponse(resultCode);
     }
 
     //----------------------------------------------------

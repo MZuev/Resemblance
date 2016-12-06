@@ -2,6 +2,7 @@ package ru.spbau.resemblance;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.annotation.BoolRes;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,8 +15,18 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class LoginActivity extends AppCompatActivity {
+    final int NETWORK_ERROR = -1;
+    final int SUCCESSFUL_LOGIN = 0;
+    final int NICKNAME_ERROR = 1;
+    final int PASSWORD_ERROR = 2;
+
+    private static LoginActivity currentActivity = null;
+
     private EditText nicknameField = null;
     private EditText passwordField = null;
+    private String passwordHash = null;
+    private String nickname = null;
+    private String password = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,10 +37,16 @@ public class LoginActivity extends AppCompatActivity {
         passwordField = (EditText)findViewById(R.id.loginPasswordField);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        currentActivity = this;
+    }
+
     public void onLoginClick(View v) {
-        String nickname = nicknameField.getText().toString();
-        String password = passwordField.getText().toString();
-        String passwordHash = null;
+        nickname = nicknameField.getText().toString();
+        password = passwordField.getText().toString();
 
         //Getting the hash of the password.
         try {
@@ -41,19 +58,40 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         Message.sendLoginMessage(nickname, passwordHash);
-
-        SharedPreferences prefs = getSharedPreferences(SettingsActivity.PREFERENCES, MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(SettingsActivity.NICKNAME_PREF, nickname);
-        editor.putString(SettingsActivity.PASSWORD_PREF, passwordHash);
-        editor.putInt(SettingsActivity.RATING_PREF, 100500);
-        editor.commit();
-
-        finish();
     }
 
     public void onRegisterClick(View v) {
         Intent register = new Intent(this, RegistrationActivity.class);
         startActivity(register);
+    }
+
+    public static void onResponse(int code) {
+        currentActivity.onResponseImpl(code);
+    }
+
+    private void onResponseImpl(int code) {
+        switch (code) {
+            case SUCCESSFUL_LOGIN: {
+                SharedPreferences prefs = getSharedPreferences(SettingsActivity.PREFERENCES, MODE_PRIVATE);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putString(SettingsActivity.NICKNAME_PREF, nickname);
+                editor.putString(SettingsActivity.PASSWORD_PREF, passwordHash);
+                editor.commit();
+
+                finish();
+            }
+            case PASSWORD_ERROR: {
+                Toast.makeText(this, "Неправильный пароль.", Toast.LENGTH_SHORT).show();
+                break;
+            }
+            case NICKNAME_ERROR: {
+                Toast.makeText(this, "Неправильный логин.", Toast.LENGTH_SHORT).show();
+                break;
+            }
+            case NETWORK_ERROR: {
+                Toast.makeText(this, "Ошибка сети.", Toast.LENGTH_SHORT).show();
+                break;
+            }
+        }
     }
 }
