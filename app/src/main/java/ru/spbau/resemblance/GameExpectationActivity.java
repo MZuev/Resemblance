@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import java.util.ArrayList;
+
 public class GameExpectationActivity extends AppCompatActivity {
     public static final String RANDOM_GAME_EXTRA = "random_game";
 
@@ -31,14 +33,19 @@ public class GameExpectationActivity extends AppCompatActivity {
         expecting = this;
     }
 
-    public static void startGame() {
-        expecting.startGameImpl();
+    public static void startGame(int roundsNumber, int playersNumber,
+                                 ArrayList<String> names) {
+        expecting.startGameImpl(roundsNumber, playersNumber, names);
     }
 
-    private void startGameImpl() {
+    private void startGameImpl(int roundsNumber, int playersNumber,
+                               ArrayList<String> names) {
         started = true;
-        Intent intent = new Intent(this, GameIntermediateActivity.class);
-        startActivity(intent);
+        Intent startGame = new Intent(this, GameIntermediateActivity.class);
+        startGame.putExtra(GameIntermediateActivity.ROUNDS_NUMBER_PARAM, roundsNumber);
+        startGame.putExtra(GameIntermediateActivity.PLAYERS_NUMBER_PARAM, playersNumber);
+        startGame.putStringArrayListExtra(GameIntermediateActivity.PLAYERS_NAMES_PARAM, names);
+        startActivity(startGame);
     }
 
     @Override

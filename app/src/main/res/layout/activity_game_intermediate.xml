@@ -22,13 +22,15 @@
             android:text="Раунд 0/N"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/intermediateRoundText" />
+            android:id="@+id/intermediateRoundText"
+            android:textAppearance="@android:style/TextAppearance.Material.Title" />
 
         <TextView
             android:text="Счёт"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/intermediateScoreText" />
+            android:id="@+id/intermediateScoreText"
+            android:textAppearance="@android:style/TextAppearance.Material.Title" />
 
         <TextView
             android:text="Подождите..."

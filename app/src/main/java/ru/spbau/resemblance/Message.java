@@ -12,6 +12,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import static android.content.Context.MODE_PRIVATE;
 import static java.security.AccessController.getContext;
@@ -121,7 +122,17 @@ public class Message {
     }
 
     private void readStartGameMessage(DataInputStream stream) {
-        GameExpectationActivity.startGame();
+        try {
+            int roundsNumber = stream.readInt();
+            int playersNumber = stream.readInt();
+            ArrayList <String> names = new ArrayList<>();
+            for (int i = 0; i < playersNumber; i++) {
+                names.add(stream.readUTF());
+            }
+            GameExpectationActivity.startGame(roundsNumber, playersNumber, names);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void readSendCardMessage(DataInputStream stream) {

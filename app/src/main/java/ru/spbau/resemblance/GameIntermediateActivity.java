@@ -3,22 +3,33 @@ package ru.spbau.resemblance;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
 public class GameIntermediateActivity extends AppCompatActivity {
-    //public static final String CARD_SET_PARAM = "cards_set";
     public static final String OUR_CARDS_PARAM = "our_cards";
     public static final String SUGGESTION_PARAM = "suggestion";
+    public static final String ROUNDS_NUMBER_PARAM = "rounds_number";
+    public static final String PLAYERS_NUMBER_PARAM = "players_number";
+    public static final String PLAYERS_NAMES_PARAM = "players_names";
     public static final int LEADING_ASSOCIATION_REQUEST = 1;
     public static final int CHOICE_REQUEST = 2;
     public static final int VOTE_REQUEST = 3;
 
     private static final String CHOOSE_SUGGESTION = "Ваша карта. Ассоциация: ";
     private static final String VOTE_SUGGESTION = "Голосование. Ассоциация: ";
+    private static final String ROUND_PREFIX = "Раунд: ";
+    private static final String SCORE_PREFIX = "Счёт:";
+
     private ArrayList<Long> cards = new ArrayList<>();
+    private int roundsNumber = -1;
+    private int currentRound = -1;
+    private TextView roundText = null;
+    private TextView scoreText = null;
+    private int playersNumber = -1;
+    private ArrayList<String> playersNames = null;
+    private ArrayList<Integer> scores = null;
     private static volatile GameIntermediateActivity runningGame = null;
 
     @Override
@@ -29,11 +40,31 @@ public class GameIntermediateActivity extends AppCompatActivity {
         synchronized (GameIntermediateActivity.class) {
             runningGame = this;
         }
-        //Intent callingIntent = getIntent();
-        //cards_set = callingIntent.getIntExtra(CARD_SET_PARAM, -1);
 
-        //Very temporary solution for testing other gameplay activities
-        //new Thread(new TestActivities()).start();
+        Intent callingIntent = getIntent();
+        roundsNumber = callingIntent.getIntExtra(ROUNDS_NUMBER_PARAM, -1);
+        currentRound = 1;
+        playersNumber = callingIntent.getIntExtra(PLAYERS_NUMBER_PARAM, -1);
+        playersNames = callingIntent.getStringArrayListExtra(PLAYERS_NAMES_PARAM);
+        scores = new ArrayList<>();
+        for (int i = 0; i < playersNumber; i++) {
+            scores.add(0);
+        }
+
+        roundText = (TextView)findViewById(R.id.intermediateRoundText);
+        scoreText = (TextView)findViewById(R.id.intermediateScoreText);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        roundText.setText(ROUND_PREFIX + currentRound + "/" + roundsNumber);
+        String scoresText = SCORE_PREFIX;
+        for (int i = 0; i < playersNumber; i++) {
+            scoresText += "\n" + playersNames.get(i) + " - " +scores.get(i);
+        }
+        scoreText.setText(scoresText);
     }
 
     public static void lead() {
@@ -118,32 +149,4 @@ public class GameIntermediateActivity extends AppCompatActivity {
         }
         return cardsArr;
     }
-    /*
-    private class TestActivities implements Runnable {
-        @Override
-        public void run() {
-            for (int i = 0; i < 8; i++) {
-                cards.add(i + 1L);
-            }
-
-            try {
-                Thread.sleep(1000);
-            } catch (Exception e) {}
-
-            lead();
-
-            try {
-                Thread.sleep(3000);
-            } catch (Exception e) {}
-
-            chooseCard("name");
-
-            try {
-                Thread.sleep(3000);
-            } catch (Exception e) {}
-
-            vote("name");
-        }
-    }
-    */
 }
