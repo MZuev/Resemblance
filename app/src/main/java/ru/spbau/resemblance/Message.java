@@ -132,6 +132,7 @@ public class Message {
     }
 
     private void readLeadRequestMessage(DataInputStream stream) {
+        Log.d("Message", "readLeadRequestMessage: ");
         GameIntermediateActivity.lead();
     }
 
@@ -143,6 +144,7 @@ public class Message {
     }
 
     private void readVoteRequestMessage(DataInputStream stream) {
+        Log.d("Message", "vote");
         try {
             String association = stream.readUTF();
             int cardsNumber = stream.readInt();
@@ -151,7 +153,9 @@ public class Message {
                 candidates[i] = stream.readLong();
             }
             GameIntermediateActivity.vote(association, candidates);
-        } catch (IOException e) {}
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void readRatingMessage(DataInputStream stream) {
@@ -166,9 +170,10 @@ public class Message {
     }
 
     public void readLeadersAssociationMessage(DataInputStream stream) {
-        //try {
+        try {
+            long leaderAssociation = stream.readInt();
             //TODO
-        //} catch (IOException e) {}
+        } catch (IOException e) {}
     }
 
     //----------------------------------------------------

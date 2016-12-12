@@ -30,7 +30,10 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         SharedPreferences preferences = getSharedPreferences(SettingsActivity.PREFERENCES, MODE_PRIVATE);
-        if (!preferences.contains(SettingsActivity.NICKNAME_PREF)) {
+        if (preferences.contains(SettingsActivity.NICKNAME_PREF)) {
+            Message.sendLoginMessage(preferences.getString(SettingsActivity.NICKNAME_PREF, null),
+                    preferences.getString(SettingsActivity.PASSWORD_PREF, null));
+        } else {
             Intent login = new Intent(this, LoginActivity.class);
             startActivity(login);
         }

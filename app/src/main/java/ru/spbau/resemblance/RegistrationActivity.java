@@ -76,7 +76,8 @@ public class RegistrationActivity extends AppCompatActivity {
                 editor.putString(SettingsActivity.PASSWORD_PREF, passwordHash);
                 editor.commit();
 
-                Toast.makeText(this, SUCCESSFUL_REGISTRATION, Toast.LENGTH_SHORT).show();
+                //TODO: Return toast
+                //Toast.makeText(this, SUCCESSFUL_REGISTRATION, Toast.LENGTH_SHORT).show();
 
                 finish();
             }

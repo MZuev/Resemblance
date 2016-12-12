@@ -66,7 +66,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public static void onResponse(int code) {
-        currentActivity.onResponseImpl(code);
+        if (currentActivity != null) {
+            currentActivity.onResponseImpl(code);
+        }
     }
 
     private void onResponseImpl(int code) {

@@ -3,6 +3,7 @@ package ru.spbau.resemblance;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -18,15 +19,17 @@ public class GameIntermediateActivity extends AppCompatActivity {
     private static final String CHOOSE_SUGGESTION = "Ваша карта. Ассоциация: ";
     private static final String VOTE_SUGGESTION = "Голосование. Ассоциация: ";
     private ArrayList<Long> cards = new ArrayList<>();
-    private static GameIntermediateActivity runningGame;
+    private static volatile GameIntermediateActivity runningGame = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_intermediate);
 
-        runningGame = this;
-        Intent callingIntent = getIntent();
+        synchronized (GameIntermediateActivity.class) {
+            runningGame = this;
+        }
+        //Intent callingIntent = getIntent();
         //cards_set = callingIntent.getIntExtra(CARD_SET_PARAM, -1);
 
         //Very temporary solution for testing other gameplay activities
@@ -34,18 +37,22 @@ public class GameIntermediateActivity extends AppCompatActivity {
     }
 
     public static void lead() {
+        while (runningGame == null) {}
         runningGame.leadImpl();
     }
 
     public static void chooseCard(String association) {
+        while (runningGame == null) {}
         runningGame.chooseCardImpl(association);
     }
 
     public static void vote(String association, long[] candidates) {
+        //while (runningGame == null) {}
         runningGame.voteImpl(association, candidates);
     }
 
     public static void addCard(long card) {
+        while (runningGame == null) {}
         runningGame.addCardImpl(card);
     }
 
@@ -70,7 +77,9 @@ public class GameIntermediateActivity extends AppCompatActivity {
     }
 
     private void addCardImpl(long card) {
-        cards.add(card);
+        synchronized (cards) {
+            cards.add(card);
+        }
     }
 
     @Override
@@ -84,7 +93,6 @@ public class GameIntermediateActivity extends AppCompatActivity {
                 cards.remove(cards.indexOf(pictureId));
 
                 Message.sendLeadAssociationMessage(pictureId, association);
-                //Toast.makeText(this, association + String.valueOf(pictureId), Toast.LENGTH_SHORT).show();
                 break;
             }
 
@@ -93,13 +101,11 @@ public class GameIntermediateActivity extends AppCompatActivity {
                 cards.remove(cards.indexOf(pictureId));
 
                 Message.sendChoiceMessage(pictureId);
-                //Toast.makeText(this, String.valueOf(pictureId), Toast.LENGTH_SHORT).show();
                 break;
             }
 
             case VOTE_REQUEST: {
                 Message.sendVoteMessage(pictureId);
-                //Toast.makeText(this, String.valueOf(pictureId), Toast.LENGTH_SHORT).show();
                 break;
             }
         }

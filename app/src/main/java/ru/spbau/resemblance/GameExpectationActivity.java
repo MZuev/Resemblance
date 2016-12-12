@@ -8,6 +8,7 @@ public class GameExpectationActivity extends AppCompatActivity {
     public static final String RANDOM_GAME_EXTRA = "random_game";
 
     private boolean randomGame;
+    private volatile boolean started = false;
     private static GameExpectationActivity expecting;
 
     @Override
@@ -16,6 +17,7 @@ public class GameExpectationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_game_expectation);
 
         randomGame = getIntent().getBooleanExtra(RANDOM_GAME_EXTRA, false);
+        started = false;
 
         if (randomGame) {
             //Ask server to put us in the waiting list
@@ -34,13 +36,14 @@ public class GameExpectationActivity extends AppCompatActivity {
     }
 
     private void startGameImpl() {
+        started = true;
         Intent intent = new Intent(this, GameIntermediateActivity.class);
         startActivity(intent);
     }
 
     @Override
     protected void onPause() {
-        if (randomGame) {
+        if (randomGame && !started) {
             //Tell server that we're not about to play anymore
             Message.sendQuitRandomGameMessage();
         }
