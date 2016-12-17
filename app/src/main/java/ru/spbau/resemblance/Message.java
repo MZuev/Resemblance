@@ -22,7 +22,7 @@ public class Message {
     final public static int CHOICE_TYPE = 10;
     final public static int VOTE_REQUEST_TYPE = 11;
     final public static int VOTE_TYPE = 12;
-    final public static int LEADERS_ASSOCIATION_TYPE = 13;
+    final public static int ROUND_END_TYPE = 13;
     final public static int RATING_TYPE = 14;
 
     private final String MESSAGE_LOG_TAG = "Message";
@@ -73,8 +73,8 @@ public class Message {
             case VOTE_REQUEST_TYPE:
                 readVoteRequestMessage(in);
                 break;
-            case LEADERS_ASSOCIATION_TYPE:
-                readLeadersAssociationMessage(in);
+            case ROUND_END_TYPE:
+                readRoundEndMessage(in);
                 break;
             case RATING_TYPE:
                 readRatingMessage(in);
@@ -185,10 +185,14 @@ public class Message {
         } catch (IOException e) {}
     }
 
-    public void readLeadersAssociationMessage(DataInputStream stream) {
+    public void readRoundEndMessage(DataInputStream stream) {
         try {
             long leaderAssociation = stream.readLong();
-            //TODO
+            int[] scores = new int[stream.readInt()];
+            for (int i = 0; i < scores.length; i++) {
+                scores[i] = stream.readInt();
+            }
+            gameListener.onRoundEnd(leaderAssociation, scores);
         } catch (IOException e) {}
     }
 
@@ -348,6 +352,8 @@ public class Message {
         void onChoiceRequest(String association);
 
         void onVoteRequest(String association, long[] candidates);
+
+        void onRoundEnd(long leadersAssociation, int[] scores);
     }
 
     protected interface GameExpectationMessageListener {

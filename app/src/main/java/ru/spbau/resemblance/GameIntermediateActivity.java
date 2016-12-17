@@ -1,8 +1,10 @@
 package ru.spbau.resemblance;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -27,9 +29,11 @@ public class GameIntermediateActivity extends AppCompatActivity implements Messa
     private int currentRound = -1;
     private TextView roundText = null;
     private TextView scoreText = null;
+    private ImageView answerView = null;
     private int playersNumber = -1;
     private ArrayList<String> playersNames = null;
-    private ArrayList<Integer> scores = null;
+    private int[] scores = null;
+    private long answer = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,13 +47,11 @@ public class GameIntermediateActivity extends AppCompatActivity implements Messa
         currentRound = 1;
         playersNumber = callingIntent.getIntExtra(PLAYERS_NUMBER_PARAM, -1);
         playersNames = callingIntent.getStringArrayListExtra(PLAYERS_NAMES_PARAM);
-        scores = new ArrayList<>();
-        for (int i = 0; i < playersNumber; i++) {
-            scores.add(0);
-        }
+        scores = new int[playersNumber];
 
         roundText = (TextView)findViewById(R.id.intermediateRoundText);
         scoreText = (TextView)findViewById(R.id.intermediateScoreText);
+        answerView = (ImageView)findViewById(R.id.intermediateAnswerView);
     }
 
     @Override
@@ -59,9 +61,14 @@ public class GameIntermediateActivity extends AppCompatActivity implements Messa
         roundText.setText(ROUND_PREFIX + currentRound + "/" + roundsNumber);
         String scoresText = SCORE_PREFIX;
         for (int i = 0; i < playersNumber; i++) {
-            scoresText += "\n" + playersNames.get(i) + " - " +scores.get(i);
+            scoresText += "\n" + playersNames.get(i) + " - " +scores[i];
         }
         scoreText.setText(scoresText);
+
+        if (answer != -1) {
+            ImageStorage.ImageWrapped answerPic = ImageStorage.ImageWrapped.createById((int)answer);
+            answerView.setImageURI(Uri.parse(answerPic.getUriImage()));
+        }
     }
 
     @Override
@@ -92,6 +99,14 @@ public class GameIntermediateActivity extends AppCompatActivity implements Messa
         synchronized (cards) {
             cards.add(card);
         }
+    }
+
+    @Override
+    public void onRoundEnd(long leadersAssociation, int[] scores){
+        this.scores = scores;
+        answer = leadersAssociation;
+        currentRound++;
+        //TODO: update screen immediately
     }
 
     @Override
