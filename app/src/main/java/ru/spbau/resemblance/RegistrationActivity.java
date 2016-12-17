@@ -12,7 +12,7 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class RegistrationActivity extends AppCompatActivity {
+public class RegistrationActivity extends AppCompatActivity implements Message.RegisterMessageListener {
     private final int NETWORK_ERROR = -1;
     private final int SUCCESS = 0;
     private final int NICKNAME_ERROR = 1;
@@ -20,7 +20,6 @@ public class RegistrationActivity extends AppCompatActivity {
     private static final String SUCCESSFUL_REGISTRATION = "Регистрация успешно завершена.";
     private static final String NICKNAME_IN_USE = "Имя пользователя занято.";
 
-    private static RegistrationActivity currentActivity;
     private EditText nicknameField = null;
     private EditText passwordField1 = null;
     private EditText passwordField2 = null;
@@ -42,7 +41,7 @@ public class RegistrationActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        currentActivity = this;
+        Message.setRegisterListener(this);
     }
 
     public void onRegisterTouch(View v) {
@@ -63,11 +62,8 @@ public class RegistrationActivity extends AppCompatActivity {
         }
     }
 
-    public static void onResponse(int code) {
-        currentActivity.onResponseImpl(code);
-}
-
-    private void onResponseImpl(int code) {
+    @Override
+    public void onRegisterResponse(int code) {
         switch (code) {
             case SUCCESS: {
                 SharedPreferences preferences = getSharedPreferences(SettingsActivity.PREFERENCES, MODE_PRIVATE);

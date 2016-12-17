@@ -14,13 +14,11 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class LoginActivity extends AppCompatActivity {
-    final int NETWORK_ERROR = -1;
-    final int SUCCESSFUL_LOGIN = 0;
-    final int NICKNAME_ERROR = 1;
-    final int PASSWORD_ERROR = 2;
-
-    private static LoginActivity currentActivity = null;
+public class LoginActivity extends AppCompatActivity implements Message.LoginMessageListener {
+    public static final int NETWORK_ERROR = -1;
+    public static final int SUCCESSFUL_LOGIN = 0;
+    public static final int NICKNAME_ERROR = 1;
+    public static final int PASSWORD_ERROR = 2;
 
     private EditText nicknameField = null;
     private EditText passwordField = null;
@@ -41,7 +39,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        currentActivity = this;
+        Message.setLoginListener(this);
     }
 
     public void onLoginClick(View v) {
@@ -65,13 +63,8 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(register);
     }
 
-    public static void onResponse(int code) {
-        if (currentActivity != null) {
-            currentActivity.onResponseImpl(code);
-        }
-    }
-
-    private void onResponseImpl(int code) {
+    @Override
+    public void onLoginResponse(int code) {
         switch (code) {
             case SUCCESSFUL_LOGIN: {
                 SharedPreferences prefs = getSharedPreferences(SettingsActivity.PREFERENCES, MODE_PRIVATE);

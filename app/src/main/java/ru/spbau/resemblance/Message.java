@@ -1,11 +1,5 @@
 package ru.spbau.resemblance;
 
-import android.app.Service;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.IBinder;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
@@ -13,9 +7,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-
-import static android.content.Context.MODE_PRIVATE;
-import static java.security.AccessController.getContext;
 
 public class Message {
     final public static int TEST_TYPE = 0;
@@ -33,6 +24,14 @@ public class Message {
     final public static int VOTE_TYPE = 12;
     final public static int LEADERS_ASSOCIATION_TYPE = 13;
     final public static int RATING_TYPE = 14;
+
+    private final String MESSAGE_LOG_TAG = "Message";
+
+    private static volatile LoginMessageListener loginListener = null;
+    private static volatile RegisterMessageListener registerListener = null;
+    private static volatile RatingMessageListener ratingListener = null;
+    private static volatile GameMessageListener gameListener = null;
+    private static volatile GameExpectationMessageListener gameExpectationListener = null;
 
     private int type = 0;
 
@@ -96,32 +95,33 @@ public class Message {
     }
 
     private void readRegisterMessage(DataInputStream in) {
-        Log.d("asd", "2");
+        Log.d(MESSAGE_LOG_TAG, "Register message received.");
         int resultCode = -1;
         try {
             synchronized (in) {
                 resultCode = in.readInt();
             }
-            applyRegister(resultCode);
+            registerListener.onRegisterResponse(resultCode);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     private void readLoginMessage(DataInputStream in) {
+        Log.d(MESSAGE_LOG_TAG, "Login message received.");
         int resultCode = -1;
-        long hashPassword = 0;
         try {
             synchronized (in) {
                 resultCode = in.readInt();
             }
-            applyLogin(resultCode);
+            loginListener.onLoginResponse(resultCode);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     private void readStartGameMessage(DataInputStream stream) {
+        Log.d(MESSAGE_LOG_TAG, "Start game message received.");
         try {
             int roundsNumber = stream.readInt();
             int playersNumber = stream.readInt();
@@ -129,33 +129,40 @@ public class Message {
             for (int i = 0; i < playersNumber; i++) {
                 names.add(stream.readUTF());
             }
-            GameExpectationActivity.startGame(roundsNumber, playersNumber, names);
+            gameExpectationListener.onStartGameMessage(roundsNumber, playersNumber, names);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     private void readSendCardMessage(DataInputStream stream) {
+        Log.d(MESSAGE_LOG_TAG, "Send card message received.");
         try {
-            long newCard = stream.readLong();
-            GameIntermediateActivity.addCard(newCard);
+            long card = stream.readLong();
+            while (gameListener == null) {
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {}
+            }
+            gameListener.onSendCard(card);
         } catch (IOException e) {}
     }
 
     private void readLeadRequestMessage(DataInputStream stream) {
-        Log.d("Message", "readLeadRequestMessage: ");
-        GameIntermediateActivity.lead();
+        Log.d(MESSAGE_LOG_TAG, "Lead message received.");
+        gameListener.onLeadRequest();
     }
 
     private void readChoiceRequestMessage(DataInputStream stream) {
+        Log.d(MESSAGE_LOG_TAG, "Choice message received.");
         try {
             String association = stream.readUTF();
-            GameIntermediateActivity.chooseCard(association);
+            gameListener.onChoiceRequest(association);
         } catch (IOException e) {}
     }
 
     private void readVoteRequestMessage(DataInputStream stream) {
-        Log.d("Message", "vote");
+        Log.d(MESSAGE_LOG_TAG, "Vote message received.");
         try {
             String association = stream.readUTF();
             int cardsNumber = stream.readInt();
@@ -163,26 +170,24 @@ public class Message {
             for (int i = 0; i < cardsNumber; i++) {
                 candidates[i] = stream.readLong();
             }
-            GameIntermediateActivity.vote(association, candidates);
+            //GameIntermediateActivity.vote(association, candidates);
+            gameListener.onVoteRequest(association, candidates);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public void readRatingMessage(DataInputStream stream) {
+        Log.d(MESSAGE_LOG_TAG, "Rating message received.");
         try {
-            int newRating = stream.readInt();
-            //TODO process
-            //SharedPreferences prefs = getContext().getSharedPreferences(SettingsActivity.PREFERENCES, MODE_PRIVATE);
-            //SharedPreferences.Editor editor = prefs.edit();
-            //editor.putInt(SettingsActivity.RATING_PREF, newRating);
-            //editor.commit();
+            int rating = stream.readInt();
+            ratingListener.onRatingMessage(rating);
         } catch (IOException e) {}
     }
 
     public void readLeadersAssociationMessage(DataInputStream stream) {
         try {
-            long leaderAssociation = stream.readInt();
+            long leaderAssociation = stream.readLong();
             //TODO
         } catch (IOException e) {}
     }
@@ -192,54 +197,6 @@ public class Message {
 
     private void applyTest(String textMessage) {
         System.out.println(textMessage);
-    }
-
-    private void applyRegister(int resultCode) {
-        /*
-        Log.d("asd", "3");
-        Log.d("qwe", "" + resultCode);
-        final int networkError = -1;
-        final int successfulRegistration = 0;
-        final int nicknameError = 1;
-
-        switch (resultCode) {
-            case successfulRegistration:
-                //// TODO: 05.12.2016
-                break;
-            case networkError:
-                // TODO: 05.12.2016
-                break;
-            case nicknameError:
-                // TODO: 05.12.2016
-                break;
-        }
-        */
-        RegistrationActivity.onResponse(resultCode);
-    }
-
-    private void applyLogin(int resultCode) {
-        /*
-        final int networkError = -1;
-        final int successfulLogin = 0;
-        final int nicknameError = 1;
-        final int passwordError = 2;
-
-        switch (resultCode) {
-            case successfulLogin:
-                //// TODO: 05.12.2016
-                break;
-            case networkError:
-                // TODO: 05.12.2016
-                break;
-            case nicknameError:
-                // TODO: 05.12.2016
-                break;
-            case passwordError:
-                // TODO: 05.12.2016
-                break;
-        }
-        */
-        LoginActivity.onResponse(resultCode);
     }
 
     //----------------------------------------------------
@@ -336,7 +293,7 @@ public class Message {
     }
 
     public static void sendRegisterMessage(String nickname, String password) {
-        Log.d("asd", "1");
+        //Log.d("asd", "1");
 
         ByteArrayOutputStream byteOS = new ByteArrayOutputStream(150);
         DataOutputStream out = new DataOutputStream(byteOS);
@@ -349,5 +306,51 @@ public class Message {
             e.printStackTrace();
         }
         SendMessageModule.sendMessage(byteOS.toByteArray());
+    }
+
+    protected static void setLoginListener(LoginMessageListener listener) {
+        loginListener = listener;
+    }
+
+    protected static void setRegisterListener(RegisterMessageListener listener) {
+        registerListener = listener;
+    }
+
+    protected static void setRatingListener(RatingMessageListener listener) {
+        ratingListener = listener;
+    }
+
+    protected static void setGameListener(GameMessageListener listener) {
+        gameListener = listener;
+    }
+
+    protected static void setGameExpectationListener(GameExpectationMessageListener listener) {
+        gameExpectationListener = listener;
+    }
+
+    protected interface LoginMessageListener {
+        void onLoginResponse(int code);
+    }
+
+    protected interface RegisterMessageListener {
+        void onRegisterResponse(int code);
+    }
+
+    protected interface RatingMessageListener {
+        void onRatingMessage(int rating);
+    }
+
+    protected interface GameMessageListener {
+        void onSendCard(long card);
+
+        void onLeadRequest();
+
+        void onChoiceRequest(String association);
+
+        void onVoteRequest(String association, long[] candidates);
+    }
+
+    protected interface GameExpectationMessageListener {
+        void onStartGameMessage(int roundsNumber, int playersNumber, ArrayList<String> names);
     }
 }

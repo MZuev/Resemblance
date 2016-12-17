@@ -1,22 +1,18 @@
 package ru.spbau.resemblance;
 
-import android.util.Log;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.net.URL;
-import java.net.UnknownHostException;
 
 
 public class SendMessageModule {
     final private static String LOG_TAG = "Messager log";
     final private static int maxCntToReconnect = 20;
 
-    final private static String serverIP = "10.0.0.2";
+    final private static String serverIP = "192.168.1.180";
     final private static int serverPort = 6662;
 
     private final static int sleepTime = 1000;
@@ -30,11 +26,11 @@ public class SendMessageModule {
     final private static int STATUS_OPEN = 2;
     final private static int STATUS_CLOSE = 3;
 
-    private static Integer connectoinStatus = STATUS_NOT_OPEN;
+    private static Integer connectionStatus = STATUS_NOT_OPEN;
 
     public static boolean isAlive() {
-        synchronized (connectoinStatus) {
-            return connectoinStatus == STATUS_OPEN;
+        synchronized (connectionStatus) {
+            return connectionStatus == STATUS_OPEN;
         }
     }
 
@@ -43,11 +39,11 @@ public class SendMessageModule {
         public void run() {
             while (true) {
                 while (true) {
-                    synchronized (connectoinStatus) {
-                        if (connectoinStatus == STATUS_OPEN) {
+                    synchronized (connectionStatus) {
+                        if (connectionStatus == STATUS_OPEN) {
                             break;
                         }
-                        if (connectoinStatus == STATUS_CLOSE) {
+                        if (connectionStatus == STATUS_CLOSE) {
                             return;
                         }
                     }
@@ -65,8 +61,8 @@ public class SendMessageModule {
                     }
                 }
                 if (messageType == -1) {
-                    synchronized (connectoinStatus) {
-                        connectoinStatus = STATUS_CLOSE;
+                    synchronized (connectionStatus) {
+                        connectionStatus = STATUS_CLOSE;
                     }
                 }
             }
@@ -77,11 +73,11 @@ public class SendMessageModule {
         Thread initThread = new Thread() {
             @Override
             public void run() {
-                synchronized (connectoinStatus) {
-                    connectoinStatus = STATUS_IS_OPENING;
+                synchronized (connectionStatus) {
+                    connectionStatus = STATUS_IS_OPENING;
                     for (int i = 0; i < maxCntToReconnect; i++) {
                         if (tryToConnect()) {
-                            connectoinStatus = STATUS_OPEN;
+                            connectionStatus = STATUS_OPEN;
                             break;
                         }
                         try {
@@ -90,8 +86,8 @@ public class SendMessageModule {
                             e.printStackTrace();
                         }
                     }
-                    if (connectoinStatus == STATUS_IS_OPENING) {
-                        connectoinStatus = STATUS_CLOSE;
+                    if (connectionStatus == STATUS_IS_OPENING) {
+                        connectionStatus = STATUS_CLOSE;
                     }
                     else {
                         readThread.start();
@@ -132,11 +128,11 @@ public class SendMessageModule {
             @Override
             public void run() {
                 while (true) {
-                    synchronized (connectoinStatus) {
-                        if (connectoinStatus == STATUS_OPEN) {
+                    synchronized (connectionStatus) {
+                        if (connectionStatus == STATUS_OPEN) {
                             break;
                         }
-                        if (connectoinStatus == STATUS_CLOSE) {
+                        if (connectionStatus == STATUS_CLOSE) {
                             return;
                         }
                     }
@@ -146,8 +142,8 @@ public class SendMessageModule {
                     messageIsSent = tryToSendMessage(message);
                 }
                 if (!messageIsSent) {
-                    synchronized (connectoinStatus) {
-                        connectoinStatus = STATUS_CLOSE;
+                    synchronized (connectionStatus) {
+                        connectionStatus = STATUS_CLOSE;
                     }
                 }
             }

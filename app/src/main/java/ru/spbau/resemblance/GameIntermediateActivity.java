@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class GameIntermediateActivity extends AppCompatActivity {
+public class GameIntermediateActivity extends AppCompatActivity implements Message.GameMessageListener {
     public static final String OUR_CARDS_PARAM = "our_cards";
     public static final String SUGGESTION_PARAM = "suggestion";
     public static final String ROUNDS_NUMBER_PARAM = "rounds_number";
@@ -30,16 +30,13 @@ public class GameIntermediateActivity extends AppCompatActivity {
     private int playersNumber = -1;
     private ArrayList<String> playersNames = null;
     private ArrayList<Integer> scores = null;
-    private static volatile GameIntermediateActivity runningGame = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_intermediate);
 
-        synchronized (GameIntermediateActivity.class) {
-            runningGame = this;
-        }
+        Message.setGameListener(this);
 
         Intent callingIntent = getIntent();
         roundsNumber = callingIntent.getIntExtra(ROUNDS_NUMBER_PARAM, -1);
@@ -67,47 +64,31 @@ public class GameIntermediateActivity extends AppCompatActivity {
         scoreText.setText(scoresText);
     }
 
-    public static void lead() {
-        while (runningGame == null) {}
-        runningGame.leadImpl();
-    }
-
-    public static void chooseCard(String association) {
-        while (runningGame == null) {}
-        runningGame.chooseCardImpl(association);
-    }
-
-    public static void vote(String association, long[] candidates) {
-        //while (runningGame == null) {}
-        runningGame.voteImpl(association, candidates);
-    }
-
-    public static void addCard(long card) {
-        while (runningGame == null) {}
-        runningGame.addCardImpl(card);
-    }
-
-    private void leadImpl() {
+    @Override
+    public void onLeadRequest() {
         Intent lead = new Intent(this, LeadingCardsGridActivity.class);
         lead.putExtra(OUR_CARDS_PARAM, getCardsArr());
         startActivityForResult(lead, LEADING_ASSOCIATION_REQUEST);
     }
 
-    private void chooseCardImpl(String association) {
+    @Override
+    public void onChoiceRequest(String association) {
         Intent choose = new Intent(this, CardPickerActivity.class);
         choose.putExtra(SUGGESTION_PARAM, CHOOSE_SUGGESTION + association);
         choose.putExtra(OUR_CARDS_PARAM, getCardsArr());
         startActivityForResult(choose, CHOICE_REQUEST);
     }
 
-    private void voteImpl(String association, long[] candidates) {
+    @Override
+    public void onVoteRequest(String association, long[] candidates) {
         Intent vote = new Intent(this, CardPickerActivity.class);
         vote.putExtra(SUGGESTION_PARAM, VOTE_SUGGESTION + association);
         vote.putExtra(OUR_CARDS_PARAM, candidates);
         startActivityForResult(vote, VOTE_REQUEST);
     }
 
-    private void addCardImpl(long card) {
+    @Override
+    public void onSendCard(long card) {
         synchronized (cards) {
             cards.add(card);
         }

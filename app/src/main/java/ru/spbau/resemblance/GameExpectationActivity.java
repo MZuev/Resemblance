@@ -6,12 +6,12 @@ import android.os.Bundle;
 
 import java.util.ArrayList;
 
-public class GameExpectationActivity extends AppCompatActivity {
+public class GameExpectationActivity extends AppCompatActivity implements
+        Message.GameExpectationMessageListener {
     public static final String RANDOM_GAME_EXTRA = "random_game";
 
     private boolean randomGame;
     private volatile boolean started = false;
-    private static GameExpectationActivity expecting;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +20,12 @@ public class GameExpectationActivity extends AppCompatActivity {
 
         randomGame = getIntent().getBooleanExtra(RANDOM_GAME_EXTRA, false);
         started = false;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Message.setGameExpectationListener(this);
 
         if (randomGame) {
             //Ask server to put us in the waiting list
@@ -28,18 +34,8 @@ public class GameExpectationActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        expecting = this;
-    }
-
-    public static void startGame(int roundsNumber, int playersNumber,
-                                 ArrayList<String> names) {
-        expecting.startGameImpl(roundsNumber, playersNumber, names);
-    }
-
-    private void startGameImpl(int roundsNumber, int playersNumber,
-                               ArrayList<String> names) {
+    public void onStartGameMessage(int roundsNumber, int playersNumber,
+                                    ArrayList<String> names) {
         started = true;
         Intent startGame = new Intent(this, GameIntermediateActivity.class);
         startGame.putExtra(GameIntermediateActivity.ROUNDS_NUMBER_PARAM, roundsNumber);
