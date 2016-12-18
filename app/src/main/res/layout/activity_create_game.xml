@@ -17,13 +17,17 @@
         android:layout_centerHorizontal="true"
         android:layout_alignParentTop="true">
 
-        <Button
-            android:text="Набор карт"
+        <TextView
+            android:text="Набор карт:"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/createGameChooseCardsButton"
-            style="@android:style/Widget.Material.Light.Button"
-            android:onClick="onCardSetsClick" />
+            android:id="@+id/createChooseSetInvitation"
+            android:textAppearance="@android:style/TextAppearance.Material.Large" />
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/createGameSetPicker" />
 
         <TextView
             android:text="Число раундов: 5"
@@ -44,6 +48,8 @@
             android:text="Создать"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/createGameCreateButton" />
+            android:id="@+id/createGameCreateButton"
+            android:onClick="onCreateClick"
+            style="@android:style/Widget.Material.Button" />
     </LinearLayout>
 </RelativeLayout>

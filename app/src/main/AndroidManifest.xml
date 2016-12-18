@@ -40,7 +40,8 @@
         <activity android:name=".LeadingAssociationActivity" />
         <activity android:name=".CardPickerActivity" />
         <activity android:name=".CardViewerActivity" />
-        <activity android:name=".GameExpectationActivity"></activity>
+        <activity android:name=".GameExpectationActivity" />
+        <activity android:name=".GamePreparationActivity"></activity>
     </application>
 
 </manifest>

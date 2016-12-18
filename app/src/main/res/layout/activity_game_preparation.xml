@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_leading_association"
+    android:id="@+id/activity_game_preparation"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="ru.spbau.resemblance.LeadingAssociationActivity">
+    tools:context="ru.spbau.resemblance.GamePreparationActivity">
 
     <LinearLayout
         android:orientation="vertical"
@@ -18,32 +17,23 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true">
 
-        <TextView
-            android:text="Ваша ассоциация:"
+        <Button
+            android:text="Играть"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/leadingAssociationInvitation"
-            android:textAppearance="@android:style/TextAppearance.Material.Large" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:ems="10"
-            android:id="@+id/leadingAssociationField" />
+            android:id="@+id/preparationStartButton"
+            android:onClick="onStartClick" />
 
         <Button
-            android:text="Готово"
+            android:text="Отмена"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/leadingAssociationButton"
-            android:onClick="onDoneClick" />
+            android:id="@+id/preparationCancelButton"
+            android:onClick="onCancelClick" />
 
-        <ImageView
+        <ListView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:srcCompat="@mipmap/ic_launcher"
-            android:id="@+id/leadingAssociationImage" />
-
+            android:layout_height="match_parent"
+            android:id="@+id/preparationListOfPlayers" />
     </LinearLayout>
 </RelativeLayout>

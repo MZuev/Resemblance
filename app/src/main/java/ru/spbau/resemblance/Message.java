@@ -24,6 +24,12 @@ public class Message {
     final public static int VOTE_TYPE = 12;
     final public static int ROUND_END_TYPE = 13;
     final public static int RATING_TYPE = 14;
+    final public static int CREATE_FIEND_GAME_TYPE = 15;
+    final public static int JOIN_FRIEND_GAME_TYPE = 16;
+    final public static int NEW_PLAYER_TYPE = 17;
+    final public static int REMOVE_PLAYER_TYPE = 18;
+    final public static int CANCEL_GAME_TYPE = 19;
+    final public static int START_FRIEND_GAME_TYPE = 20;
 
     private final String MESSAGE_LOG_TAG = "Message";
 
@@ -32,6 +38,7 @@ public class Message {
     private static volatile RatingMessageListener ratingListener = null;
     private static volatile GameMessageListener gameListener = null;
     private static volatile GameExpectationMessageListener gameExpectationListener = null;
+    private static volatile FriendGamePreparationListener preparationListener = null;
 
     private int type = 0;
 
@@ -78,6 +85,9 @@ public class Message {
                 break;
             case RATING_TYPE:
                 readRatingMessage(in);
+                break;
+            case NEW_PLAYER_TYPE:
+                readNewPlayerMessage(in);
                 break;
         }
     }
@@ -129,6 +139,11 @@ public class Message {
             for (int i = 0; i < playersNumber; i++) {
                 names.add(stream.readUTF());
             }
+            while (gameExpectationListener == null) {
+                try {
+                    Thread.sleep(5);
+                } catch (InterruptedException e) {}
+            }
             gameExpectationListener.onStartGameMessage(roundsNumber, playersNumber, names);
         } catch (IOException e) {
             e.printStackTrace();
@@ -145,7 +160,9 @@ public class Message {
                 } catch (InterruptedException e) {}
             }
             gameListener.onSendCard(card);
-        } catch (IOException e) {}
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void readLeadRequestMessage(DataInputStream stream) {
@@ -158,7 +175,9 @@ public class Message {
         try {
             String association = stream.readUTF();
             gameListener.onChoiceRequest(association);
-        } catch (IOException e) {}
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void readVoteRequestMessage(DataInputStream stream) {
@@ -170,7 +189,6 @@ public class Message {
             for (int i = 0; i < cardsNumber; i++) {
                 candidates[i] = stream.readLong();
             }
-            //GameIntermediateActivity.vote(association, candidates);
             gameListener.onVoteRequest(association, candidates);
         } catch (IOException e) {
             e.printStackTrace();
@@ -193,7 +211,23 @@ public class Message {
                 scores[i] = stream.readInt();
             }
             gameListener.onRoundEnd(leaderAssociation, scores);
-        } catch (IOException e) {}
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void readNewPlayerMessage(DataInputStream stream) {
+        try {
+            String playerName = stream.readUTF();
+            while (preparationListener == null) {
+                try {
+                    Thread.sleep(5);
+                } catch (InterruptedException e) {}
+            }
+            preparationListener.onNewPlayer(playerName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     //----------------------------------------------------
@@ -312,6 +346,49 @@ public class Message {
         SendMessageModule.sendMessage(byteOS.toByteArray());
     }
 
+    public static void sendCreateGameMessage(int roundsNumber,
+                                             ArrayList<ImageStorage.ImageWrapped> cards) {
+        ByteArrayOutputStream byteOS = new ByteArrayOutputStream(150);
+        DataOutputStream out = new DataOutputStream(byteOS);
+        try {
+            out.writeInt(CREATE_FIEND_GAME_TYPE);
+            out.writeInt(roundsNumber);
+            out.writeInt(cards.size());
+            for (ImageStorage.ImageWrapped image: cards) {
+                out.writeInt(image.getIdImage());
+            }
+            out.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        SendMessageModule.sendMessage(byteOS.toByteArray());
+    }
+
+    public static void sendJoinFriendGameMessage(String gameCreatorName) {
+        ByteArrayOutputStream byteOS = new ByteArrayOutputStream(150);
+        DataOutputStream out = new DataOutputStream(byteOS);
+        try {
+            out.writeInt(JOIN_FRIEND_GAME_TYPE);
+            out.writeUTF(gameCreatorName);
+            out.flush();
+            SendMessageModule.sendMessage(byteOS.toByteArray());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void sendStartFriendGameMessage() {
+        ByteArrayOutputStream byteOS = new ByteArrayOutputStream(150);
+        DataOutputStream out = new DataOutputStream(byteOS);
+        try {
+            out.writeInt(START_FRIEND_GAME_TYPE);
+            out.flush();
+            SendMessageModule.sendMessage(byteOS.toByteArray());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     protected static void setLoginListener(LoginMessageListener listener) {
         loginListener = listener;
     }
@@ -330,6 +407,10 @@ public class Message {
 
     protected static void setGameExpectationListener(GameExpectationMessageListener listener) {
         gameExpectationListener = listener;
+    }
+
+    protected static void setFriendGamePreparationListener(FriendGamePreparationListener listener) {
+        preparationListener = listener;
     }
 
     protected interface LoginMessageListener {
@@ -358,5 +439,9 @@ public class Message {
 
     protected interface GameExpectationMessageListener {
         void onStartGameMessage(int roundsNumber, int playersNumber, ArrayList<String> names);
+    }
+
+    protected interface FriendGamePreparationListener {
+        void onNewPlayer(String name);
     }
 }

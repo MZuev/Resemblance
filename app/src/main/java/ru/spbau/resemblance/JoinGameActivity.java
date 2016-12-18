@@ -1,5 +1,6 @@
 package ru.spbau.resemblance;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -19,7 +20,10 @@ public class JoinGameActivity extends AppCompatActivity {
 
     protected void onJoinPressed(View v) {
         String gameCreatorName = ((EditText)findViewById(joinGameNameField)).getText().toString();
-        Toast.makeText(this, gameCreatorName, Toast.LENGTH_SHORT).show();
-        //TODO: ask server to add us to the game
+        Message.sendJoinFriendGameMessage(gameCreatorName);
+
+        Intent waitForGame = new Intent(this, GameExpectationActivity.class);
+        waitForGame.putExtra(GameExpectationActivity.RANDOM_GAME_EXTRA, false);
+        startActivity(waitForGame);
     }
 }

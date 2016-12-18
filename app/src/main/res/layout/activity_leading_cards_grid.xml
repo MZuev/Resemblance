@@ -10,10 +10,26 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="ru.spbau.resemblance.LeadingCardsGridActivity">
 
-    <GridView
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/leadingCardsGrid" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true">
+
+        <TextView
+            android:text="Вы водите. Выберите карту:"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/leadingGridInvitation"
+            android:textAppearance="@android:style/TextAppearance.Material.Large" />
+
+        <GridView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/leadingCardsGrid" />
+    </LinearLayout>
 </RelativeLayout>
