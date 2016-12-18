@@ -12,7 +12,7 @@ public class SendMessageModule {
     final private static String LOG_TAG = "Messenger log";
     final private static int maxCntToReconnect = 20;
 
-    final private static String serverIP = "192.168.1.180";
+    final private static String serverIP = "10.0.0.2";
     final private static int serverPort = 6662;
 
     private final static int sleepTime = 1000;
