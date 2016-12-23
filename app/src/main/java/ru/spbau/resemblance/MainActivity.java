@@ -1,8 +1,12 @@
 package ru.spbau.resemblance;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
@@ -12,6 +16,8 @@ public class MainActivity extends AppCompatActivity implements Message.LoginMess
     private static final String RATING_PREFIX = "Рейтинг: ";
     private TextView nicknameText = null;
     private TextView ratingText = null;
+    private static final String RATING_UPDATE_MESSAGE = "ru.spbau.resemblance.UPDATE_RATING";
+    private BroadcastReceiver receiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,11 +25,10 @@ public class MainActivity extends AppCompatActivity implements Message.LoginMess
         setContentView(R.layout.activity_main);
 
         nicknameText = (TextView)findViewById(R.id.mainNickname);
-        ratingText = (TextView)findViewById(R.id.mainRating);
+        ratingText = (TextView)findViewById(R.id.mainRatingText);
 
         ImageStorage.createImageStorage(this);
         SendMessageModule.connectToServer();
-        //new Message(Message.TEST_TYPE).sendTestMessage("test message from client");
 
         Message.setRatingListener(this);
 
@@ -46,12 +51,15 @@ public class MainActivity extends AppCompatActivity implements Message.LoginMess
         SharedPreferences preferences = getSharedPreferences(SettingsActivity.PREFERENCES, MODE_PRIVATE);
         nicknameText.setText(preferences.getString(SettingsActivity.NICKNAME_PREF, ""));
         ratingText.setText(RATING_PREFIX + preferences.getInt(SettingsActivity.RATING_PREF, -1));
+
+        receiver = new RatingUpdateMessageReceiver();
+        IntentFilter filter = new IntentFilter(RATING_UPDATE_MESSAGE);
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
+
+        //findViewById(R.id.mainScrollView).setNestedScrollingEnabled(false);
     }
 
     public void onRandomGameClick(View v) {
-        //Intent randomGame = new Intent(this, RandomGameActivity.class);
-        //startActivity(randomGame);
-
         Intent randomGame = new Intent(this, GameExpectationActivity.class);
         randomGame.putExtra(GameExpectationActivity.RANDOM_GAME_EXTRA, true);
         startActivity(randomGame);
@@ -86,13 +94,19 @@ public class MainActivity extends AppCompatActivity implements Message.LoginMess
     }
 
     @Override
-    public void onRatingMessage(int rating) {
-        //ratingText.setText(RATING_PREFIX + rating);
-        //TODO: instant update
-
-        SharedPreferences prefs = getSharedPreferences(SettingsActivity.PREFERENCES, MODE_PRIVATE);
+    public void onRatingMessage(int rating) {SharedPreferences prefs = getSharedPreferences(SettingsActivity.PREFERENCES, MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putInt(SettingsActivity.RATING_PREF, rating);
         editor.commit();
+
+        LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(RATING_UPDATE_MESSAGE));
+    }
+
+    public class RatingUpdateMessageReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            SharedPreferences preferences = getSharedPreferences(SettingsActivity.PREFERENCES, MODE_PRIVATE);
+            ratingText.setText(RATING_PREFIX + preferences.getInt(SettingsActivity.RATING_PREF, -1));
+        }
     }
 }

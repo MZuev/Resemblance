@@ -1,11 +1,16 @@
 package ru.spbau.resemblance;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -23,6 +28,9 @@ public class GameIntermediateActivity extends AppCompatActivity implements Messa
     private static final String VOTE_SUGGESTION = "Голосование. Ассоциация: ";
     private static final String ROUND_PREFIX = "Раунд: ";
     private static final String SCORE_PREFIX = "Счёт:";
+    private static final String UPDATE_SCREEN_MESSAGE = "ru.spbau.resemblance.UPDATE_INFO";
+    private static final int TRANSPARENT = 0;
+    private static final int OPAQUE = 255;
 
     private ArrayList<Long> cards = new ArrayList<>();
     private int roundsNumber = -1;
@@ -34,6 +42,7 @@ public class GameIntermediateActivity extends AppCompatActivity implements Messa
     private ArrayList<String> playersNames = null;
     private int[] scores = null;
     private long answer = -1;
+    private BroadcastReceiver receiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,23 +61,17 @@ public class GameIntermediateActivity extends AppCompatActivity implements Messa
         roundText = (TextView)findViewById(R.id.intermediateRoundText);
         scoreText = (TextView)findViewById(R.id.intermediateScoreText);
         answerView = (ImageView)findViewById(R.id.intermediateAnswerView);
+
+        receiver = new UpdateScreenMessageReceiver();
+        IntentFilter filter = new IntentFilter(UPDATE_SCREEN_MESSAGE);
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        roundText.setText(ROUND_PREFIX + currentRound + "/" + roundsNumber);
-        String scoresText = SCORE_PREFIX;
-        for (int i = 0; i < playersNumber; i++) {
-            scoresText += "\n" + playersNames.get(i) + " - " +scores[i];
-        }
-        scoreText.setText(scoresText);
-
-        if (answer != -1) {
-            ImageStorage.ImageWrapped answerPic = ImageStorage.ImageWrapped.createById((int)answer);
-            answerView.setImageURI(Uri.parse(answerPic.getUriImage()));
-        }
+        updateScreen();
     }
 
     @Override
@@ -106,7 +109,8 @@ public class GameIntermediateActivity extends AppCompatActivity implements Messa
         this.scores = scores;
         answer = leadersAssociation;
         currentRound++;
-        //TODO: update screen immediately
+
+        LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(UPDATE_SCREEN_MESSAGE));
     }
 
     @Override
@@ -144,5 +148,35 @@ public class GameIntermediateActivity extends AppCompatActivity implements Messa
             cardsArr[i] = cards.get(i);
         }
         return cardsArr;
+    }
+
+    private void updateScreen() {
+        Toast.makeText(this, "foo", Toast.LENGTH_SHORT).show();
+        roundText.setText(ROUND_PREFIX + currentRound + "/" + roundsNumber);
+        String scoresText = SCORE_PREFIX;
+        for (int i = 0; i < playersNumber; i++) {
+            scoresText += "\n" + playersNames.get(i) + " - " +scores[i];
+        }
+        scoreText.setText(scoresText);
+
+        if (answer != -1) {
+            ImageStorage.ImageWrapped answerPic = ImageStorage.ImageWrapped.createById((int)answer);
+            answerView.setImageURI(Uri.parse(answerPic.getUriImage()));
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+        Message.unSetGameListener();
+
+        super.onDestroy();
+    }
+
+    public class UpdateScreenMessageReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            updateScreen();
+        }
     }
 }

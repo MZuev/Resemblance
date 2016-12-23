@@ -413,6 +413,18 @@ public class Message {
         preparationListener = listener;
     }
 
+    protected static void unSetGameListener() {
+        gameListener = null;
+    }
+
+    protected static void unSetGameExpectationListener() {
+        gameExpectationListener = null;
+    }
+
+    protected static void unSetFriendGamePreparationListener() {
+        preparationListener = null;
+    }
+
     protected interface LoginMessageListener {
         void onLoginResponse(int code);
     }

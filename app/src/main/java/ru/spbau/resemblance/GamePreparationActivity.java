@@ -7,15 +7,11 @@ import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.StringTokenizer;
 
 public class GamePreparationActivity extends AppCompatActivity implements
         Message.FriendGamePreparationListener {
@@ -23,6 +19,8 @@ public class GamePreparationActivity extends AppCompatActivity implements
     private ArrayAdapter<String> playersAdapter;
     private ArrayList<String> players;
     private BroadcastReceiver receiver;
+    private static final String NEW_PLAYER_MESSAGE = "ru.spbau.resemblance.NEW_FRIEND_GAME_PLAYER";
+
     //TODO: player removal
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +35,7 @@ public class GamePreparationActivity extends AppCompatActivity implements
         playersListView.setAdapter(playersAdapter);
 
         receiver = new NewPlayerMessageReceiver();
-        IntentFilter filter = new IntentFilter("ru.spbau.resemblance.NEW_FRIEND_GAME_PLAYER");
+        IntentFilter filter = new IntentFilter(NEW_PLAYER_MESSAGE);
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
     }
 
@@ -46,6 +44,7 @@ public class GamePreparationActivity extends AppCompatActivity implements
 
         Intent expectGame = new Intent(this, GameExpectationActivity.class);
         startActivity(expectGame);
+        finish();
     }
 
     public void onCancelClick(View v) {
@@ -55,13 +54,15 @@ public class GamePreparationActivity extends AppCompatActivity implements
     public void onNewPlayer(String name) {
         players.add(name);
 
-        LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent("ru.spbau.resemblance.NEW_FRIEND_GAME_PLAYER"));
+        LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(NEW_PLAYER_MESSAGE));
     }
 
     @Override
-    public void onDestroy() {
-        unregisterReceiver(receiver);
-        super.onDestroy();
+    public void onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+        Message.unSetFriendGamePreparationListener();
+
+        super.onPause();
     }
 
     public class NewPlayerMessageReceiver extends BroadcastReceiver {

@@ -51,5 +51,7 @@ public class GameExpectationActivity extends AppCompatActivity implements
             Message.sendQuitRandomGameMessage();
         }
         super.onPause();
+        Message.unSetGameExpectationListener();
+        finish();
     }
 }

@@ -30,7 +30,7 @@
             android:id="@+id/createGameSetPicker" />
 
         <TextView
-            android:text="Число раундов: 5"
+            android:text="Число раундов: 3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/createGameRoundsText"
@@ -40,8 +40,8 @@
             style="@style/Widget.AppCompat.SeekBar.Discrete"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:max="10"
-            android:progress="5"
+            android:max="9"
+            android:progress="2"
             android:id="@+id/createGameRoundsSeekBar" />
 
         <Button

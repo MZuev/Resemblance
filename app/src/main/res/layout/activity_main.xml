@@ -1,107 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="ru.spbau.resemblance.MainActivity">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appbar"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent">
-
-        <android.support.design.widget.CollapsingToolbarLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:toolbarId="@+id/toolbar"
-            app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
-            app:contentScrim="?attr/colorPrimary">
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <TextView
-                    android:text="TextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/mainNickname"
-                    android:textAppearance="@android:style/TextAppearance.Material.Large.Inverse" />
-
-                <TextView
-                    android:text="TextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/mainRating"
-                    android:textAppearance="@android:style/TextAppearance.Material.Large.Inverse" />
-            </LinearLayout>
-
-        </android.support.design.widget.CollapsingToolbarLayout>
-    </android.support.design.widget.AppBarLayout>
-
-    <android.support.v4.widget.NestedScrollView
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="android.support.design.widget.AppBarLayout$ScrollingViewBehavior">
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true">
 
-        <RelativeLayout
-            android:id="@+id/activity_main"
+        <TextView
+            android:text="TextView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingBottom="@dimen/activity_vertical_margin"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingTop="@dimen/activity_vertical_margin"
-            tools:context="ru.spbau.resemblance.MainActivity">
+            android:layout_height="wrap_content"
+            android:id="@+id/mainNickname"
+            android:textAppearance="@android:style/TextAppearance.Material.Large.Inverse"
+            android:textColor="@android:color/black" />
 
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true">
+        <TextView
+            android:text="TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/mainRatingText"
+            android:textAppearance="@android:style/TextAppearance.Material.Large.Inverse"
+            android:textColor="@android:color/black" />
 
-                <Button
-                    android:text="Простая игра"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/mainRandomGameButton"
-                    style="@android:style/Widget.Material.Light.Button.Borderless"
-                    android:onClick="onRandomGameClick" />
+        <Button
+            android:text="Простая игра"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/mainRandomGameButton"
+            style="@android:style/Widget.Material.Light.Button.Borderless"
+            android:onClick="onRandomGameClick" />
 
-                <Button
-                    android:text="Создать игру"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/mainCreateGameButton"
-                    style="@android:style/Widget.Material.Button.Borderless"
-                    android:onClick="onCreateGameClick" />
+        <Button
+            android:text="Создать игру"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/mainCreateGameButton"
+            style="@android:style/Widget.Material.Button.Borderless"
+            android:onClick="onCreateGameClick" />
 
-                <Button
-                    android:text="Присоединиться к игре"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/minJoinGameButton"
-                    style="@android:style/Widget.Material.Button.Borderless"
-                    android:onClick="onJoinGameClick" />
+        <Button
+            android:text="Присоединиться к игре"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/minJoinGameButton"
+            style="@android:style/Widget.Material.Button.Borderless"
+            android:onClick="onJoinGameClick" />
 
-                <Button
-                    android:text="Наборы карт"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/mainPictureSetButton"
-                    style="@android:style/Widget.Material.Button.Borderless"
-                    android:onClick="onSetCardsClick" />
+        <Button
+            android:text="Наборы карт"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/mainPictureSetButton"
+            style="@android:style/Widget.Material.Button.Borderless"
+            android:onClick="onSetCardsClick" />
 
-                <Button
-                    android:text="Настройки"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/mainSettingsButton"
-                    style="@android:style/Widget.Material.Button.Borderless"
-                    android:onClick="onSettingsClick" />
-            </LinearLayout>
-        </RelativeLayout>
-    </android.support.v4.widget.NestedScrollView>
-</android.support.design.widget.CoordinatorLayout>
+        <Button
+            android:text="Настройки"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/mainSettingsButton"
+            style="@android:style/Widget.Material.Button.Borderless"
+            android:onClick="onSettingsClick" />
+    </LinearLayout>
+
+</RelativeLayout>
