@@ -42,17 +42,7 @@
         <activity android:name=".CardViewerActivity" />
         <activity android:name=".GameExpectationActivity" />
         <activity android:name=".GamePreparationActivity" />
-
-        <receiver
-            android:name=".GamePreparationActivity$NewPlayerMessageReceiver"
-            android:enabled="true"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="ru.spbau.resemblance.NEW_FRIEND_GAME_PLAYER" />
-            </intent-filter>
-        </receiver>
-
-        <activity android:name=".GameFinishActivity"></activity>
+        <activity android:name=".GameFinishActivity" />
     </application>
 
 </manifest>

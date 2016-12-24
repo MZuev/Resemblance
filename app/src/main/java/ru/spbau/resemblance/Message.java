@@ -28,9 +28,10 @@ public class Message {
     final public static int JOIN_FRIEND_GAME_TYPE = 16;
     final public static int NEW_PLAYER_TYPE = 17;
     final public static int REMOVE_PLAYER_TYPE = 18;
-    final public static int CANCEL_GAME_TYPE = 19;
+    final public static int CANCEL_FRIEND_GAME_TYPE = 19;
     final public static int START_FRIEND_GAME_TYPE = 20;
     final public static int GAME_FINISH_TYPE = 21;
+    final public static int GAME_CANCELED_TYPE = 22;
 
     private final String MESSAGE_LOG_TAG = "Message";
 
@@ -92,6 +93,9 @@ public class Message {
                 break;
             case GAME_FINISH_TYPE:
                 readGameFinishMessage(in);
+                break;
+            case GAME_CANCELED_TYPE:
+                readGameCancelledMessage(in);
                 break;
         }
     }
@@ -256,6 +260,15 @@ public class Message {
         }
     }
 
+    private void readGameCancelledMessage(DataInputStream stream) {
+        while (gameExpectationListener == null) {
+            try {
+                Thread.sleep(5);
+            } catch (InterruptedException e) {}
+        }
+        gameExpectationListener.onGameCancelled();
+    }
+
     //----------------------------------------------------
 
 
@@ -413,6 +426,31 @@ public class Message {
         }
     }
 
+    public static void sendCancelFriendGameMessage() {
+        ByteArrayOutputStream byteOS = new ByteArrayOutputStream(150);
+        DataOutputStream out = new DataOutputStream(byteOS);
+        try {
+            out.writeInt(CANCEL_FRIEND_GAME_TYPE);
+            out.flush();
+            SendMessageModule.sendMessage(byteOS.toByteArray());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void sendRemovePlayerMessage(String playerName) {
+        ByteArrayOutputStream byteOS = new ByteArrayOutputStream(150);
+        DataOutputStream out = new DataOutputStream(byteOS);
+        try {
+            out.writeInt(REMOVE_PLAYER_TYPE);
+            out.writeUTF(playerName);
+            out.flush();
+            SendMessageModule.sendMessage(byteOS.toByteArray());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     protected static void setLoginListener(LoginMessageListener listener) {
         loginListener = listener;
     }
@@ -478,6 +516,8 @@ public class Message {
 
     protected interface GameExpectationMessageListener {
         void onStartGameMessage(int roundsNumber, int playersNumber, ArrayList<String> names);
+
+        void onGameCancelled();
     }
 
     protected interface FriendGamePreparationListener {

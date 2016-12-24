@@ -3,6 +3,7 @@ package ru.spbau.resemblance;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -42,6 +43,13 @@ public class GameExpectationActivity extends AppCompatActivity implements
         startGame.putExtra(GameIntermediateActivity.PLAYERS_NUMBER_PARAM, playersNumber);
         startGame.putStringArrayListExtra(GameIntermediateActivity.PLAYERS_NAMES_PARAM, names);
         startActivity(startGame);
+        finish();
+    }
+
+    @Override
+    public void onGameCancelled() {
+        //Toast.makeText(this, "Ошибка.", Toast.LENGTH_SHORT).show();
+        finish();
     }
 
     @Override
@@ -52,6 +60,5 @@ public class GameExpectationActivity extends AppCompatActivity implements
         }
         super.onPause();
         Message.unSetGameExpectationListener();
-        finish();
     }
 }
