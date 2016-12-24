@@ -18,7 +18,7 @@ public class JoinGameActivity extends AppCompatActivity {
         setContentView(R.layout.activity_join_game);
     }
 
-    protected void onJoinPressed(View v) {
+    public void onJoinPressed(View v) {
         String gameCreatorName = ((EditText)findViewById(joinGameNameField)).getText().toString();
         Message.sendJoinFriendGameMessage(gameCreatorName);
 

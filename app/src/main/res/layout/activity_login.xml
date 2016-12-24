@@ -21,9 +21,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
-            android:text="Имя"
             android:ems="10"
-            android:id="@+id/loginNicknameField" />
+            android:id="@+id/loginNicknameField"
+            android:textAppearance="@style/TextAppearance.AppCompat" />
 
         <EditText
             android:layout_width="match_parent"
@@ -37,7 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/loginLoginButton"
-            style="@android:style/Widget.Material.Light.Button"
+            style="@style/Widget.AppCompat.Button"
             android:onClick="onLoginClick" />
 
         <Button
@@ -45,7 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/loginRegisterButton"
-            style="@android:style/Widget.Material.Light.Button"
+            style="@style/Widget.AppCompat.Button"
             android:onClick="onRegisterClick" />
     </LinearLayout>
 </RelativeLayout>

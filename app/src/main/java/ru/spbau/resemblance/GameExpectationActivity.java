@@ -3,6 +3,7 @@ package ru.spbau.resemblance;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -12,22 +13,16 @@ public class GameExpectationActivity extends AppCompatActivity implements
     public static final String RANDOM_GAME_EXTRA = "random_game";
 
     private boolean randomGame;
-    private volatile boolean started = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_expectation);
 
-        randomGame = getIntent().getBooleanExtra(RANDOM_GAME_EXTRA, false);
-        started = false;
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
         Message.setGameExpectationListener(this);
+        setTitle("Ожидание игры");
 
+        randomGame = getIntent().getBooleanExtra(RANDOM_GAME_EXTRA, false);
         if (randomGame) {
             //Ask server to put us in the waiting list
             Message.sendJoinRandomGameMessage();
@@ -37,7 +32,6 @@ public class GameExpectationActivity extends AppCompatActivity implements
     @Override
     public void onStartGameMessage(int roundsNumber, int playersNumber,
                                     ArrayList<String> names) {
-        started = true;
         Intent startGame = new Intent(this, GameIntermediateActivity.class);
         startGame.putExtra(GameIntermediateActivity.ROUNDS_NUMBER_PARAM, roundsNumber);
         startGame.putExtra(GameIntermediateActivity.PLAYERS_NUMBER_PARAM, playersNumber);
@@ -48,17 +42,25 @@ public class GameExpectationActivity extends AppCompatActivity implements
 
     @Override
     public void onGameCancelled() {
-        //Toast.makeText(this, "Ошибка.", Toast.LENGTH_SHORT).show();
+        finish();
+    }
+
+    public void onCancelClick(View v) {
+        if (randomGame) {
+            Message.sendQuitRandomGameMessage();
+        } else {
+            Message.sendQuitFriendGameMessage();
+        }
         finish();
     }
 
     @Override
-    protected void onPause() {
-        if (randomGame && !started) {
-            //Tell server that we're not about to play anymore
-            Message.sendQuitRandomGameMessage();
-        }
-        super.onPause();
+    public void onBackPressed() {}
+
+    @Override
+    protected void onDestroy() {
         Message.unSetGameExpectationListener();
+
+        super.onDestroy();
     }
 }

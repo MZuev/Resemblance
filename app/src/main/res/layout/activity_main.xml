@@ -23,39 +23,39 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/mainNickname"
-            android:textAppearance="@android:style/TextAppearance.Material.Large.Inverse"
-            android:textColor="@android:color/black" />
+            android:textAppearance="@android:style/TextAppearance.Large" />
 
         <TextView
             android:text="TextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/mainRatingText"
-            android:textAppearance="@android:style/TextAppearance.Material.Large.Inverse"
-            android:textColor="@android:color/black" />
+            android:textAppearance="@android:style/TextAppearance.Large" />
 
         <Button
             android:text="Простая игра"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/mainRandomGameButton"
-            style="@android:style/Widget.Material.Light.Button.Borderless"
-            android:onClick="onRandomGameClick" />
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:onClick="onRandomGameClick"
+            android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button" />
 
         <Button
             android:text="Создать игру"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/mainCreateGameButton"
-            style="@android:style/Widget.Material.Button.Borderless"
-            android:onClick="onCreateGameClick" />
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:onClick="onCreateGameClick"
+            android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button" />
 
         <Button
             android:text="Присоединиться к игре"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/minJoinGameButton"
-            style="@android:style/Widget.Material.Button.Borderless"
+            style="@style/Widget.AppCompat.Button.Borderless"
             android:onClick="onJoinGameClick" />
 
         <Button
@@ -63,7 +63,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/mainPictureSetButton"
-            style="@android:style/Widget.Material.Button.Borderless"
+            style="@style/Widget.AppCompat.Button.Borderless"
             android:onClick="onSetCardsClick" />
 
         <Button
@@ -71,7 +71,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/mainSettingsButton"
-            style="@android:style/Widget.Material.Button.Borderless"
+            style="@style/Widget.AppCompat.Button.Borderless"
             android:onClick="onSettingsClick" />
     </LinearLayout>
 

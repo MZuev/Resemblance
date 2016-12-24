@@ -60,9 +60,15 @@ public class GamePreparationActivity extends AppCompatActivity implements
         finish();
     }
 
+    @Override
     public void onNewPlayer(String name) {
         players.add(name);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(PLAYERS_LIST_UPDATE_MESSAGE));
+    }
 
+    @Override
+    public void onGonePlayer(String name) {
+        players.remove(name);
         LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(PLAYERS_LIST_UPDATE_MESSAGE));
     }
 

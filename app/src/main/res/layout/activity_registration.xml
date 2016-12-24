@@ -28,9 +28,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
-            android:text="Nickname"
             android:ems="10"
-            android:id="@+id/registrationNickField" />
+            android:id="@+id/registrationNickField"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         <TextView
             android:text="Пароль:"
@@ -44,7 +44,8 @@
             android:layout_height="wrap_content"
             android:inputType="textPassword"
             android:ems="10"
-            android:id="@+id/registrationPasswordField1" />
+            android:id="@+id/registrationPasswordField1"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         <TextView
             android:text="Повторите пароль:"
@@ -58,14 +59,15 @@
             android:layout_height="wrap_content"
             android:inputType="textPassword"
             android:ems="10"
-            android:id="@+id/registrationPasswordField2" />
+            android:id="@+id/registrationPasswordField2"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         <Button
             android:text="Зарегистрироваться"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/registrationRegisterButton"
-            style="@android:style/Widget.Material.Light.Button"
+            style="@style/Widget.AppCompat.Button"
             android:onClick="onRegisterTouch" />
 
     </LinearLayout>

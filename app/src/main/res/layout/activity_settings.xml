@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/settingsChagePasswordButton"
-            style="@android:style/Widget.Material.Button.Borderless"
+            style="@style/Widget.AppCompat.Button.Borderless"
             android:onClick="onPasswordChangeClick" />
 
         <Button
@@ -31,7 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/settingsQuitButton"
-            style="@android:style/Widget.Material.Button.Borderless"
+            style="@style/Widget.AppCompat.Button.Borderless"
             android:elevation="0dp"
             android:onClick="onQuitClick" />
 

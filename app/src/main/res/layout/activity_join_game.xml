@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/joinGameText"
-            android:textAppearance="@android:style/TextAppearance.Material.Large" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
         <EditText
             android:layout_width="match_parent"
@@ -37,7 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/joinGameJoinButton"
-            style="@android:style/Widget.Material.Light.Button"
+            style="@style/Widget.AppCompat.Button"
             android:onClick="onJoinPressed" />
     </LinearLayout>
 </RelativeLayout>

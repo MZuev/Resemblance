@@ -26,12 +26,13 @@ public class Message {
     final public static int RATING_TYPE = 14;
     final public static int CREATE_FIEND_GAME_TYPE = 15;
     final public static int JOIN_FRIEND_GAME_TYPE = 16;
-    final public static int NEW_PLAYER_TYPE = 17;
+    final public static int FRIEND_GAME_PLAYER_TYPE = 17;
     final public static int REMOVE_PLAYER_TYPE = 18;
     final public static int CANCEL_FRIEND_GAME_TYPE = 19;
     final public static int START_FRIEND_GAME_TYPE = 20;
     final public static int GAME_FINISH_TYPE = 21;
     final public static int GAME_CANCELED_TYPE = 22;
+    final public static int QUIT_FIEND_GAME_TYPE = 23;
 
     private final String MESSAGE_LOG_TAG = "Message";
 
@@ -88,8 +89,8 @@ public class Message {
             case RATING_TYPE:
                 readRatingMessage(in);
                 break;
-            case NEW_PLAYER_TYPE:
-                readNewPlayerMessage(in);
+            case FRIEND_GAME_PLAYER_TYPE:
+                readFriendGamePlayerMessage(in);
                 break;
             case GAME_FINISH_TYPE:
                 readGameFinishMessage(in);
@@ -224,15 +225,21 @@ public class Message {
         }
     }
 
-    private void readNewPlayerMessage(DataInputStream stream) {
+    private void readFriendGamePlayerMessage(DataInputStream stream) {
         try {
+            boolean joined = stream.readBoolean();
             String playerName = stream.readUTF();
+            Log.d(MESSAGE_LOG_TAG, "FriendGamePlayerMessage received: " + joined);
             while (preparationListener == null) {
                 try {
                     Thread.sleep(5);
                 } catch (InterruptedException e) {}
             }
-            preparationListener.onNewPlayer(playerName);
+            if (joined) {
+                preparationListener.onNewPlayer(playerName);
+            } else {
+                preparationListener.onGonePlayer(playerName);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -451,6 +458,18 @@ public class Message {
         }
     }
 
+    public static void sendQuitFriendGameMessage() {
+        ByteArrayOutputStream byteOS = new ByteArrayOutputStream(150);
+        DataOutputStream out = new DataOutputStream(byteOS);
+        try {
+            out.writeInt(QUIT_FIEND_GAME_TYPE);
+            out.flush();
+            SendMessageModule.sendMessage(byteOS.toByteArray());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     protected static void setLoginListener(LoginMessageListener listener) {
         loginListener = listener;
     }
@@ -522,5 +541,7 @@ public class Message {
 
     protected interface FriendGamePreparationListener {
         void onNewPlayer(String name);
+
+        void onGonePlayer(String name);
     }
 }

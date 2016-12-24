@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/createChooseSetInvitation"
-            android:textAppearance="@android:style/TextAppearance.Material.Large" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
         <Spinner
             android:layout_width="match_parent"
@@ -34,7 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/createGameRoundsText"
-            android:textAppearance="@android:style/TextAppearance.Material.Large" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
         <SeekBar
             style="@style/Widget.AppCompat.SeekBar.Discrete"
@@ -50,6 +50,6 @@
             android:layout_height="wrap_content"
             android:id="@+id/createGameCreateButton"
             android:onClick="onCreateClick"
-            style="@android:style/Widget.Material.Button" />
+            style="@style/Widget.AppCompat.Button" />
     </LinearLayout>
 </RelativeLayout>

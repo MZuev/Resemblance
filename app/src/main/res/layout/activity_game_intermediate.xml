@@ -24,14 +24,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/intermediateRoundText"
-            android:textAppearance="@android:style/TextAppearance.Material.Title" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
         <TextView
             android:text="Счёт"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/intermediateScoreText"
-            android:textAppearance="@android:style/TextAppearance.Material.Title" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
         <ImageView
             android:layout_width="match_parent"
