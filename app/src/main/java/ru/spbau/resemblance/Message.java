@@ -30,6 +30,7 @@ public class Message {
     final public static int REMOVE_PLAYER_TYPE = 18;
     final public static int CANCEL_GAME_TYPE = 19;
     final public static int START_FRIEND_GAME_TYPE = 20;
+    final public static int GAME_FINISH_TYPE = 21;
 
     private final String MESSAGE_LOG_TAG = "Message";
 
@@ -88,6 +89,9 @@ public class Message {
                 break;
             case NEW_PLAYER_TYPE:
                 readNewPlayerMessage(in);
+                break;
+            case GAME_FINISH_TYPE:
+                readGameFinishMessage(in);
                 break;
         }
     }
@@ -230,6 +234,28 @@ public class Message {
         }
     }
 
+    private void readGameFinishMessage(DataInputStream stream) {
+        try {
+            long lastAnswer = stream.readLong();
+            int playersNumber = stream.readInt();
+            ArrayList<Integer> finalScores = new ArrayList<>();
+            for (int i = 0; i < playersNumber; i++) {
+                finalScores.add(stream.readInt());
+            }
+            ArrayList<Integer> oldRatings = new ArrayList<>();
+            for (int i = 0; i < playersNumber; i++) {
+                oldRatings.add(stream.readInt());
+            }
+            ArrayList<Integer> newRatings = new ArrayList<>();
+            for (int i = 0; i < playersNumber; i++) {
+                newRatings.add(stream.readInt());
+            }
+            gameListener.onGameFinish(lastAnswer, finalScores, oldRatings, newRatings);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     //----------------------------------------------------
 
 
@@ -331,8 +357,6 @@ public class Message {
     }
 
     public static void sendRegisterMessage(String nickname, String password) {
-        //Log.d("asd", "1");
-
         ByteArrayOutputStream byteOS = new ByteArrayOutputStream(150);
         DataOutputStream out = new DataOutputStream(byteOS);
         try {
@@ -447,6 +471,9 @@ public class Message {
         void onVoteRequest(String association, long[] candidates);
 
         void onRoundEnd(long leadersAssociation, int[] scores);
+
+        void onGameFinish(long lastAnswer, ArrayList<Integer> finalScores,
+                          ArrayList<Integer> oldRatings, ArrayList<Integer> newRatings);
     }
 
     protected interface GameExpectationMessageListener {

@@ -29,10 +29,8 @@ public class GameIntermediateActivity extends AppCompatActivity implements Messa
     private static final String ROUND_PREFIX = "Раунд: ";
     private static final String SCORE_PREFIX = "Счёт:";
     private static final String UPDATE_SCREEN_MESSAGE = "ru.spbau.resemblance.UPDATE_INFO";
-    private static final int TRANSPARENT = 0;
-    private static final int OPAQUE = 255;
 
-    private ArrayList<Long> cards = new ArrayList<>();
+    private final ArrayList<Long> cards = new ArrayList<>();
     private int roundsNumber = -1;
     private int currentRound = -1;
     private TextView roundText = null;
@@ -171,6 +169,20 @@ public class GameIntermediateActivity extends AppCompatActivity implements Messa
         Message.unSetGameListener();
 
         super.onDestroy();
+    }
+
+    @Override
+    public void onGameFinish(long lastAnswer, ArrayList<Integer> finalScores,
+                             ArrayList<Integer> oldRatings, ArrayList<Integer> newRatings) {
+        Intent showGameFinish = new Intent(this, GameFinishActivity.class);
+        showGameFinish.putExtra(GameFinishActivity.LAST_ANSWER_PARAM, lastAnswer);
+        showGameFinish.putIntegerArrayListExtra(GameFinishActivity.FINAL_SCORES_PARAM, finalScores);
+        showGameFinish.putIntegerArrayListExtra(GameFinishActivity.OLD_RATINGS_PARAM, oldRatings);
+        showGameFinish.putIntegerArrayListExtra(GameFinishActivity.NEW_RATINGS_PARAM, newRatings);
+        showGameFinish.putStringArrayListExtra(GameFinishActivity.PLAYERS_NAMES_PARAM, playersNames);
+        startActivity(showGameFinish);
+
+        finish();
     }
 
     public class UpdateScreenMessageReceiver extends BroadcastReceiver {

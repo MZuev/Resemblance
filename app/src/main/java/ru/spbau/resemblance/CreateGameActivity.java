@@ -45,6 +45,7 @@ public class CreateGameActivity extends AppCompatActivity implements SeekBar.OnS
         ArrayAdapter<String> pickerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, setNames);
         setPicker.setAdapter(pickerAdapter);
         setPicker.setOnItemSelectedListener(this);
+        setTitle("Новая игра");
     }
 
     @Override
