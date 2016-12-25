@@ -9,9 +9,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
 public class LeadingAssociationActivity extends AppCompatActivity {
     public final static String IMAGE_PARAM = "image";
 

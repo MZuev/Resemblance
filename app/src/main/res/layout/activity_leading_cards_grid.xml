@@ -19,7 +19,7 @@
         android:layout_alignParentBottom="true">
 
         <TextView
-            android:text="   Карта:"
+            android:text="   Ваша карта:"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/leadingGridInvitation"
