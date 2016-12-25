@@ -24,11 +24,12 @@ import java.util.Collections;
 import java.util.List;
 
 public class LeadingCardsGridActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
-    public static String ASSOCIATION_PARAM = "association";
-    public static String PICTURE_PARAM = "picture_id";
+    public static final String ASSOCIATION_PARAM = "association";
+    public static final String OUR_CARDS_PARAM = "our_cards";
+    public static final String PICTURE_PARAM = "picture_id";
 
     private ImageStorage.ImageWrapped[] cardViews;
-    private final int COLUMNS_NUMBER = 3;
+    private final static int COLUMNS_NUMBER = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +39,7 @@ public class LeadingCardsGridActivity extends AppCompatActivity implements Adapt
         GridView grid = (GridView) findViewById(R.id.leadingCardsGrid);
 
         List <Long> cardIds = new ArrayList<>();
-        long[] cardsArr = getIntent().getLongArrayExtra(GameIntermediateActivity.OUR_CARDS_PARAM);
+        long[] cardsArr = getIntent().getLongArrayExtra(OUR_CARDS_PARAM);
         for(long card: cardsArr) {
             cardIds.add(card);
         }

@@ -14,9 +14,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 public class GameIntermediateActivity extends AppCompatActivity implements Message.GameMessageListener {
-    public static final String OUR_CARDS_PARAM = "our_cards";
-    public static final String SUGGESTION_PARAM = "suggestion";
-    public static final String TITLE_PARAM = "title";
     public static final String ROUNDS_NUMBER_PARAM = "rounds_number";
     public static final String PLAYERS_NUMBER_PARAM = "players_number";
     public static final String PLAYERS_NAMES_PARAM = "players_names";
@@ -76,25 +73,25 @@ public class GameIntermediateActivity extends AppCompatActivity implements Messa
     @Override
     public void onLeadRequest() {
         Intent lead = new Intent(this, LeadingCardsGridActivity.class);
-        lead.putExtra(OUR_CARDS_PARAM, getCardsArr());
+        lead.putExtra(LeadingCardsGridActivity.OUR_CARDS_PARAM, getCardsArr());
         startActivityForResult(lead, LEADING_ASSOCIATION_REQUEST);
     }
 
     @Override
     public void onChoiceRequest(String association) {
         Intent choose = new Intent(this, CardPickerActivity.class);
-        choose.putExtra(SUGGESTION_PARAM, ASSOCIATION_SUGGESTION + association);
-        choose.putExtra(TITLE_PARAM, CHOICE_TITLE);
-        choose.putExtra(OUR_CARDS_PARAM, getCardsArr());
+        choose.putExtra(CardPickerActivity.SUGGESTION_PARAM, ASSOCIATION_SUGGESTION + association);
+        choose.putExtra(CardPickerActivity.TITLE_PARAM, CHOICE_TITLE);
+        choose.putExtra(CardPickerActivity.OUR_CARDS_PARAM, getCardsArr());
         startActivityForResult(choose, CHOICE_REQUEST);
     }
 
     @Override
     public void onVoteRequest(String association, long[] candidates) {
         Intent vote = new Intent(this, CardPickerActivity.class);
-        vote.putExtra(SUGGESTION_PARAM, ASSOCIATION_SUGGESTION+ association);
-        vote.putExtra(TITLE_PARAM, VOTE_TITLE);
-        vote.putExtra(OUR_CARDS_PARAM, candidates);
+        vote.putExtra(CardPickerActivity.SUGGESTION_PARAM, ASSOCIATION_SUGGESTION+ association);
+        vote.putExtra(CardPickerActivity.TITLE_PARAM, VOTE_TITLE);
+        vote.putExtra(CardPickerActivity.OUR_CARDS_PARAM, candidates);
         startActivityForResult(vote, VOTE_REQUEST);
     }
 

@@ -50,9 +50,10 @@ public class GameFinishActivity extends AppCompatActivity {
 
     private void showScores() {
         StringBuilder scoresText = new StringBuilder();
-        scoresText.append("Итоговый счёт:");
         for (int i = 0; i < playerNames.size(); i++) {
-            scoresText.append("\n");
+            if (i > 0) {
+                scoresText.append("\n");
+            }
             scoresText.append(playerNames.get(i));
             scoresText.append(": ");
             scoresText.append(finalScores.get(i));
@@ -62,9 +63,10 @@ public class GameFinishActivity extends AppCompatActivity {
 
     private void showRatings() {
         StringBuilder ratingsText = new StringBuilder();
-        ratingsText.append("Рейтинги:");
         for (int i = 0; i < playerNames.size(); i++) {
-            ratingsText.append("\n");
+            if (i > 0) {
+                ratingsText.append("\n");
+            }
             ratingsText.append(playerNames.get(i));
             ratingsText.append(": ");
             ratingsText.append(oldRatings.get(i));

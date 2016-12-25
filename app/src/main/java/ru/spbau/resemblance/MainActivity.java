@@ -11,7 +11,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
-
+//TODO: get rid of BroadcastReceivers
 public class MainActivity extends AppCompatActivity implements Message.LoginMessageListener,
         Message.RatingMessageListener {
     private static final String RATING_PREFIX = "Рейтинг: ";

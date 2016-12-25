@@ -24,6 +24,13 @@
             android:id="@+id/cardPickerText"
             android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
+        <TextView
+            android:text="TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/cardPickerTimeView"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
         <GridView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
