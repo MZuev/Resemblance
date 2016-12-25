@@ -22,9 +22,11 @@ public class ImageStorage {
     final private static String IMAGE_TABLE = "imageTable";
     final private static String SET_CARDS_TABLE = "setCardsTable";
     final private static String MAP_TABLE = "mapSetAndImage";
+    final private static String DATA_BASE_NAME = "imageDB1";
+    final private static int CURRENT_VERSION = 1;
     final private static long baseInHash = 257;
 
-    private static int CURRENT_VERSION = 2;
+
     private static byte[] imageBuffer = null;
 
     private ImageStorage() {
@@ -115,7 +117,7 @@ public class ImageStorage {
      private static class ImageDB extends SQLiteOpenHelper{
 
         private ImageDB(Context context) {
-            super(context, "imageDB", null, CURRENT_VERSION);
+            super(context, DATA_BASE_NAME, null, CURRENT_VERSION);
         }
 
         @Override
