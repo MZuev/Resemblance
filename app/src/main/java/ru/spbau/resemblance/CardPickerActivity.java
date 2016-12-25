@@ -11,7 +11,6 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -22,7 +21,7 @@ public class CardPickerActivity extends AppCompatActivity implements AdapterView
     public static final String SUGGESTION_PARAM = "suggestion";
     public static final String TITLE_PARAM = "title";
 
-    private final static int COLUMNS_NUMBER = 3;
+    private final static int COLUMNS_NUMBER = 2;
     private final static int CARD_REQUEST = 1;
     private final static int TIMEOUT = 60;
     private final static String TIME_PREF = "   Время: ";
@@ -68,7 +67,7 @@ public class CardPickerActivity extends AppCompatActivity implements AdapterView
         grid.setOnItemClickListener(this);
 
         timer = new Timer();
-        deadline = new Date().getTime() / SECOND + TIMEOUT;
+        deadline = System.currentTimeMillis() / SECOND + TIMEOUT;
         timer.scheduleAtFixedRate(new TimeUpdater(), 10, 200);
     }
 
@@ -102,7 +101,7 @@ public class CardPickerActivity extends AppCompatActivity implements AdapterView
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    long rest = deadline - new Date().getTime() / SECOND;
+                    long rest = deadline - System.currentTimeMillis() / SECOND;
                     //Log.d("FOO", "run: " + clock.getTime());
                     timeView.setText(TIME_PREF + rest / MINUTE + ":" + rest % MINUTE);
                 }

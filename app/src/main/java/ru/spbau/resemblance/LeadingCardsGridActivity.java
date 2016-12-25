@@ -29,7 +29,7 @@ public class LeadingCardsGridActivity extends AppCompatActivity implements Adapt
     public static final String PICTURE_PARAM = "picture_id";
 
     private ImageStorage.ImageWrapped[] cardViews;
-    private final int COLUMNS_NUMBER = 3;
+    private final static int COLUMNS_NUMBER = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
