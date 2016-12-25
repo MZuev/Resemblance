@@ -17,7 +17,6 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,8 +53,8 @@ public class LeadingCardsGridActivity extends AppCompatActivity implements Adapt
 
         grid.setAdapter(cardsAdapter);
         grid.setNumColumns(COLUMNS_NUMBER);
-        //grid.setVerticalSpacing(-200);
         grid.setOnItemClickListener(this);
+        setTitle("Вы водите");
     }
 
     @Override
@@ -63,15 +62,11 @@ public class LeadingCardsGridActivity extends AppCompatActivity implements Adapt
         Intent showPicture = new Intent(this, LeadingAssociationActivity.class);
         showPicture.putExtra(LeadingAssociationActivity.IMAGE_PARAM, id);
         startActivityForResult(showPicture, GameIntermediateActivity.LEADING_ASSOCIATION_REQUEST);
-        //finish();
-        //Toast.makeText(this, String.valueOf(id), Toast.LENGTH_LONG).show();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        //String association = data.getStringExtra(ASSOCIATION_PARAM);
         long pictureId = data.getLongExtra(PICTURE_PARAM, -1L);
-        //Toast.makeText(this, association + String.valueOf(pictureId), Toast.LENGTH_SHORT).show();
         if (pictureId >= 0) {
             setResult(RESULT_OK, data);
             finish();

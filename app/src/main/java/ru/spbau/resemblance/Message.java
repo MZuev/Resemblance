@@ -33,6 +33,8 @@ public class Message {
     final public static int GAME_FINISH_TYPE = 21;
     final public static int GAME_CANCELED_TYPE = 22;
     final public static int QUIT_FIEND_GAME_TYPE = 23;
+    final public static int PASSWORD_CHANGE_REQUEST_TYPE = 24;
+    final public static int PASSWORD_CHANGE_RESPONSE_TYPE = 25;
 
     private final String MESSAGE_LOG_TAG = "Message";
 
@@ -42,6 +44,7 @@ public class Message {
     private static volatile GameMessageListener gameListener = null;
     private static volatile GameExpectationMessageListener gameExpectationListener = null;
     private static volatile FriendGamePreparationListener preparationListener = null;
+    private static volatile PasswordChangeListener passwordChangeListener = null;
 
     private int type = 0;
 
@@ -97,6 +100,9 @@ public class Message {
                 break;
             case GAME_CANCELED_TYPE:
                 readGameCancelledMessage(in);
+                break;
+            case PASSWORD_CHANGE_RESPONSE_TYPE:
+                readPasswordChangeMessage(in);
                 break;
         }
     }
@@ -274,6 +280,15 @@ public class Message {
             } catch (InterruptedException e) {}
         }
         gameExpectationListener.onGameCancelled();
+    }
+
+    private void readPasswordChangeMessage(DataInputStream stream) {
+        try {
+            int code = stream.readInt();
+            passwordChangeListener.onPasswordChangeResponse(code);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     //----------------------------------------------------
@@ -470,6 +485,20 @@ public class Message {
         }
     }
 
+    public static void sendPasswordChangeMessage(String oldPassword, String newPassword) {
+        ByteArrayOutputStream byteOS = new ByteArrayOutputStream(150);
+        DataOutputStream out = new DataOutputStream(byteOS);
+        try {
+            out.writeInt(PASSWORD_CHANGE_REQUEST_TYPE);
+            out.writeUTF(oldPassword);
+            out.writeUTF(newPassword);
+            out.flush();
+            SendMessageModule.sendMessage(byteOS.toByteArray());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     protected static void setLoginListener(LoginMessageListener listener) {
         loginListener = listener;
     }
@@ -492,6 +521,10 @@ public class Message {
 
     protected static void setFriendGamePreparationListener(FriendGamePreparationListener listener) {
         preparationListener = listener;
+    }
+
+    protected static void setPasswordChangeListener(PasswordChangeListener listener) {
+        passwordChangeListener = listener;
     }
 
     protected static void unSetGameListener() {
@@ -543,5 +576,9 @@ public class Message {
         void onNewPlayer(String name);
 
         void onGonePlayer(String name);
+    }
+
+    protected interface PasswordChangeListener {
+        void onPasswordChangeResponse(int code);
     }
 }

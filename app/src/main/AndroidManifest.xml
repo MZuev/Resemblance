@@ -16,33 +16,34 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RandomGameActivity" />
-        <activity android:name=".CreateGameActivity" />
-        <activity android:name=".JoinGameActivity" />
-        <activity android:name=".LoginActivity" />
+        <activity android:name=".RandomGameActivity" android:screenOrientation="portrait" />
+        <activity android:name=".CreateGameActivity" android:screenOrientation="portrait" />
+        <activity android:name=".JoinGameActivity" android:screenOrientation="portrait" />
+        <activity android:name=".LoginActivity" android:screenOrientation="portrait" />
         <activity
             android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings" />
-        <activity android:name=".RegistrationActivity" />
-        <activity android:name=".PasswordChangeActivity" />
-        <activity android:name=".CreateSetCardsActivity" />
-        <activity android:name=".ListOfSetsActivity" />
-        <activity android:name=".ShowImageFromListActivity" />
-        <activity android:name=".GameIntermediateActivity" />
-        <activity android:name=".LeadingCardsGridActivity" />
-        <activity android:name=".LeadingAssociationActivity" />
-        <activity android:name=".CardPickerActivity" />
-        <activity android:name=".CardViewerActivity" />
-        <activity android:name=".GameExpectationActivity" />
-        <activity android:name=".GamePreparationActivity" />
-        <activity android:name=".GameFinishActivity" />
+            android:label="@string/title_activity_settings"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".RegistrationActivity" android:screenOrientation="portrait" />
+        <activity android:name=".PasswordChangeActivity" android:screenOrientation="portrait" />
+        <activity android:name=".CreateSetCardsActivity" android:screenOrientation="portrait" />
+        <activity android:name=".ListOfSetsActivity" android:screenOrientation="portrait" />
+        <activity android:name=".ShowImageFromListActivity" android:screenOrientation="portrait" />
+        <activity android:name=".GameIntermediateActivity" android:screenOrientation="portrait" />
+        <activity android:name=".LeadingCardsGridActivity" android:screenOrientation="portrait" />
+        <activity android:name=".LeadingAssociationActivity" android:screenOrientation="portrait" />
+        <activity android:name=".CardPickerActivity" android:screenOrientation="portrait" />
+        <activity android:name=".CardViewerActivity" android:screenOrientation="portrait" />
+        <activity android:name=".GameExpectationActivity" android:screenOrientation="portrait" />
+        <activity android:name=".GamePreparationActivity" android:screenOrientation="portrait" />
+        <activity android:name=".GameFinishActivity" android:screenOrientation="portrait" />
     </application>
 
 </manifest>

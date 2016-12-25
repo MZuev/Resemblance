@@ -10,13 +10,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
 public class GameIntermediateActivity extends AppCompatActivity implements Message.GameMessageListener {
     public static final String OUR_CARDS_PARAM = "our_cards";
     public static final String SUGGESTION_PARAM = "suggestion";
+    public static final String TITLE_PARAM = "title";
     public static final String ROUNDS_NUMBER_PARAM = "rounds_number";
     public static final String PLAYERS_NUMBER_PARAM = "players_number";
     public static final String PLAYERS_NAMES_PARAM = "players_names";
@@ -24,8 +24,9 @@ public class GameIntermediateActivity extends AppCompatActivity implements Messa
     public static final int CHOICE_REQUEST = 2;
     public static final int VOTE_REQUEST = 3;
 
-    private static final String CHOOSE_SUGGESTION = "Ваша карта. Ассоциация: ";
-    private static final String VOTE_SUGGESTION = "Голосование. Ассоциация: ";
+    private static final String ASSOCIATION_SUGGESTION = "   Ассоциация: ";
+    private static final String CHOICE_TITLE = "Ваша карта";
+    private static final String VOTE_TITLE = "Голосование";
     private static final String ROUND_PREFIX = "Раунд: ";
     private static final String SCORE_PREFIX = "Счёт:";
     private static final String UPDATE_SCREEN_MESSAGE = "ru.spbau.resemblance.UPDATE_INFO";
@@ -82,7 +83,8 @@ public class GameIntermediateActivity extends AppCompatActivity implements Messa
     @Override
     public void onChoiceRequest(String association) {
         Intent choose = new Intent(this, CardPickerActivity.class);
-        choose.putExtra(SUGGESTION_PARAM, CHOOSE_SUGGESTION + association);
+        choose.putExtra(SUGGESTION_PARAM, ASSOCIATION_SUGGESTION + association);
+        choose.putExtra(TITLE_PARAM, CHOICE_TITLE);
         choose.putExtra(OUR_CARDS_PARAM, getCardsArr());
         startActivityForResult(choose, CHOICE_REQUEST);
     }
@@ -90,7 +92,8 @@ public class GameIntermediateActivity extends AppCompatActivity implements Messa
     @Override
     public void onVoteRequest(String association, long[] candidates) {
         Intent vote = new Intent(this, CardPickerActivity.class);
-        vote.putExtra(SUGGESTION_PARAM, VOTE_SUGGESTION + association);
+        vote.putExtra(SUGGESTION_PARAM, ASSOCIATION_SUGGESTION+ association);
+        vote.putExtra(TITLE_PARAM, VOTE_TITLE);
         vote.putExtra(OUR_CARDS_PARAM, candidates);
         startActivityForResult(vote, VOTE_REQUEST);
     }
@@ -149,7 +152,6 @@ public class GameIntermediateActivity extends AppCompatActivity implements Messa
     }
 
     private void updateScreen() {
-        Toast.makeText(this, "foo", Toast.LENGTH_SHORT).show();
         roundText.setText(ROUND_PREFIX + currentRound + "/" + roundsNumber);
         String scoresText = SCORE_PREFIX;
         for (int i = 0; i < playersNumber; i++) {

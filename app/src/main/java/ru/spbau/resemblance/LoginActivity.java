@@ -19,12 +19,18 @@ public class LoginActivity extends AppCompatActivity implements Message.LoginMes
     public static final int SUCCESSFUL_LOGIN = 0;
     public static final int NICKNAME_ERROR = 1;
     public static final int PASSWORD_ERROR = 2;
+    private static final String PASSWORD_ERROR_TEXT = "Неправильный пароль.";
+    private static final String NICKNAME_ERROR_TEXT = "Неправильный логин.";
+    private static final String NETWORK_ERROR_TEXT = "Ошибка сети.";
+
+    private final String LOGIN_RESPONSE_MESSAGE = "ru.spbau.resemblance.LOGIN_RESPONSE";
 
     private EditText nicknameField = null;
     private EditText passwordField = null;
     private String passwordHash = null;
     private String nickname = null;
     private String password = null;
+    private MessageToastMaker toastMaker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +39,8 @@ public class LoginActivity extends AppCompatActivity implements Message.LoginMes
 
         nicknameField = (EditText)findViewById(R.id.loginNicknameField);
         passwordField = (EditText)findViewById(R.id.loginPasswordField);
+
+        toastMaker = new MessageToastMaker(this, LOGIN_RESPONSE_MESSAGE);
     }
 
     @Override
@@ -74,19 +82,29 @@ public class LoginActivity extends AppCompatActivity implements Message.LoginMes
                 editor.commit();
 
                 finish();
+                break;
             }
             case PASSWORD_ERROR: {
-                Toast.makeText(this, "Неправильный пароль.", Toast.LENGTH_SHORT).show();
+                toastMaker.showToast(PASSWORD_ERROR_TEXT);
                 break;
             }
             case NICKNAME_ERROR: {
-                Toast.makeText(this, "Неправильный логин.", Toast.LENGTH_SHORT).show();
+                toastMaker.showToast(NICKNAME_ERROR_TEXT);
                 break;
             }
             case NETWORK_ERROR: {
-                Toast.makeText(this, "Ошибка сети.", Toast.LENGTH_SHORT).show();
+                toastMaker.showToast(NETWORK_ERROR_TEXT);
                 break;
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {}
+
+    @Override
+    protected void onDestroy() {
+        toastMaker.close();
+        super.onDestroy();
     }
 }

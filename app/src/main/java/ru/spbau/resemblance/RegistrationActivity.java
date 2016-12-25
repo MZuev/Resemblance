@@ -1,6 +1,5 @@
 package ru.spbau.resemblance;
 
-import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,15 +16,19 @@ public class RegistrationActivity extends AppCompatActivity implements Message.R
     private final int SUCCESS = 0;
     private final int NICKNAME_ERROR = 1;
     private static final String PASSWORDS_DIFFER = "Первый и второй пароль не совпадают.";
+    private static final String NICKNAME_IN_USE_ERROR = "Имя пользователя занято.";
+    private static final String UNKNOWN_ERROR = "Ошибка";
     private static final String SUCCESSFUL_REGISTRATION = "Регистрация успешно завершена.";
-    private static final String NICKNAME_IN_USE = "Имя пользователя занято.";
+    private static final String REGISTRATION_RESPONSE_MESSAGE =
+            "ru.spbau.resemblance.REGISTRATION_RESPONSE";
 
     private EditText nicknameField = null;
     private EditText passwordField1 = null;
     private EditText passwordField2 = null;
-    String nickname = null;
-    String password = null;
-    String passwordHash = null;
+    private String nickname = null;
+    private String password = null;
+    private String passwordHash = null;
+    private MessageToastMaker toastMaker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +38,8 @@ public class RegistrationActivity extends AppCompatActivity implements Message.R
         nicknameField = (EditText)findViewById(R.id.registrationNickField);
         passwordField1 = (EditText)findViewById(R.id.registrationPasswordField1);
         passwordField2 = (EditText)findViewById(R.id.registrationPasswordField2);
+
+        toastMaker = new MessageToastMaker(this, REGISTRATION_RESPONSE_MESSAGE);
     }
 
     @Override
@@ -66,24 +71,25 @@ public class RegistrationActivity extends AppCompatActivity implements Message.R
     public void onRegisterResponse(int code) {
         switch (code) {
             case SUCCESS: {
-                SharedPreferences preferences = getSharedPreferences(SettingsActivity.PREFERENCES, MODE_PRIVATE);
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putString(SettingsActivity.NICKNAME_PREF, nickname);
-                editor.putString(SettingsActivity.PASSWORD_PREF, passwordHash);
-                editor.commit();
-
-                //TODO: Return toast
-                //Toast.makeText(this, SUCCESSFUL_REGISTRATION, Toast.LENGTH_SHORT).show();
-
                 finish();
+                toastMaker.showToast(SUCCESSFUL_REGISTRATION);
+                break;
             }
             case NICKNAME_ERROR: {
-                Toast.makeText(this, NICKNAME_IN_USE, Toast.LENGTH_SHORT).show();
+                toastMaker.showToast(NICKNAME_IN_USE_ERROR);
+                break;
             }
             case NETWORK_ERROR: {
-                Toast.makeText(this, "Ошибка сети.", Toast.LENGTH_SHORT).show();
+                toastMaker.showToast(UNKNOWN_ERROR);
                 break;
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        toastMaker.close();
+
+        super.onDestroy();
     }
 }

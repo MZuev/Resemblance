@@ -28,7 +28,6 @@ public class GamePreparationActivity extends AppCompatActivity implements
     private static final String PLAYERS_LIST_UPDATE_MESSAGE =
             "ru.spbau.resemblance.FRIEND_GAME_PLAYERS_LIST_UPDATE";
 
-    //TODO: player removal
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

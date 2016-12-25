@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
@@ -55,8 +56,6 @@ public class MainActivity extends AppCompatActivity implements Message.LoginMess
         receiver = new RatingUpdateMessageReceiver();
         IntentFilter filter = new IntentFilter(RATING_UPDATE_MESSAGE);
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
-
-        //findViewById(R.id.mainScrollView).setNestedScrollingEnabled(false);
     }
 
     public void onRandomGameClick(View v) {
