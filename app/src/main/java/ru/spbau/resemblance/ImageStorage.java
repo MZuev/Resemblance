@@ -23,9 +23,12 @@ public class ImageStorage {
     final private static String SET_CARDS_TABLE = "setCardsTable";
     final private static String MAP_TABLE = "mapSetAndImage";
     final private static long baseInHash = 257;
+
+    private static int CURRENT_VERSION = 2;
     private static byte[] imageBuffer = null;
 
-    private ImageStorage(){}
+    private ImageStorage() {
+    }
 
     private static ImageDB imageDB = null;
 
@@ -36,21 +39,32 @@ public class ImageStorage {
         if (imageBuffer == null) {
             imageBuffer = new byte[context.getResources().getInteger(R.integer.max_image_size)];
         }
+
+        addTestSet(context, "testSet1", "a", 8);
+        addTestSet(context, "testSet2", "b", 37);
+
+        printToLogAll(IMAGE_TABLE);
+        printToLogAll(SET_CARDS_TABLE);
+        printToLogAll(MAP_TABLE);
+    }
+
+    private static void addTestSet(Context context, String nameSet, String prefCardName, int sizeSet) {
         SetCardsWrapped setCards = new SetCardsWrapped();
-       // Log.d(LOG_TAG, String.valueOf(imageDB.getWritableDatabase().delete(IMAGE_TABLE, null, null)));
-        //Log.d(LOG_TAG, String.valueOf(imageDB.getWritableDatabase().delete(SET_CARDS_TABLE, null, null)));
-        //Log.d(LOG_TAG, String.valueOf(imageDB.getWritableDatabase().delete(MAP_TABLE, null, null)));
-        setCards.setNameSetCards("testSet");
+        setCards.setNameSetCards(nameSet);
         setCards.addSetCards();
-        for (int i = 1; i < 9; i++) {
-            int curId = context.getResources().getIdentifier("a" + i,"drawable", context.getPackageName());
+        for (int i = 1; i <= sizeSet; i++) {
+            int curId = context.getResources().getIdentifier(prefCardName + i, "drawable", context.getPackageName());
             Resources resources = context.getResources();
             ImageWrapped curImage = addImageByUri(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + resources.getResourcePackageName(curId) + '/' + resources.getResourceTypeName(curId) + '/' + resources.getResourceEntryName(curId), context);
             setCards.addCardToSet(curImage);
         }
-        printToLogAll(IMAGE_TABLE);
-        printToLogAll(SET_CARDS_TABLE);
-        printToLogAll(MAP_TABLE);
+    }
+
+    private static void clearImageDB() {
+        imageDB.getWritableDatabase().delete(IMAGE_TABLE, null, null);
+        imageDB.getWritableDatabase().delete(SET_CARDS_TABLE, null, null);
+        imageDB.getWritableDatabase().delete(MAP_TABLE, null, null);
+        imageDB.close();
     }
 
     private static void printToLogCur(Cursor c) {
@@ -72,7 +86,7 @@ public class ImageStorage {
     private static void printToLogAll(String nameTable) {
         imageDB.close();
         Log.d(LOG_TAG, " -- Print table " + nameTable + " -- ");
-        Cursor c = imageDB.getReadableDatabase().query(nameTable, null, null, null, null, null, null);
+        Cursor c = imageDB.getWritableDatabase().query(nameTable, null, null, null, null, null, null);
         printToLogAll(c);
         Log.d(LOG_TAG, " -- End to print table " + nameTable + " -- ");
         imageDB.close();
@@ -101,7 +115,7 @@ public class ImageStorage {
      private static class ImageDB extends SQLiteOpenHelper{
 
         private ImageDB(Context context) {
-            super(context, "imageDB", null, 1);
+            super(context, "imageDB", null, CURRENT_VERSION);
         }
 
         @Override
@@ -136,7 +150,7 @@ public class ImageStorage {
     }
 
     private static boolean checkExistenceByHash(long hashObject, String nameTable) {
-        Cursor c = imageDB.getReadableDatabase().query(nameTable, null, "hash = " + hashObject, null, null, null,null);
+        Cursor c = imageDB.getWritableDatabase().query(nameTable, null, "hash = " + hashObject, null, null, null,null);
         boolean ans = c.moveToFirst();
         c.close();
         return ans;
@@ -152,7 +166,7 @@ public class ImageStorage {
         if (nameAndValueField == null) {
             return false;
         }
-        Cursor c = imageDB.getReadableDatabase().query(nameTable, null, nameAndValueField, null, null, null,null);
+        Cursor c = imageDB.getWritableDatabase().query(nameTable, null, nameAndValueField, null, null, null,null);
         boolean ans = c.moveToFirst();
         c.close();
         return ans;
@@ -160,17 +174,17 @@ public class ImageStorage {
 
     private static Cursor getImageInfo(ImageWrapped curImage) {
      //   Log.d(LOG_TAG, " -- Get image info -- ");
-        Cursor c = imageDB.getReadableDatabase().query(IMAGE_TABLE, null, "hash = " + curImage.hashImage, null, null, null, null);
+        Cursor c = imageDB.getWritableDatabase().query(IMAGE_TABLE, null, "hash = " + curImage.hashImage, null, null, null, null);
         if (c.moveToFirst()) {
             return c;
         }
         if (curImage.uriImage != null) {
-            c = imageDB.getReadableDatabase().query(IMAGE_TABLE, null, "uri = '" + curImage.uriImage + "'", null, null, null, null);
+            c = imageDB.getWritableDatabase().query(IMAGE_TABLE, null, "uri = '" + curImage.uriImage + "'", null, null, null, null);
             if (c.moveToFirst()) {
                 return c;
             }
         }
-        c = imageDB.getReadableDatabase().query(IMAGE_TABLE, null, "id = " + curImage.idImage, null, null, null, null);
+        c = imageDB.getWritableDatabase().query(IMAGE_TABLE, null, "id = " + curImage.idImage, null, null, null, null);
         if (c.moveToFirst()) {
             return c;
         }
@@ -181,16 +195,16 @@ public class ImageStorage {
        // Log.d(LOG_TAG, " -- Get set cards info -- ");
         Cursor c = null;
         if (curSetCard.nameSetCards != null) {
-            c = imageDB.getReadableDatabase().query(SET_CARDS_TABLE, null, "name = '" + curSetCard.nameSetCards + "'", null, null, null, null);
+            c = imageDB.getWritableDatabase().query(SET_CARDS_TABLE, null, "name = '" + curSetCard.nameSetCards + "'", null, null, null, null);
             if (c.moveToFirst()) {
                 return c;
             }
         }
-        c = imageDB.getReadableDatabase().query(SET_CARDS_TABLE, null, "id = " + curSetCard.idSetCards, null, null, null, null);
+        c = imageDB.getWritableDatabase().query(SET_CARDS_TABLE, null, "id = " + curSetCard.idSetCards, null, null, null, null);
         if (c.moveToFirst()) {
             return c;
         }
-        c = imageDB.getReadableDatabase().query(SET_CARDS_TABLE, null, "hash = " + curSetCard.hashSetCards, null, null, null, null);
+        c = imageDB.getWritableDatabase().query(SET_CARDS_TABLE, null, "hash = " + curSetCard.hashSetCards, null, null, null, null);
         if (c.moveToFirst()) {
             return c;
         }
@@ -198,15 +212,15 @@ public class ImageStorage {
     }
 
     private static Cursor getIdCardsByIdSet(long idSetCards) {
-        return imageDB.getReadableDatabase().query(MAP_TABLE, null, "idSet = " + idSetCards, null, null, null, null);
+        return imageDB.getWritableDatabase().query(MAP_TABLE, null, "idSet = " + idSetCards, null, null, null, null);
     }
 
     private static Cursor getIdCardsByIdImage(long idImage) {
-        return imageDB.getReadableDatabase().query(MAP_TABLE, null, "idImage = " + idImage, null, null, null, null);
+        return imageDB.getWritableDatabase().query(MAP_TABLE, null, "idImage = " + idImage, null, null, null, null);
     }
 
     private static long getHashImageById(long idImage) {
-        Cursor c = imageDB.getReadableDatabase().query(IMAGE_TABLE, null, "id = " + idImage, null, null, null, null);
+        Cursor c = imageDB.getWritableDatabase().query(IMAGE_TABLE, null, "id = " + idImage, null, null, null, null);
         c.moveToFirst();
         long hashImage = c.getLong(c.getColumnIndex("hash"));
         c.close();
@@ -339,6 +353,7 @@ public class ImageStorage {
         }
 
         private SetCardsWrapped(Cursor c) {
+            Log.d(LOG_TAG, "q");
             hashSetCards = c.getLong(c.getColumnIndex("hash"));
             idSetCards = c.getLong(c.getColumnIndex("id"));
             nameSetCards = c.getString(c.getColumnIndex("name"));
@@ -533,7 +548,7 @@ public class ImageStorage {
             Cursor c = getIdCardsByIdSet(idSetCards);
             if (c.moveToFirst()) {
                 do {
-                    Cursor curC = imageDB.getReadableDatabase().query(IMAGE_TABLE, null, "id = " + c.getLong(c.getColumnIndex("idImage")), null, null, null, null);
+                    Cursor curC = imageDB.getWritableDatabase().query(IMAGE_TABLE, null, "id = " + c.getLong(c.getColumnIndex("idImage")), null, null, null, null);
                     if (curC.moveToFirst()) {
                         ansList.add(new ImageWrapped(curC));
                         curC.close();
@@ -553,13 +568,12 @@ public class ImageStorage {
     }
     public static ArrayList<SetCardsWrapped> getAllSetsCards() {
         ArrayList<SetCardsWrapped> ansList = new ArrayList<SetCardsWrapped>();
-        Cursor c = imageDB.getReadableDatabase().query(SET_CARDS_TABLE, null, null, null, null, null, null);
+        Cursor c = imageDB.getWritableDatabase().query(SET_CARDS_TABLE, null, null, null, null, null, null);
         if (c.moveToFirst()) {
             do {
                 SetCardsWrapped curSet = new SetCardsWrapped(c);
                 curSet.updateCardsSet();
                 ansList.add(curSet);
-                break;
             } while (c.moveToNext());
             c.close();
         }
@@ -568,7 +582,7 @@ public class ImageStorage {
     }
     public static ArrayList<ImageWrapped> getAllImages() {
         ArrayList<ImageWrapped> ansList = new ArrayList<>();
-        Cursor c = imageDB.getReadableDatabase().query(IMAGE_TABLE, null, null, null, null, null, null);
+        Cursor c = imageDB.getWritableDatabase().query(IMAGE_TABLE, null, null, null, null, null, null);
         if (c.moveToFirst()) {
             do {
                 ImageWrapped curImage = new ImageWrapped(c);
