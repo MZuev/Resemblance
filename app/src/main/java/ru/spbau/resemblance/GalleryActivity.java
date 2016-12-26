@@ -7,11 +7,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ListAdapter;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
 
 public class GalleryActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
     public static final String CARDS_PARAM = "our_cards";
@@ -50,7 +48,7 @@ public class GalleryActivity extends AppCompatActivity implements AdapterView.On
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent showPicture = new Intent(this, GalleryCardCiewerActivity.class);
+        Intent showPicture = new Intent(this, GalleryCardViewerActivity.class);
         showPicture.putExtra(LeadingAssociationActivity.IMAGE_PARAM, id);
         startActivity(showPicture);
     }
