@@ -35,6 +35,7 @@ public class CreateSetCardsActivity extends AppCompatActivity {
     }
 
     public void onListOfCardsClick(View v) {
+        /*
         Intent showCards = new Intent(this, ShowImageFromListActivity.class);
         ArrayList<ImageStorage.ImageWrapped> listImages = ImageStorage.getAllImages();
         ArrayList<Integer> idImagesList = new ArrayList<Integer>();
@@ -42,6 +43,15 @@ public class CreateSetCardsActivity extends AppCompatActivity {
             idImagesList.add(curImage.getIdImage());
         }
         showCards.putExtra("listImage", idImagesList);
+        startActivity(showCards);
+        */
+        Intent showCards = new Intent(this, GalleryActivity.class);
+        ArrayList<ImageStorage.ImageWrapped> cards = ImageStorage.getAllImages();
+        long[] cardIds = new long[cards.size()];
+        for (int i = 0; i < cardIds.length; i++) {
+            cardIds[i] = cards.get(i).getIdImage();
+        }
+        showCards.putExtra(GalleryActivity.CARDS_PARAM, cardIds);
         startActivity(showCards);
     }
 

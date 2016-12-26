@@ -33,6 +33,7 @@ public class ListOfSetsActivity extends AppCompatActivity{
             newSetTxtView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    /*
                     Intent showCards = new Intent(curActivity, ShowImageFromListActivity.class);
                     ArrayList<ImageStorage.ImageWrapped> listImages = curSet.getListOfCards();
                     ArrayList<Integer> idImagesList = new ArrayList<Integer>();
@@ -40,6 +41,15 @@ public class ListOfSetsActivity extends AppCompatActivity{
                         idImagesList.add(curImage.getIdImage());
                     }
                     showCards.putExtra("listImage", idImagesList);
+                    startActivity(showCards);
+                    */
+                    Intent showCards = new Intent(ListOfSetsActivity.this, GalleryActivity.class);
+                    ArrayList<ImageStorage.ImageWrapped> cards = curSet.getListOfCards();
+                    long[] cardIds = new long[cards.size()];
+                    for (int i = 0; i < cardIds.length; i++) {
+                        cardIds[i] = cards.get(i).getIdImage();
+                    }
+                    showCards.putExtra(GalleryActivity.CARDS_PARAM, cardIds);
                     startActivity(showCards);
                 }
             });
