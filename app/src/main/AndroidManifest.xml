@@ -26,9 +26,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".RandomGameActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".CreateGameActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -48,13 +45,10 @@
             android:name=".PasswordChangeActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".CreateSetCardsActivity"
+            android:name=".CardSetsActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ListOfSetsActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ShowImageFromListActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".GameIntermediateActivity"

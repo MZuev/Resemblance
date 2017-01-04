@@ -19,7 +19,7 @@
         android:layout_marginTop="16dp">
 
         <Button
-            android:text="Изменить пароль"
+            android:text="@string/settings_change_password_button_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/settingsChagePasswordButton"
@@ -27,12 +27,11 @@
             android:onClick="onPasswordChangeClick" />
 
         <Button
-            android:text="Выйти"
+            android:text="@string/settings_logout_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/settingsQuitButton"
             style="@style/Widget.AppCompat.Button.Borderless"
-            android:elevation="0dp"
             android:onClick="onQuitClick" />
 
     </LinearLayout>

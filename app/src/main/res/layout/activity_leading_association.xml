@@ -19,7 +19,7 @@
         android:layout_centerHorizontal="true">
 
         <TextView
-            android:text="Ваша ассоциация:"
+            android:text="@string/leading_association_text_invitation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/leadingAssociationInvitation"
@@ -33,7 +33,7 @@
             android:id="@+id/leadingAssociationField" />
 
         <Button
-            android:text="Готово"
+            android:text="@string/ready"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/leadingAssociationButton"

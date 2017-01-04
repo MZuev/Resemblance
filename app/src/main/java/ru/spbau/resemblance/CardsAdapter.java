@@ -8,9 +8,9 @@ import android.widget.GridView;
 import android.widget.ImageView;
 
 public class CardsAdapter extends BaseAdapter {
-    private Context context = null;
-    private ImageStorage.ImageWrapped[] cards = null;
-    private int cardSide;
+    private final Context context;
+    private final ImageStorage.ImageWrapped[] cards;
+    private final int cardSide;
 
     public CardsAdapter(Context context, ImageStorage.ImageWrapped[] cards, int cardSide) {
         this.context = context;

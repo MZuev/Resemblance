@@ -18,7 +18,7 @@
         android:layout_centerHorizontal="true">
 
         <TextView
-            android:text="Введите имя создателя игры: "
+            android:text="@string/join_game_creator_name_invitation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/joinGameText"
@@ -33,7 +33,7 @@
             style="@android:style/Widget.Holo.Light.EditText" />
 
         <Button
-            android:text="Присоединиться"
+            android:text="@string/join"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/joinGameJoinButton"

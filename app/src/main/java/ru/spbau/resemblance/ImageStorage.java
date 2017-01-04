@@ -24,7 +24,7 @@ public class ImageStorage {
     final private static String MAP_TABLE = "mapSetAndImage";
     final private static String DATA_BASE_NAME = "imageDB1";
     final private static int CURRENT_VERSION = 1;
-    final private static long baseInHash = 257;
+    final private static long BASE_IN_HASH = 257;
 
 
     private static byte[] imageBuffer = null;
@@ -102,7 +102,7 @@ public class ImageStorage {
             int len = stream.read(imageBuffer);
             hashImage = uriImage.hashCode();
             for (int i = 0; i < len; i++) {
-                hashImage *= baseInHash;
+                hashImage *= BASE_IN_HASH;
                 hashImage += imageBuffer[i];
             }
             //TODO

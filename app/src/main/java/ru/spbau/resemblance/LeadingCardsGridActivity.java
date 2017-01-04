@@ -1,26 +1,14 @@
 package ru.spbau.resemblance;
 
-import android.content.Context;
 import android.content.Intent;
-import android.provider.ContactsContract;
-import android.support.annotation.IntegerRes;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.ListAdapter;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class LeadingCardsGridActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
@@ -28,7 +16,6 @@ public class LeadingCardsGridActivity extends AppCompatActivity implements Adapt
     public static final String OUR_CARDS_PARAM = "our_cards";
     public static final String PICTURE_PARAM = "picture_id";
 
-    private ImageStorage.ImageWrapped[] cardViews;
     private final static int COLUMNS_NUMBER = 2;
 
     @Override
@@ -44,9 +31,9 @@ public class LeadingCardsGridActivity extends AppCompatActivity implements Adapt
             cardIds.add(card);
         }
 
-        cardViews = new ImageStorage.ImageWrapped[cardIds.size()];
+        ImageStorage.ImageWrapped[] cardViews = new ImageStorage.ImageWrapped[cardIds.size()];
         for (int i = 0; i < cardIds.size(); i++) {
-            cardViews[i] = ImageStorage.ImageWrapped.createById((int)(long)cardIds.get(i));
+            cardViews[i] = ImageStorage.ImageWrapped.createById(cardIds.get(i).intValue());
         }
 
         ListAdapter cardsAdapter = new CardsAdapter(this, cardViews,
@@ -55,7 +42,7 @@ public class LeadingCardsGridActivity extends AppCompatActivity implements Adapt
         grid.setAdapter(cardsAdapter);
         grid.setNumColumns(COLUMNS_NUMBER);
         grid.setOnItemClickListener(this);
-        setTitle("Вы водите");
+        setTitle(R.string.leading_grid_title);
     }
 
     @Override
@@ -75,5 +62,7 @@ public class LeadingCardsGridActivity extends AppCompatActivity implements Adapt
     }
 
     @Override
-    public void onBackPressed() {}
+    public void onBackPressed() {
+        //Doing nothing. Player should submit an association.
+    }
 }

@@ -2,14 +2,10 @@ package ru.spbau.resemblance;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -21,12 +17,8 @@ import java.util.ArrayList;
 
 public class GamePreparationActivity extends AppCompatActivity implements
         Message.FriendGamePreparationListener, AdapterView.OnItemClickListener {
-    private ListView playersListView;
     private ArrayAdapter<String> playersAdapter;
     private ArrayList<String> players;
-    private BroadcastReceiver receiver;
-    private static final String PLAYERS_LIST_UPDATE_MESSAGE =
-            "ru.spbau.resemblance.FRIEND_GAME_PLAYERS_LIST_UPDATE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,15 +27,12 @@ public class GamePreparationActivity extends AppCompatActivity implements
 
         Message.setFriendGamePreparationListener(this);
 
-        players = new ArrayList<String>();
-        playersListView = (ListView)findViewById(R.id.preparationListOfPlayers);
-        playersAdapter = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, players);
+        players = new ArrayList<>();
+        ListView playersListView = (ListView) findViewById(R.id.preparationListOfPlayers);
+        playersAdapter = new ArrayAdapter<>(this,
+                R.layout.support_simple_spinner_dropdown_item, players);
         playersListView.setAdapter(playersAdapter);
         playersListView.setOnItemClickListener(this);
-
-        receiver = new PlayersListUpdateMessageReceiver();
-        IntentFilter filter = new IntentFilter(PLAYERS_LIST_UPDATE_MESSAGE);
-        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
     }
 
     public void onStartClick(View v) {
@@ -59,31 +48,32 @@ public class GamePreparationActivity extends AppCompatActivity implements
         finish();
     }
 
+    private void updateList() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                playersAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
     @Override
     public void onNewPlayer(String name) {
         players.add(name);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(PLAYERS_LIST_UPDATE_MESSAGE));
+        updateList();
     }
 
     @Override
     public void onGonePlayer(String name) {
         players.remove(name);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(PLAYERS_LIST_UPDATE_MESSAGE));
+        updateList();
     }
 
     @Override
     public void onPause() {
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
         Message.unSetFriendGamePreparationListener();
 
         super.onPause();
-    }
-
-    public class PlayersListUpdateMessageReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            playersAdapter.notifyDataSetChanged();
-        }
     }
 
     @Override
@@ -100,7 +90,7 @@ public class GamePreparationActivity extends AppCompatActivity implements
     private void removePlayer(int playerIndex) {
         Message.sendRemovePlayerMessage(players.get(playerIndex));
         players.remove(playerIndex);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(PLAYERS_LIST_UPDATE_MESSAGE));
+        updateList();
     }
 
     public static class DeletePlayerDialog extends DialogFragment {
@@ -111,14 +101,14 @@ public class GamePreparationActivity extends AppCompatActivity implements
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setMessage("Удалить игрока?")
-                    .setPositiveButton("Да", new DialogInterface.OnClickListener() {
+            builder.setMessage(R.string.delete_player)
+                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             activity.removePlayer(playerIndex);
                         }
                     })
-                    .setNegativeButton("Нет", new DialogInterface.OnClickListener() {
+                    .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
 

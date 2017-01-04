@@ -14,21 +14,11 @@ import java.security.NoSuchAlgorithmException;
 
 public class PasswordChangeActivity extends AppCompatActivity implements
         Message.PasswordChangeListener {
-    private final String WRONG_PASSWORD = "Старый пароль введён неверно.";
-    private static final String PASSWORDS_DIFFER = "Первый и второй пароль не совпадают.";
-    private static final String WAITING_TEXT = "Ожидание ответа.";
-    private static final String PASSWORD_CHANGE_RESPONSE_MESSAGE =
-            "ru.spbau.resemblance.REGISTRATION_RESPONSE";
-    private final int PASSWORD_CHANGE_SUCCESS = 1;
-    private final int PASSWORD_CHANGE_FAILURE = 2;
-
     private EditText oldPasswordField = null;
     private EditText newPasswordField1 = null;
     private EditText newPasswordField2 = null;
-    private String oldPasswordHash = null;
     private String newPasswordHash = null;
     private volatile boolean waiting = false;
-    private MessageToastMaker toastMaker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,57 +29,61 @@ public class PasswordChangeActivity extends AppCompatActivity implements
         newPasswordField1 = (EditText)findViewById(R.id.changePasswordNewField2);
         newPasswordField2 = (EditText)findViewById(R.id.changePasswordNewField1);
 
-        toastMaker = new MessageToastMaker(this, PASSWORD_CHANGE_RESPONSE_MESSAGE);
         Message.setPasswordChangeListener(this);
     }
 
     public void onChangePasswordClick(View v) {
         if (!newPasswordField1.getText().toString().equals(newPasswordField2.getText().toString())) {
-            Toast.makeText(this, PASSWORDS_DIFFER, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.passwords_differ, Toast.LENGTH_LONG).show();
         } else {
             try {
                 MessageDigest messageDigest = MessageDigest.getInstance("MD5");
                 byte[] oldHash = messageDigest.digest(oldPasswordField.getText().toString().getBytes());
-                oldPasswordHash = new BigInteger(1, oldHash).toString();
+                String oldPasswordHash = new BigInteger(1, oldHash).toString();
                 byte[] newHash = messageDigest.digest(newPasswordField1.getText().toString().getBytes());
                 newPasswordHash = new BigInteger(1, newHash).toString();
+
+                if (!waiting) {
+                    Message.sendPasswordChangeMessage(oldPasswordHash, newPasswordHash);
+                    waiting = true;
+                } else {
+                    Toast.makeText(this, R.string.password_change_waiting, Toast.LENGTH_SHORT).show();
+                }
             } catch (NoSuchAlgorithmException e) {
                 Log.d("MD5", "MD5 Algorithm not found.");
-            }
-
-            if (!waiting) {
-                Message.sendPasswordChangeMessage(oldPasswordHash, newPasswordHash);
-                waiting = true;
-            } else {
-                Toast.makeText(this, WAITING_TEXT, Toast.LENGTH_SHORT).show();
             }
         }
     }
 
     @Override
     public void onPasswordChangeResponse(int code) {
-        if (code == PASSWORD_CHANGE_SUCCESS) {
-            SharedPreferences prefs = getSharedPreferences(SettingsActivity.PREFERENCES, MODE_PRIVATE);
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putString(SettingsActivity.PASSWORD_PREF, newPasswordHash);
-            editor.commit();
-            finish();
-        } else {
-            toastMaker.showToast(WRONG_PASSWORD);
+        final int PASSWORD_CHANGE_SUCCESS = 1;
+        final int WRONG_PASSWORD = 2;
+        switch (code) {
+            case PASSWORD_CHANGE_SUCCESS: {
+                SharedPreferences prefs = getSharedPreferences(SettingsActivity.PREFERENCES, MODE_PRIVATE);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putString(SettingsActivity.PASSWORD_PREF, newPasswordHash);
+                editor.apply();
+                finish();
+            }
+            case WRONG_PASSWORD: {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(PasswordChangeActivity.this,
+                                R.string.password_change_wrong_old_password, Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
         }
         waiting = false;
     }
 
     @Override
-    protected void onDestroy() {
-        toastMaker.close();
-        super.onDestroy();
-    }
-
-    @Override
     public void onBackPressed() {
         if (waiting) {
-            Toast.makeText(this, WAITING_TEXT, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.password_change_waiting, Toast.LENGTH_SHORT).show();
         } else {
             super.onBackPressed();
         }

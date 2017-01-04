@@ -527,7 +527,7 @@ public class Message {
         passwordChangeListener = listener;
     }
 
-    protected static void unSetGameListener() {
+    protected static void unsetGameListener() {
         gameListener = null;
     }
 

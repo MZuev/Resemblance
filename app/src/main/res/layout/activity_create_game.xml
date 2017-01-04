@@ -18,7 +18,7 @@
         android:layout_alignParentTop="true">
 
         <TextView
-            android:text="Набор карт:"
+            android:text="@string/create_game_card_set_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/createChooseSetInvitation"
@@ -30,7 +30,7 @@
             android:id="@+id/createGameSetPicker" />
 
         <TextView
-            android:text="Число раундов: 3"
+            android:text="@string/create_game_rounds_number_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/createGameRoundsText"
@@ -45,7 +45,7 @@
             android:id="@+id/createGameRoundsSeekBar" />
 
         <Button
-            android:text="Создать"
+            android:text="@string/create_game_create_button_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/createGameCreateButton"

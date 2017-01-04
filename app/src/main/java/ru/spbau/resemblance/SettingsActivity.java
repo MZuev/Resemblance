@@ -29,7 +29,7 @@ public class SettingsActivity extends AppCompatActivity {
         editor.remove(NICKNAME_PREF);
         editor.remove(PASSWORD_PREF);
         editor.remove(RATING_PREF);
-        editor.commit();
+        editor.apply();
 
         Intent quit = new Intent(this, LoginActivity.class);
         startActivity(quit);

@@ -20,7 +20,7 @@ public class GameExpectationActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_game_expectation);
 
         Message.setGameExpectationListener(this);
-        setTitle("Ожидание игры");
+        setTitle(R.string.game_expectation_title);
 
         randomGame = getIntent().getBooleanExtra(RANDOM_GAME_EXTRA, false);
         if (randomGame) {
@@ -55,7 +55,9 @@ public class GameExpectationActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onBackPressed() {}
+    public void onBackPressed() {
+        //Disabled
+    }
 
     @Override
     protected void onDestroy() {

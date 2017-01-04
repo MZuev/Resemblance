@@ -20,14 +20,14 @@
         android:layout_alignParentStart="true">
 
         <TextView
-            android:text="Раунд 0/N"
+            android:text="@string/game_intermediate_score_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/intermediateRoundText"
             android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
         <TextView
-            android:text="Счёт"
+            android:text="@string/score"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/intermediateScoreText"

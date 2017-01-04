@@ -33,7 +33,7 @@
             android:id="@+id/loginPasswordField" />
 
         <Button
-            android:text="Войти"
+            android:text="@string/login_activity_login_button_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/loginLoginButton"
@@ -41,7 +41,7 @@
             android:onClick="onLoginClick" />
 
         <Button
-            android:text="Регистрация"
+            android:text="@string/login_activity_registration_button_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/loginRegisterButton"

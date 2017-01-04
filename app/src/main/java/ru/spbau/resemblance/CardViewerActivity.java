@@ -5,15 +5,11 @@ import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 
 public class CardViewerActivity extends AppCompatActivity {
     public final static String IMAGE_PARAM = "image";
 
-    private Button doneButton;
-    private ImageView imageView;
     private ImageStorage.ImageWrapped image;
 
     @Override
@@ -21,8 +17,7 @@ public class CardViewerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card_viewer);
 
-        doneButton = (Button)findViewById(R.id.cardViewerButton);
-        imageView = (ImageView)findViewById(R.id.cardViewerImage);
+        ImageView imageView = (ImageView) findViewById(R.id.cardViewerImage);
 
         image = ImageStorage.ImageWrapped.createById((int)getIntent().getLongExtra(IMAGE_PARAM, -1L));
         imageView.setImageURI(Uri.parse(image.getUriImage()));

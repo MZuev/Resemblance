@@ -12,23 +12,10 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class RegistrationActivity extends AppCompatActivity implements Message.RegisterMessageListener {
-    private final int NETWORK_ERROR = -1;
-    private final int SUCCESS = 0;
-    private final int NICKNAME_ERROR = 1;
-    private static final String PASSWORDS_DIFFER = "Первый и второй пароль не совпадают.";
-    private static final String NICKNAME_IN_USE_ERROR = "Имя пользователя занято.";
-    private static final String UNKNOWN_ERROR = "Ошибка";
-    private static final String SUCCESSFUL_REGISTRATION = "Регистрация успешно завершена.";
-    private static final String REGISTRATION_RESPONSE_MESSAGE =
-            "ru.spbau.resemblance.REGISTRATION_RESPONSE";
-
     private EditText nicknameField = null;
     private EditText passwordField1 = null;
     private EditText passwordField2 = null;
-    private String nickname = null;
-    private String password = null;
     private String passwordHash = null;
-    private MessageToastMaker toastMaker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +25,6 @@ public class RegistrationActivity extends AppCompatActivity implements Message.R
         nicknameField = (EditText)findViewById(R.id.registrationNickField);
         passwordField1 = (EditText)findViewById(R.id.registrationPasswordField1);
         passwordField2 = (EditText)findViewById(R.id.registrationPasswordField2);
-
-        toastMaker = new MessageToastMaker(this, REGISTRATION_RESPONSE_MESSAGE);
     }
 
     @Override
@@ -51,10 +36,10 @@ public class RegistrationActivity extends AppCompatActivity implements Message.R
 
     public void onRegisterTouch(View v) {
         if (!(passwordField1.getText().toString().equals(passwordField2.getText().toString()))) {
-            Toast.makeText(this, PASSWORDS_DIFFER, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.passwords_differ, Toast.LENGTH_SHORT).show();
         } else {
-            nickname = nicknameField.getText().toString();
-            password = passwordField1.getText().toString();
+            String nickname = nicknameField.getText().toString();
+            String password = passwordField1.getText().toString();
             try {
                 MessageDigest messageDigest = MessageDigest.getInstance("MD5");
                 byte[] hash = messageDigest.digest(password.getBytes());
@@ -69,27 +54,27 @@ public class RegistrationActivity extends AppCompatActivity implements Message.R
 
     @Override
     public void onRegisterResponse(int code) {
+        final int NETWORK_ERROR = -1;
+        final int SUCCESS = 0;
+        final int NICKNAME_ERROR = 1;
+        int messageId = R.string.registration_unknown_error;
         switch (code) {
             case SUCCESS: {
                 finish();
-                toastMaker.showToast(SUCCESSFUL_REGISTRATION);
+                messageId = R.string.registration_success;
                 break;
             }
             case NICKNAME_ERROR: {
-                toastMaker.showToast(NICKNAME_IN_USE_ERROR);
-                break;
-            }
-            case NETWORK_ERROR: {
-                toastMaker.showToast(UNKNOWN_ERROR);
+                messageId = R.string.registration_nickname_used_error;
                 break;
             }
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        toastMaker.close();
-
-        super.onDestroy();
+        final String messageToShow = getString(messageId);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(RegistrationActivity.this, messageToShow, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

@@ -15,15 +15,12 @@ public class GalleryActivity extends AppCompatActivity implements AdapterView.On
     public static final String CARDS_PARAM = "our_cards";
     private final static int COLUMNS_NUMBER = 3;
 
-    private ImageStorage.ImageWrapped[] cardViews;
-    private GridView grid;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
 
-        grid = (GridView) findViewById(R.id.galleryGrid);
+        GridView grid = (GridView) findViewById(R.id.galleryGrid);
 
         Intent callingIntent = getIntent();
 
@@ -33,7 +30,7 @@ public class GalleryActivity extends AppCompatActivity implements AdapterView.On
             cardIds.add(card);
         }
 
-        cardViews = new ImageStorage.ImageWrapped[cardIds.size()];
+        ImageStorage.ImageWrapped[] cardViews = new ImageStorage.ImageWrapped[cardIds.size()];
         for (int i = 0; i < cardIds.size(); i++) {
             cardViews[i] = ImageStorage.ImageWrapped.createById((int)(long)cardIds.get(i));
         }

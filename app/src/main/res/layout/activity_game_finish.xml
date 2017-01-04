@@ -19,7 +19,7 @@
         android:layout_centerHorizontal="true">
 
         <TextView
-            android:text="Итоговый счёт:"
+            android:text="@string/game_finish_final_score"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/gameFinishScoreTitle"
@@ -33,7 +33,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
         <TextView
-            android:text="Рейтинги:"
+            android:text="@string/game_finish_ratings"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/gameFinishRatingTitle"
@@ -47,7 +47,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
         <TextView
-            android:text="Последняя ассоциация:"
+            android:text="@string/game_finish_last_association"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/gameFinishLastAnswerText"

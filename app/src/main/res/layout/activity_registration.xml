@@ -18,11 +18,11 @@
         android:layout_centerHorizontal="true">
 
         <TextView
-            android:text="Выберите имя пользователя:"
+            android:text="@string/registration_choose_nickname_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/textView2"
-            android:textAppearance="@android:style/TextAppearance.Material" />
+            android:textAppearance="@style/TextAppearance.AppCompat" />
 
         <EditText
             android:layout_width="match_parent"
@@ -33,11 +33,11 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         <TextView
-            android:text="Пароль:"
+            android:text="@string/registration_password_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/registrationPasswordText1"
-            android:textAppearance="@android:style/TextAppearance.Material" />
+            android:textAppearance="@style/TextAppearance.AppCompat" />
 
         <EditText
             android:layout_width="match_parent"
@@ -48,11 +48,11 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         <TextView
-            android:text="Повторите пароль:"
+            android:text="@string/registration_repeat_password_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/registrationPasswordText2"
-            android:textAppearance="@android:style/TextAppearance.Material" />
+            android:textAppearance="@style/TextAppearance.AppCompat" />
 
         <EditText
             android:layout_width="match_parent"
@@ -63,7 +63,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         <Button
-            android:text="Зарегистрироваться"
+            android:text="@string/registration_register_button_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/registrationRegisterButton"

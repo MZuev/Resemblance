@@ -18,7 +18,6 @@ public class GameFinishActivity extends AppCompatActivity {
 
     private TextView scoresTextView;
     private TextView ratingsTextView;
-    private ImageView lastAnswerView;
     private ArrayList<String> playerNames;
     private ArrayList<Integer> finalScores;
     private ArrayList<Integer> oldRatings;
@@ -31,7 +30,7 @@ public class GameFinishActivity extends AppCompatActivity {
 
         scoresTextView = (TextView) findViewById(R.id.gameFinishScoreText);
         ratingsTextView = (TextView) findViewById(R.id.gameFinishRatingText);
-        lastAnswerView = (ImageView) findViewById(R.id.gameFinishLastCard);
+        ImageView lastAnswerView = (ImageView) findViewById(R.id.gameFinishLastCard);
 
         Intent callingIntent = getIntent();
         playerNames = callingIntent.getStringArrayListExtra(PLAYERS_NAMES_PARAM);
@@ -45,7 +44,7 @@ public class GameFinishActivity extends AppCompatActivity {
         ImageStorage.ImageWrapped lastAnswerPic = ImageStorage.ImageWrapped.createById((int)lastAnswer);
         lastAnswerView.setImageURI(Uri.parse(lastAnswerPic.getUriImage()));
 
-        setTitle("Игра закончена.");
+        setTitle(R.string.game_finish_title);
     }
 
     private void showScores() {

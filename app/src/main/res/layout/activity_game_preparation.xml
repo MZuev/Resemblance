@@ -18,14 +18,14 @@
         android:layout_centerHorizontal="true">
 
         <Button
-            android:text="Играть"
+            android:text="@string/play"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/preparationStartButton"
             android:onClick="onStartClick" />
 
         <Button
-            android:text="Отмена"
+            android:text="@string/cancel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/preparationCancelButton"

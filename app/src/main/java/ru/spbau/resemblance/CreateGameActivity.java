@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.SeekBar;
@@ -20,15 +19,16 @@ public class CreateGameActivity extends AppCompatActivity implements SeekBar.OnS
         AdapterView.OnItemSelectedListener {
     private int roundsNumber = 3;
     private TextView roundsText = null;
-    private final String ROUNDS_TEXT_PREFIX = "Число раундов: ";
-    private SeekBar roundsBar = null;
-    private Spinner setPicker = null;
-    private String[] setNames = null;
+
     private ArrayList<ImageStorage.SetCardsWrapped> sets = null;
     private int chosenSet = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SeekBar roundsBar = null;
+        Spinner setPicker = null;
+        String[] setNames = null;
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_game);
 
@@ -45,7 +45,7 @@ public class CreateGameActivity extends AppCompatActivity implements SeekBar.OnS
         ArrayAdapter<String> pickerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, setNames);
         setPicker.setAdapter(pickerAdapter);
         setPicker.setOnItemSelectedListener(this);
-        setTitle("Новая игра");
+        setTitle(R.string.create_game_title);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class CreateGameActivity extends AppCompatActivity implements SeekBar.OnS
     @Override
     public void onProgressChanged(SeekBar bar, int val, boolean byUser) {
         roundsNumber = val + 1;
-        roundsText.setText(ROUNDS_TEXT_PREFIX + String.valueOf(roundsNumber));
+        roundsText.setText(String.format(getString(R.string.create_game_rounds), roundsNumber));
     }
 
     @Override
@@ -74,7 +74,7 @@ public class CreateGameActivity extends AppCompatActivity implements SeekBar.OnS
 
     public void onCreateClick(View v) {
         if (chosenSet == -1) {
-            Toast.makeText(this, "Выберите набор карт.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.create_game_choose_card_set, Toast.LENGTH_SHORT).show();
         } else {
             Message.sendCreateGameMessage(roundsNumber, sets.get(chosenSet).getListOfCards());
             Intent prepareGame = new Intent(this, GamePreparationActivity.class);

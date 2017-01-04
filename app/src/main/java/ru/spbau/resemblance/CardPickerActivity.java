@@ -3,7 +3,6 @@ package ru.spbau.resemblance;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -16,7 +15,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class CardPickerActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
-    public static String PICTURE_PARAM = "picture_id";
+    public static final String PICTURE_PARAM = "picture_id";
     public static final String OUR_CARDS_PARAM = "our_cards";
     public static final String SUGGESTION_PARAM = "suggestion";
     public static final String TITLE_PARAM = "title";
@@ -24,13 +23,9 @@ public class CardPickerActivity extends AppCompatActivity implements AdapterView
     private final static int COLUMNS_NUMBER = 2;
     private final static int CARD_REQUEST = 1;
     private final static int TIMEOUT = 60;
-    private final static String TIME_PREF = "   Время: ";
     private final static long SECOND = 1000;
 
-    private ImageStorage.ImageWrapped[] cardViews;
-    private TextView suggestion;
     private TextView timeView;
-    private GridView grid;
     private Timer timer;
     private long deadline;
 
@@ -39,8 +34,8 @@ public class CardPickerActivity extends AppCompatActivity implements AdapterView
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card_picker);
 
-        grid = (GridView) findViewById(R.id.cardPickedGrid);
-        suggestion = (TextView) findViewById(R.id.cardPickerText);
+        GridView grid = (GridView) findViewById(R.id.cardPickedGrid);
+        TextView suggestion = (TextView) findViewById(R.id.cardPickerText);
         timeView = (TextView) findViewById(R.id.cardPickerTimeView);
 
         Intent callingIntent = getIntent();
@@ -54,7 +49,7 @@ public class CardPickerActivity extends AppCompatActivity implements AdapterView
             cardIds.add(card);
         }
 
-        cardViews = new ImageStorage.ImageWrapped[cardIds.size()];
+        ImageStorage.ImageWrapped[] cardViews = new ImageStorage.ImageWrapped[cardIds.size()];
         for (int i = 0; i < cardIds.size(); i++) {
             cardViews[i] = ImageStorage.ImageWrapped.createById((int)(long)cardIds.get(i));
         }
@@ -102,8 +97,7 @@ public class CardPickerActivity extends AppCompatActivity implements AdapterView
                 @Override
                 public void run() {
                     long rest = deadline - System.currentTimeMillis() / SECOND;
-                    //Log.d("FOO", "run: " + clock.getTime());
-                    timeView.setText(TIME_PREF + rest / MINUTE + ":" + rest % MINUTE);
+                    timeView.setText(String.format(getString(R.string.card_picker_time), rest / MINUTE + ":" + rest % MINUTE));
                 }
             });
         }
