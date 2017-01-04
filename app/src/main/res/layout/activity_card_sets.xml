@@ -20,7 +20,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@android:style/Widget.Material.Light.Button.Borderless"
+            style="@style/Widget.AppCompat.Button.Borderless"
             android:text="Список наборов"
             android:id="@+id/ListOfSets"
             android:onClick="onListOfSetsClick"/>
@@ -28,7 +28,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@android:style/Widget.Material.Light.Button.Borderless"
+            style="@style/Widget.AppCompat.Button.Borderless"
             android:text="Добавить набор"
             android:id="@+id/AddSetsCards"
             android:onClick="onAddSetsCardsClick"/>
@@ -36,7 +36,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@android:style/Widget.Material.Light.Button.Borderless"
+            style="@style/Widget.AppCompat.Button.Borderless"
             android:text="Список карт"
             android:id="@+id/ListOfCards"
             android:onClick="onListOfCardsClick"/>
@@ -44,7 +44,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@android:style/Widget.Material.Light.Button.Borderless"
+            style="@style/Widget.AppCompat.Button.Borderless"
             android:text="Добавить карты"
             android:id="@+id/onAddCardsClick"
             android:onClick="onAddCardsClick"/>
