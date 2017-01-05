@@ -23,11 +23,12 @@ public class ListOfSetsActivity extends AppCompatActivity{
 
         ArrayList<ImageStorage.SetCardsWrapped> listSetCards = ImageStorage.getAllSetsCards();
 
-        final ListOfSetsActivity curActivity = this;
         for (final ImageStorage.SetCardsWrapped curSet : listSetCards) {
             Button newSetTxtView = new Button(this);
-            newSetTxtView.setText("Название: " + curSet.getNameSetCards() + ", размер: " + curSet.getSizeSetCards());
-            newSetTxtView.setGravity(Gravity.CENTER_HORIZONTAL);
+            newSetTxtView.setText(String.format(getString(R.string.list_of_sets_item),
+                    curSet.getNameSetCards(), curSet.getSizeSetCards()));
+            //newSetTxtView.setGravity(Gravity.CENTER_HORIZONTAL);
+
             newSetTxtView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

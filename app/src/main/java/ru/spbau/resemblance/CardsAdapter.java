@@ -1,6 +1,7 @@
 package ru.spbau.resemblance;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -11,11 +12,13 @@ public class CardsAdapter extends BaseAdapter {
     private final Context context;
     private final ImageStorage.ImageWrapped[] cards;
     private final int cardSide;
+    private final ImageView[] views;
 
     public CardsAdapter(Context context, ImageStorage.ImageWrapped[] cards, int cardSide) {
         this.context = context;
         this.cards = cards;
         this.cardSide = cardSide;
+        views = new ImageView[cards.length];
     }
 
     @Override
@@ -35,11 +38,13 @@ public class CardsAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        //return cards[position].getImageView(context);
-        ImageView view = cards[position].getImageView(context);
-        view.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        view.setLayoutParams(new GridView.LayoutParams(cardSide, cardSide));
+        if (views[position] == null) {
+            views[position] = cards[position].getImageView(context);
+            views[position].setScaleType(ImageView.ScaleType.CENTER_CROP);
+            views[position].setLayoutParams(new GridView.LayoutParams(cardSide, cardSide));
+        }
+        Log.d("CardsAdapter", "getView: " + position);
 
-        return view;
+        return views[position];
     }
 }

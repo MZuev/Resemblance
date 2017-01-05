@@ -42,8 +42,8 @@ public class ImageStorage {
             imageBuffer = new byte[context.getResources().getInteger(R.integer.max_image_size)];
         }
 
-        addTestSet(context, "testSet1", "a", 8);
-        addTestSet(context, "testSet2", "b", 37);
+        addTestSet(context, "Set1", "a", 8);
+        addTestSet(context, "Set2", "b", 37);
 
         printToLogAll(IMAGE_TABLE);
         printToLogAll(SET_CARDS_TABLE);
@@ -52,7 +52,7 @@ public class ImageStorage {
 
     private static void addTestSet(Context context, String nameSet, String prefCardName, int sizeSet) {
         SetCardsWrapped setCards = new SetCardsWrapped();
-        setCards.setNameSetCards(nameSet);
+        setCards.setName(nameSet);
         setCards.addSetCards();
         for (int i = 1; i <= sizeSet; i++) {
             int curId = context.getResources().getIdentifier(prefCardName + i, "drawable", context.getPackageName());
@@ -72,7 +72,10 @@ public class ImageStorage {
     private static void printToLogCur(Cursor c) {
         StringBuilder newLog = new StringBuilder();
         for (String columnName : c.getColumnNames()) {
-            newLog.append(columnName + " = " + c.getString(c.getColumnIndex(columnName)) + " ; ");
+            newLog.append(columnName);
+            newLog.append(" = ");
+            newLog.append(c.getString(c.getColumnIndex(columnName)));
+            newLog.append(" ; ");
         }
         Log.d(LOG_TAG, newLog.toString());
     }
@@ -100,6 +103,7 @@ public class ImageStorage {
             Uri uri = Uri.parse(uriImage);
             InputStream stream = new BufferedInputStream(context.getContentResolver().openInputStream(uri));
             int len = stream.read(imageBuffer);
+            stream.close();
             hashImage = uriImage.hashCode();
             for (int i = 0; i < len; i++) {
                 hashImage *= BASE_IN_HASH;
@@ -265,7 +269,7 @@ public class ImageStorage {
         public String getUriImage() { return uriImage; }
         public  int getIdImage() { return (int)idImage; }
 
-        public boolean checkExistenceImage() {
+        public boolean exists() {
             return checkExistenceByHash(hashImage, IMAGE_TABLE)
                             || checkExistenceByStringField(uriImage, "uri", IMAGE_TABLE)
                             || checkExistenceByStringField(String.valueOf(idImage), "id", IMAGE_TABLE);
@@ -289,7 +293,7 @@ public class ImageStorage {
         }
 
         public ImageView getViewImage(Context context) {
-            if (!checkExistenceImage()) {
+            if (!exists()) {
                 return null;
             }
             if (isEmptyImage) {
@@ -301,7 +305,7 @@ public class ImageStorage {
         }
 
         public boolean addImage() {
-            if (checkExistenceImage()) {
+            if (exists()) {
                 setImageInfo();
                 return false;
             }
@@ -314,7 +318,7 @@ public class ImageStorage {
         }
 
         public void deleteImage() {
-            if (!checkExistenceImage()) {
+            if (!exists()) {
                 return;
             }
             if (isEmptyImage) {
@@ -371,7 +375,7 @@ public class ImageStorage {
             idSetCards = id;
         }
 
-        public void setNameSetCards(String name) {
+        public void setName(String name) {
             nameSetCards = name;
         }
 
@@ -479,7 +483,7 @@ public class ImageStorage {
         }
 
         public boolean addCardToSet(ImageWrapped newImage) {
-            if (!newImage.checkExistenceImage()) {
+            if (!newImage.exists()) {
                 newImage.addImage();
             }
             else {

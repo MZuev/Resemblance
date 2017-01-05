@@ -6,6 +6,8 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class SendMessageModule {
     final private static String LOG_TAG = "Messenger log";
@@ -26,6 +28,7 @@ public class SendMessageModule {
     final private static int STATUS_CLOSE = 3;
 
     private static Integer connectionStatus = STATUS_NOT_OPEN;
+    private static Executor messageWriter;
 
     public static boolean isAlive() {
         synchronized (connectionStatus) {
@@ -95,6 +98,7 @@ public class SendMessageModule {
             }
         };
         initThread.start();
+        messageWriter = Executors.newSingleThreadExecutor();
     }
 
     private static boolean tryToConnect() {
@@ -123,7 +127,7 @@ public class SendMessageModule {
     }
 
     public static void sendMessage(final byte[] message) {
-        Thread sendThread = new Thread() {
+        messageWriter.execute(new Runnable() {
             @Override
             public void run() {
                 while (true) {
@@ -146,8 +150,6 @@ public class SendMessageModule {
                     }
                 }
             }
-        };
-        sendThread.start();
+        });
     }
-
 }
