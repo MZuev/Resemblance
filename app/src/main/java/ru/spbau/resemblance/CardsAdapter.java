@@ -8,6 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 
+import java.io.FileNotFoundException;
+
 public class CardsAdapter extends BaseAdapter {
     private final Context context;
     private final ImageStorage.ImageWrapped[] cards;
@@ -39,11 +41,15 @@ public class CardsAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (views[position] == null) {
-            views[position] = cards[position].getImageView(context);
+            try {
+                views[position] = cards[position].getPreview(context, cardSide);
+            } catch (FileNotFoundException e) {
+                views[position] = new ImageView(context);
+                views[position].setImageResource(R.drawable.empty);
+            }
             views[position].setScaleType(ImageView.ScaleType.CENTER_CROP);
             views[position].setLayoutParams(new GridView.LayoutParams(cardSide, cardSide));
         }
-        Log.d("CardsAdapter", "getView: " + position);
 
         return views[position];
     }

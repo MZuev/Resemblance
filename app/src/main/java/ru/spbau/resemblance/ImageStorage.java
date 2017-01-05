@@ -7,11 +7,14 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.util.Log;
 import android.widget.ImageView;
 
 import java.io.BufferedInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -335,6 +338,28 @@ public class ImageStorage {
             ImageView imageView = new ImageView(context);
             imageView.setImageURI(Uri.parse(getUriImage()));
             return imageView;
+        }
+
+        public ImageView getPreview(Context context, int size) throws FileNotFoundException {
+            if (isEmptyImage) {
+                setImageInfo();
+            }
+            InputStream fileStream = context.getContentResolver().openInputStream(Uri.parse(uriImage));
+
+            BitmapFactory.Options sizeOptions = new BitmapFactory.Options();
+            sizeOptions.inJustDecodeBounds = true;
+            BitmapFactory.decodeStream(fileStream, null, sizeOptions);
+            int realSize = Math.min(sizeOptions.outHeight, sizeOptions.outWidth);
+            int scale = (int)((double)realSize / size + 0.50001);
+
+            BitmapFactory.Options readOptions = new BitmapFactory.Options();
+            readOptions.inSampleSize = scale;
+            fileStream = context.getContentResolver().openInputStream(Uri.parse(uriImage));
+            Bitmap imageBitmap = BitmapFactory.decodeStream(fileStream, null, readOptions);
+            ImageView ret = new ImageView(context);
+            ret.setImageBitmap(imageBitmap);
+
+            return ret;
         }
 
         public  static ImageWrapped createById(int idNewImage) {
