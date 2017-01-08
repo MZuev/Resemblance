@@ -27,14 +27,16 @@ public class CardsAdapter extends BaseAdapter {
         //First we fill the grid with placeholders
         ImageView placeholder = new ImageView(activity);
         placeholder.setImageResource(android.R.drawable.ic_menu_report_image);
+        placeholder.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        final GridView.LayoutParams sizeLayoutParams = new GridView.LayoutParams(CardsAdapter.this.cardSide,
+                CardsAdapter.this.cardSide);
+        placeholder.setLayoutParams(sizeLayoutParams);
         Arrays.fill(views, placeholder);
         //Then we replace them with real pictures
         //This is made for performance improvements
         new Thread(new Runnable() {
             @Override
             public void run() {
-                GridView.LayoutParams sizeLayoutParams = new GridView.LayoutParams(CardsAdapter.this.cardSide,
-                        CardsAdapter.this.cardSide);
                 for (int i = 0; i < cards.length; i++) {
                     //Setting picture from file and its parameters
                     try {

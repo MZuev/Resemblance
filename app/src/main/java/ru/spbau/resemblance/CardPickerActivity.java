@@ -19,10 +19,10 @@ public class CardPickerActivity extends AppCompatActivity implements AdapterView
     public static final String OUR_CARDS_PARAM = "our_cards";
     public static final String SUGGESTION_PARAM = "suggestion";
     public static final String TITLE_PARAM = "title";
+    public static final String EXPECTATION_TIME_PARAM = "expectation_time";
 
     private final static int COLUMNS_NUMBER = 2;
     private final static int CARD_REQUEST = 1;
-    private final static int TIMEOUT = 60;
     private final static long SECOND = 1000;
 
     private TextView timeView;
@@ -42,6 +42,7 @@ public class CardPickerActivity extends AppCompatActivity implements AdapterView
 
         suggestion.setText(callingIntent.getStringExtra(SUGGESTION_PARAM));
         setTitle(callingIntent.getStringExtra(TITLE_PARAM));
+        long timeout = callingIntent.getLongExtra(EXPECTATION_TIME_PARAM, -1);
 
         List <Long> cardIds = new ArrayList<>();
         long[] cardsArr = callingIntent.getLongArrayExtra(OUR_CARDS_PARAM);
@@ -62,7 +63,7 @@ public class CardPickerActivity extends AppCompatActivity implements AdapterView
         grid.setOnItemClickListener(this);
 
         timer = new Timer();
-        deadline = System.currentTimeMillis() / SECOND + TIMEOUT;
+        deadline = System.currentTimeMillis() + timeout;
         timer.scheduleAtFixedRate(new TimeUpdater(), 10, 200);
     }
 
@@ -96,8 +97,16 @@ public class CardPickerActivity extends AppCompatActivity implements AdapterView
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    long rest = deadline - System.currentTimeMillis() / SECOND;
-                    timeView.setText(String.format(getString(R.string.card_picker_time), rest / MINUTE + ":" + rest % MINUTE));
+                    if (System.currentTimeMillis() > deadline) {
+                        Intent ret = new Intent();
+                        ret.putExtra(LeadingCardsGridActivity.PICTURE_PARAM, -1L);
+                        setResult(RESULT_OK, ret);
+                        timer.cancel();
+                        finish();
+                    } else {
+                        long rest = (deadline - System.currentTimeMillis()) / SECOND;
+                        timeView.setText(String.format(getString(R.string.card_picker_time), rest / MINUTE + ":" + rest % MINUTE));
+                    }
                 }
             });
         }

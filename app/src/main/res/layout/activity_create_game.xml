@@ -44,6 +44,21 @@
             android:progress="2"
             android:id="@+id/createGameRoundsSeekBar" />
 
+        <TextView
+            android:text="@string/create_game_choice_time_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/createGameTimeText"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+        <SeekBar
+            style="@style/Widget.AppCompat.SeekBar.Discrete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="5"
+            android:progress="0"
+            android:id="@+id/createGameTimeBar" />
+
         <Button
             android:text="@string/create_game_create_button_text"
             android:layout_width="match_parent"

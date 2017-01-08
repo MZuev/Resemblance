@@ -63,4 +63,7 @@
     <string name="no">"Нет"</string>
     <string name="authorisation_required">"Необходимо авторизоваться."</string>
     <string name="list_of_sets_item">"%1$s, %2$d карт(ы)"</string>
+    <string name="create_game_choice_time_text">"Время на выбор: %1$s"</string>
+    <string name="minutes">"мин."</string>
+    <string name="seconds">"сек."</string>
 </resources>

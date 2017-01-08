@@ -31,11 +31,12 @@ public class GameExpectationActivity extends AppCompatActivity implements
 
     @Override
     public void onStartGameMessage(int roundsNumber, int playersNumber,
-                                    ArrayList<String> names) {
+                                    ArrayList<String> names, long expectationTime) {
         Intent startGame = new Intent(this, GameIntermediateActivity.class);
         startGame.putExtra(GameIntermediateActivity.ROUNDS_NUMBER_PARAM, roundsNumber);
         startGame.putExtra(GameIntermediateActivity.PLAYERS_NUMBER_PARAM, playersNumber);
         startGame.putStringArrayListExtra(GameIntermediateActivity.PLAYERS_NAMES_PARAM, names);
+        startGame.putExtra(GameIntermediateActivity.EXPECTATION_TIME_PARAM, expectationTime);
         startActivity(startGame);
         finish();
     }

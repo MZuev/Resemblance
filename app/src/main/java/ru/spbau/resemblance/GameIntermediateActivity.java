@@ -13,6 +13,7 @@ public class GameIntermediateActivity extends AppCompatActivity implements Messa
     public static final String ROUNDS_NUMBER_PARAM = "rounds_number";
     public static final String PLAYERS_NUMBER_PARAM = "players_number";
     public static final String PLAYERS_NAMES_PARAM = "players_names";
+    public static final String EXPECTATION_TIME_PARAM = "expectation_time";
     public static final int LEADING_ASSOCIATION_REQUEST = 1;
     public static final int CHOICE_REQUEST = 2;
     public static final int VOTE_REQUEST = 3;
@@ -27,6 +28,7 @@ public class GameIntermediateActivity extends AppCompatActivity implements Messa
     private ArrayList<String> playersNames = null;
     private int[] scores = null;
     private long answer = -1;
+    private long expectationTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,7 @@ public class GameIntermediateActivity extends AppCompatActivity implements Messa
         currentRound = 1;
         playersNumber = callingIntent.getIntExtra(PLAYERS_NUMBER_PARAM, -1);
         playersNames = callingIntent.getStringArrayListExtra(PLAYERS_NAMES_PARAM);
+        expectationTime = callingIntent.getLongExtra(EXPECTATION_TIME_PARAM, -1);
         scores = new int[playersNumber];
 
         roundText = (TextView)findViewById(R.id.intermediateRoundText);
@@ -68,6 +71,7 @@ public class GameIntermediateActivity extends AppCompatActivity implements Messa
                 String.format(getString(R.string.game_association_suggestion), association));
         choose.putExtra(CardPickerActivity.TITLE_PARAM, getString(R.string.choice_title));
         choose.putExtra(CardPickerActivity.OUR_CARDS_PARAM, getCardsArr());
+        choose.putExtra(CardPickerActivity.EXPECTATION_TIME_PARAM, expectationTime);
         startActivityForResult(choose, CHOICE_REQUEST);
     }
 
@@ -78,6 +82,7 @@ public class GameIntermediateActivity extends AppCompatActivity implements Messa
                 String.format(getString(R.string.game_association_suggestion), association));
         vote.putExtra(CardPickerActivity.TITLE_PARAM, getString(R.string.vote_title));
         vote.putExtra(CardPickerActivity.OUR_CARDS_PARAM, candidates);
+        vote.putExtra(CardPickerActivity.EXPECTATION_TIME_PARAM, expectationTime);
         startActivityForResult(vote, VOTE_REQUEST);
     }
 
@@ -105,36 +110,44 @@ public class GameIntermediateActivity extends AppCompatActivity implements Messa
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         long pictureId = data.getLongExtra(LeadingCardsGridActivity.PICTURE_PARAM, -1L);
-        switch (requestCode) {
-            case LEADING_ASSOCIATION_REQUEST: {
-                //Now we need to send the association and remove the card fom our cards list.
-                String association = data.getStringExtra(LeadingCardsGridActivity.ASSOCIATION_PARAM);
+        if (pictureId >= 0) {
+            switch (requestCode) {
+                case LEADING_ASSOCIATION_REQUEST: {
+                    //Now we need to send the association and remove the card fom our cards list.
+                    String association = data.getStringExtra(LeadingCardsGridActivity.ASSOCIATION_PARAM);
 
-                cards.remove(pictureId);
+                    synchronized (cards) {
+                        cards.remove(pictureId);
+                    }
 
-                Message.sendLeadAssociationMessage(pictureId, association);
-                break;
-            }
+                    Message.sendLeadAssociationMessage(pictureId, association);
+                    break;
+                }
 
-            case CHOICE_REQUEST: {
-                //Sending player's choice and removing the chosen card.
-                cards.remove(cards.indexOf(pictureId));
+                case CHOICE_REQUEST: {
+                    //Sending player's choice and removing the chosen card.
+                    synchronized (cards) {
+                        cards.remove(cards.indexOf(pictureId));
+                    }
 
-                Message.sendChoiceMessage(pictureId);
-                break;
-            }
+                    Message.sendChoiceMessage(pictureId);
+                    break;
+                }
 
-            case VOTE_REQUEST: {
-                Message.sendVoteMessage(pictureId);
-                break;
+                case VOTE_REQUEST: {
+                    Message.sendVoteMessage(pictureId);
+                    break;
+                }
             }
         }
     }
 
     private long[] getCardsArr() {
         long[] cardsArr = new long[cards.size()];
-        for (int i = 0; i < cards.size(); i++) {
-            cardsArr[i] = cards.get(i);
+        synchronized (cards) {
+            for (int i = 0; i < cards.size(); i++) {
+                cardsArr[i] = cards.get(i);
+            }
         }
         return cardsArr;
     }

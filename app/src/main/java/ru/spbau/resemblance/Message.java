@@ -159,7 +159,8 @@ public class Message {
                     Thread.sleep(5);
                 } catch (InterruptedException e) {}
             }
-            gameExpectationListener.onStartGameMessage(roundsNumber, playersNumber, names);
+            long expectationTime = stream.readLong();
+            gameExpectationListener.onStartGameMessage(roundsNumber, playersNumber, names, expectationTime);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -405,8 +406,8 @@ public class Message {
         SendMessageModule.sendMessage(byteOS.toByteArray());
     }
 
-    public static void sendCreateGameMessage(int roundsNumber,
-                                             ArrayList<ImageStorage.ImageWrapped> cards) {
+    public static void sendCreateGameMessage(int roundsNumber, ArrayList<ImageStorage.ImageWrapped> cards,
+                                             long expectationTime) {
         ByteArrayOutputStream byteOS = new ByteArrayOutputStream(150);
         DataOutputStream out = new DataOutputStream(byteOS);
         try {
@@ -414,8 +415,9 @@ public class Message {
             out.writeInt(roundsNumber);
             out.writeInt(cards.size());
             for (ImageStorage.ImageWrapped image: cards) {
-                out.writeInt(image.getIdImage());
+                out.writeLong(image.getIdImage());
             }
+            out.writeLong(expectationTime);
             out.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -567,7 +569,8 @@ public class Message {
     }
 
     protected interface GameExpectationMessageListener {
-        void onStartGameMessage(int roundsNumber, int playersNumber, ArrayList<String> names);
+        void onStartGameMessage(int roundsNumber, int playersNumber, ArrayList<String> names,
+                                long expectatioTime);
 
         void onGameCancelled();
     }
