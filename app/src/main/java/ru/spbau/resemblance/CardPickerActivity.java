@@ -3,6 +3,8 @@ package ru.spbau.resemblance;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -110,5 +112,18 @@ public class CardPickerActivity extends AppCompatActivity implements AdapterView
                 }
             });
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.chat_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent chatIntent = new Intent(this, ChatActivity.class);
+        startActivity(chatIntent);
+        return true;
     }
 }

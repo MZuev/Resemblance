@@ -20,7 +20,7 @@ public class Chat {
     private static volatile Activity activity;
     private static final Lock activityLock = new ReentrantLock();
 
-    private Chat(){};
+    private Chat(){}
 
     private static final BaseAdapter ADAPTER = new BaseAdapter() {
         @Override
@@ -40,6 +40,10 @@ public class Chat {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView != null) {
+                return convertView;
+            }
+
             LayoutInflater inflater = (LayoutInflater) activity.getSystemService(
                     Context.LAYOUT_INFLATER_SERVICE);
             ChatMessage message = messages.get(position);
@@ -102,6 +106,10 @@ public class Chat {
             activityLock.unlock();
         }
         Message.sendChatMessage(message);
+    }
+
+    public static void clear() {
+        messages.clear();
     }
 
     public static class ChatMessage {

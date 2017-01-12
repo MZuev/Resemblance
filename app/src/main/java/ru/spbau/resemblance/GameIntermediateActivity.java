@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -182,6 +184,7 @@ public class GameIntermediateActivity extends AppCompatActivity implements Messa
     @Override
     public void onGameFinish(long lastAnswer, ArrayList<Integer> finalScores,
                              ArrayList<Integer> oldRatings, ArrayList<Integer> newRatings) {
+        Chat.clear();
         Intent showGameFinish = new Intent(this, GameFinishActivity.class);
         showGameFinish.putExtra(GameFinishActivity.LAST_ANSWER_PARAM, lastAnswer);
         showGameFinish.putIntegerArrayListExtra(GameFinishActivity.FINAL_SCORES_PARAM, finalScores);
@@ -193,8 +196,16 @@ public class GameIntermediateActivity extends AppCompatActivity implements Messa
         finish();
     }
 
-    public void onMessageButtonClick(View v) {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.chat_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
         Intent chatIntent = new Intent(this, ChatActivity.class);
         startActivity(chatIntent);
+        return true;
     }
 }

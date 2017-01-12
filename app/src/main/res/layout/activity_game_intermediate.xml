@@ -36,18 +36,9 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:srcCompat="?android:attr/selectableItemBackgroundBorderless"
+            app:srcCompat="@android:color/transparent"
             android:id="@+id/intermediateAnswerView" />
 
     </LinearLayout>
-
-    <ImageButton
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:srcCompat="@android:drawable/ic_dialog_email"
-        android:id="@+id/imageButton"
-        android:layout_marginBottom="18dp"
-        android:layout_alignParentBottom="true"
-        android:onClick="onMessageButtonClick" />
 
 </RelativeLayout>
