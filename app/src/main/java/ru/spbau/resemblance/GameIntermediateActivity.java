@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -190,5 +191,10 @@ public class GameIntermediateActivity extends AppCompatActivity implements Messa
         startActivity(showGameFinish);
 
         finish();
+    }
+
+    public void onMessageButtonClick(View v) {
+        Intent chatIntent = new Intent(this, ChatActivity.class);
+        startActivity(chatIntent);
     }
 }

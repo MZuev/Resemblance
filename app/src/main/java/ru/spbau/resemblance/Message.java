@@ -35,8 +35,10 @@ public class Message {
     final public static int QUIT_FIEND_GAME_TYPE = 23;
     final public static int PASSWORD_CHANGE_REQUEST_TYPE = 24;
     final public static int PASSWORD_CHANGE_RESPONSE_TYPE = 25;
+    final public static int OUTGOING_CHAT_MESSAGE_TYPE = 26;
+    final public static int INGOING_CHAT_MESSAGE = 27;
 
-    private final String MESSAGE_LOG_TAG = "Message";
+    private final String MESSAGE_LOG_TAG = "ChatMessage";
 
     private static volatile LoginMessageListener loginListener = null;
     private static volatile RegisterMessageListener registerListener = null;
@@ -103,6 +105,9 @@ public class Message {
                 break;
             case PASSWORD_CHANGE_RESPONSE_TYPE:
                 readPasswordChangeMessage(in);
+                break;
+            case INGOING_CHAT_MESSAGE:
+                readChatMessage(in);
                 break;
         }
     }
@@ -287,6 +292,18 @@ public class Message {
         try {
             int code = stream.readInt();
             passwordChangeListener.onPasswordChangeResponse(code);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void readChatMessage(DataInputStream stream) {
+        Log.d(MESSAGE_LOG_TAG, "ChatMessage received.");
+        try {
+            String author = stream.readUTF();
+            String time = stream.readUTF();
+            String text = stream.readUTF();
+            Chat.receiveMessage(author, time, text);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -494,6 +511,20 @@ public class Message {
             out.writeInt(PASSWORD_CHANGE_REQUEST_TYPE);
             out.writeUTF(oldPassword);
             out.writeUTF(newPassword);
+            out.flush();
+            SendMessageModule.sendMessage(byteOS.toByteArray());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void sendChatMessage(Chat.ChatMessage chatMessage) {
+        ByteArrayOutputStream byteOS = new ByteArrayOutputStream(200);
+        DataOutputStream out = new DataOutputStream(byteOS);
+        try {
+            out.writeInt(OUTGOING_CHAT_MESSAGE_TYPE);
+            out.writeUTF(chatMessage.getTime());
+            out.writeUTF(chatMessage.getText());
             out.flush();
             SendMessageModule.sendMessage(byteOS.toByteArray());
         } catch (IOException e) {

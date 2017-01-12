@@ -66,4 +66,5 @@
     <string name="create_game_choice_time_text">"Время на выбор: %1$s"</string>
     <string name="minutes">"мин."</string>
     <string name="seconds">"сек."</string>
+    <string name="chat_title">"Чат"</string>
 </resources>

@@ -75,7 +75,8 @@
             android:name=".GameFinishActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".GalleryActivity" />
-        <activity android:name=".GalleryCardViewerActivity"></activity>
+        <activity android:name=".GalleryCardViewerActivity" />
+        <activity android:name=".ChatActivity"></activity>
     </application>
 
 </manifest>
