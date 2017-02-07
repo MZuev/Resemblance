@@ -67,4 +67,5 @@
     <string name="minutes">"мин."</string>
     <string name="seconds">"сек."</string>
     <string name="chat_title">"Чат"</string>
+    <string name="sets_title">"Наборы"</string>
 </resources>

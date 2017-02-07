@@ -3,46 +3,44 @@ package ru.spbau.resemblance;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
-import android.widget.Button;
-import android.widget.LinearLayout;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import java.util.ArrayList;
 
-public class ListOfSetsActivity extends AppCompatActivity{
+public class ListOfSetsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_of_sets);
 
-        int wrapContent = LinearLayout.LayoutParams.WRAP_CONTENT;
-        int matchParent = LinearLayout.LayoutParams.MATCH_PARENT;
-        LinearLayout mainLL = (LinearLayout)findViewById(R.id.ListOfCardsLayout);
-        LinearLayout.LayoutParams lParams = new LinearLayout.LayoutParams(matchParent, wrapContent);
+        ListView setsView = (ListView)findViewById(R.id.setsList);
 
-        ArrayList<ImageStorage.SetCardsWrapped> listSetCards = ImageStorage.getAllSetsCards();
-
-        for (final ImageStorage.SetCardsWrapped curSet : listSetCards) {
-            Button newSetTxtView = new Button(this);
-            newSetTxtView.setText(String.format(getString(R.string.list_of_sets_item),
-                    curSet.getNameSetCards(), curSet.getSizeSetCards()));
-            //newSetTxtView.setGravity(Gravity.CENTER_HORIZONTAL);
-
-            newSetTxtView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent showCards = new Intent(ListOfSetsActivity.this, GalleryActivity.class);
-                    ArrayList<ImageStorage.ImageWrapped> cards = curSet.getListOfCards();
-                    long[] cardIds = new long[cards.size()];
-                    for (int i = 0; i < cardIds.length; i++) {
-                        cardIds[i] = cards.get(i).getIdImage();
-                    }
-                    showCards.putExtra(GalleryActivity.CARDS_PARAM, cardIds);
-                    startActivity(showCards);
-                }
-            });
-            mainLL.addView(newSetTxtView, lParams);
+        ArrayList<String> sets = new ArrayList<>();
+        for (ImageStorage.SetCardsWrapped set: ImageStorage.getAllSetsCards()) {
+            sets.add(String.format(getString(R.string.list_of_sets_item), set.getNameSetCards(),
+                    set.getSizeSetCards()));
         }
+        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, sets);
+        setsView.setAdapter(adapter);
+
+        setsView.setOnItemClickListener(this);
+
+        setTitle(R.string.sets_title);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Intent showCards = new Intent(ListOfSetsActivity.this, GalleryActivity.class);
+        ArrayList<ImageStorage.ImageWrapped> cards =
+                ImageStorage.getAllSetsCards().get(position).getListOfCards();
+        long[] cardIds = new long[cards.size()];
+        for (int i = 0; i < cardIds.length; i++) {
+            cardIds[i] = cards.get(i).getIdImage();
+        }
+        showCards.putExtra(GalleryActivity.CARDS_PARAM, cardIds);
+        startActivity(showCards);
     }
 }
