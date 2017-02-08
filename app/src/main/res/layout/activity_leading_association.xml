@@ -27,23 +27,34 @@
             android:id="@+id/leadingAssociationInvitation"
             android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
-        <EditText
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:inputType="textPersonName"
-            android:ems="10"
-            android:id="@+id/leadingAssociationField" />
+            android:weightSum="10">
 
-        <Button
-            android:text="@string/ready"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:id="@+id/leadingAssociationButton"
-            android:onClick="onDoneClick" />
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:inputType="textPersonName"
+                android:ems="10"
+                android:id="@+id/leadingAssociationField"
+                android:layout_weight="9" />
+
+            <ImageButton
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:id="@+id/leadingAssociationButton"
+                app:srcCompat="@android:drawable/ic_menu_send"
+                android:background="@android:color/transparent"
+                android:onClick="onDoneClick"
+                android:layout_weight="1" />
+
+        </LinearLayout>
 
         <ImageView
             android:layout_width="match_parent"
