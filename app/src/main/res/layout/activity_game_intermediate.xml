@@ -11,34 +11,9 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="ru.spbau.resemblance.GameIntermediateActivity">
 
-    <LinearLayout
-        android:orientation="vertical"
+    <ListView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
-
-        <TextView
-            android:text="@string/game_intermediate_score_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/intermediateRoundText"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
-        <TextView
-            android:text="@string/score"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/intermediateScoreText"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:srcCompat="@android:color/transparent"
-            android:id="@+id/intermediateAnswerView" />
-
-    </LinearLayout>
+        android:layout_height="wrap_content"
+        android:id="@+id/gameStateList" />
 
 </RelativeLayout>

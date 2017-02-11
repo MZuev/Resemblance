@@ -21,7 +21,7 @@
     <string name="game_finish_ratings">Рейтинги:</string>
     <string name="game_finish_last_association">Последняя ассоциация:</string>
     <string name="score">Счёт</string>
-    <string name="game_intermediate_score_text">Раунд 0/N</string>
+    <string name="game_intermediate_round_text">Раунд 0/N</string>
     <string name="play">Играть</string>
     <string name="join_game_creator_name_invitation">Имя создателя игры:</string>
     <string name="join">Присоединиться</string>

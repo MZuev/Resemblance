@@ -1,13 +1,17 @@
 package ru.spbau.resemblance;
 
+import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -24,14 +28,15 @@ public class GameIntermediateActivity extends AppCompatActivity implements Messa
     private final ArrayList<Long> cards = new ArrayList<>();
     private int roundsNumber = -1;
     private int currentRound = -1;
-    private TextView roundText = null;
-    private TextView scoreText = null;
-    private ImageView answerView = null;
     private int playersNumber = -1;
     private ArrayList<String> playersNames = null;
     private int[] scores = null;
     private long answer = -1;
     private long expectationTime;
+
+    private LayoutInflater inflater;
+    private ListView stateList;
+    private ViewArrayAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,16 +53,14 @@ public class GameIntermediateActivity extends AppCompatActivity implements Messa
         expectationTime = callingIntent.getLongExtra(EXPECTATION_TIME_PARAM, -1);
         scores = new int[playersNumber];
 
-        roundText = (TextView)findViewById(R.id.intermediateRoundText);
-        scoreText = (TextView)findViewById(R.id.intermediateScoreText);
-        answerView = (ImageView)findViewById(R.id.intermediateAnswerView);
-    }
+        inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        stateList = (ListView) findViewById(R.id.gameStateList);
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+        View[] listViews = new View[playersNumber + 2];
+        updateInfo(listViews);
 
-        updateScreen();
+        adapter = new ViewArrayAdapter(listViews);
+        stateList.setAdapter(adapter);
     }
 
     @Override
@@ -156,21 +159,33 @@ public class GameIntermediateActivity extends AppCompatActivity implements Messa
     }
 
     private void updateScreen() {
-        roundText.setText(String.format(getString(R.string.game_round_text),
-                currentRound + "/" + roundsNumber));
-        StringBuilder scoresText = new StringBuilder();
-        scoresText.append(getString(R.string.game_score_prefix));
-        for (int i = 0; i < playersNumber; i++) {
-            scoresText.append("\n");
-            scoresText.append(playersNames.get(i));
-            scoresText.append(" - ");
-            scoresText.append(scores[i]);
-        }
-        scoreText.setText(scoresText.toString());
+        View[] listViews = new View[playersNumber + 3];
+        updateInfo(listViews);
+        listViews[playersNumber + 2] = ImageStorage.ImageWrapped.createById((int)answer).getImageView(this);
+        ((ImageView)listViews[playersNumber + 2]).setScaleType(ImageView.ScaleType.CENTER);
+        ((ImageView)listViews[playersNumber + 2]).setAdjustViewBounds(true);
+        adapter.setArray(listViews);
+        adapter.notifyDataSetChanged();
+    }
 
-        if (answer != -1) {
-            ImageStorage.ImageWrapped answerPic = ImageStorage.ImageWrapped.createById((int)answer);
-            answerView.setImageURI(Uri.parse(answerPic.getUriImage()));
+    private void updateInfo(View[] listViews) {
+        listViews[0] = new TextView(this);
+        ((TextView)listViews[0]).setTextAppearance(this, android.R.style.TextAppearance_DeviceDefault_Large);
+        ((TextView)listViews[0]).setText(String.format(getString(R.string.game_round_text),
+                currentRound + "/" + roundsNumber));
+
+        listViews[1] = new TextView(this);
+        ((TextView)listViews[1]).setTextAppearance(this, android.R.style.TextAppearance_DeviceDefault_Large);
+        ((TextView)listViews[1]).setText(R.string.game_score_prefix);
+
+        for (int i = 0; i < playersNumber; i++) {
+            View playerScoreView = inflater.inflate(R.layout.score_list_item, stateList, false);
+            TextView playerView = (TextView) playerScoreView.findViewById(R.id.player);
+            TextView scoreView = (TextView) playerScoreView.findViewById(R.id.score);
+
+            playerView.setText(playersNames.get(i));
+            scoreView.setText(String.valueOf(scores[i]));
+            listViews[i + 2] = playerScoreView;
         }
     }
 
@@ -207,5 +222,37 @@ public class GameIntermediateActivity extends AppCompatActivity implements Messa
         Intent chatIntent = new Intent(this, ChatActivity.class);
         startActivity(chatIntent);
         return true;
+    }
+}
+
+class ViewArrayAdapter extends BaseAdapter {
+    private View[] views;
+
+    ViewArrayAdapter(View[] views) {
+        this.views = views;
+    }
+
+    public void setArray(View[] views) {
+        this.views = views;
+    }
+
+    @Override
+    public int getCount() {
+        return views.length;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        return views[position];
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return null;
     }
 }
