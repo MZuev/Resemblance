@@ -11,53 +11,9 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="ru.spbau.resemblance.GameFinishActivity">
 
-    <LinearLayout
-        android:orientation="vertical"
+    <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true">
+        android:id="@+id/resultsList" />
 
-        <TextView
-            android:text="@string/game_finish_final_score"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/gameFinishScoreTitle"
-            android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
-
-        <TextView
-            android:text="TextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/gameFinishScoreText"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
-        <TextView
-            android:text="@string/game_finish_ratings"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/gameFinishRatingTitle"
-            android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
-
-        <TextView
-            android:text="TextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/gameFinishRatingText"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
-        <TextView
-            android:text="@string/game_finish_last_association"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/gameFinishLastAnswerText"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:srcCompat="?android:attr/selectableItemBackground"
-            android:id="@+id/gameFinishLastCard" />
-
-    </LinearLayout>
 </RelativeLayout>

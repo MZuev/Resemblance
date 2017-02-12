@@ -8,8 +8,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -33,7 +31,6 @@ public class GameIntermediateActivity extends AppCompatActivity implements Messa
     private int[] scores = null;
     private long answer = -1;
     private long expectationTime;
-
     private LayoutInflater inflater;
     private ListView stateList;
     private ViewArrayAdapter adapter;
@@ -180,11 +177,8 @@ public class GameIntermediateActivity extends AppCompatActivity implements Messa
 
         for (int i = 0; i < playersNumber; i++) {
             View playerScoreView = inflater.inflate(R.layout.score_list_item, stateList, false);
-            TextView playerView = (TextView) playerScoreView.findViewById(R.id.player);
-            TextView scoreView = (TextView) playerScoreView.findViewById(R.id.score);
-
-            playerView.setText(playersNames.get(i));
-            scoreView.setText(String.valueOf(scores[i]));
+            ((TextView)playerScoreView.findViewById(R.id.player)).setText(playersNames.get(i));
+            ((TextView)playerScoreView.findViewById(R.id.score)).setText(String.valueOf(scores[i]));
             listViews[i + 2] = playerScoreView;
         }
     }
@@ -222,37 +216,5 @@ public class GameIntermediateActivity extends AppCompatActivity implements Messa
         Intent chatIntent = new Intent(this, ChatActivity.class);
         startActivity(chatIntent);
         return true;
-    }
-}
-
-class ViewArrayAdapter extends BaseAdapter {
-    private View[] views;
-
-    ViewArrayAdapter(View[] views) {
-        this.views = views;
-    }
-
-    public void setArray(View[] views) {
-        this.views = views;
-    }
-
-    @Override
-    public int getCount() {
-        return views.length;
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        return views[position];
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return null;
     }
 }
