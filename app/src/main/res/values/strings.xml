@@ -1,8 +1,6 @@
 <resources>
     <string name="app_name">Resemblance</string>
-
     <string name="title_activity_settings">Настройки</string>
-
     <string name="main_random_game_button_text">Простая игра</string>
     <string name="main_create_game_button_text">Создать игру</string>
     <string name="main_join_game_button_text">Присоединиться к игре</string>
@@ -12,10 +10,11 @@
     <string name="create_game_card_set_text">Набор карт:</string>
     <string name="create_game_rounds_number_text">Число раундов: 3</string>
     <string name="create_game_create_button_text">Создать</string>
-    <string name="card_sets_sets_list_button_text">Список наборов</string>
-    <string name="card_sets_add_set_button_text">Добавить набор</string>
-    <string name="card_sets_cards_list_button_text">Список карт</string>
-    <string name="card_sets_add_cards_button_text">Добавить карты</string>
+    <string-array name="cards_control_options">
+        <item>"Список наборов"</item>
+        <item>"Список карт"</item>
+        <item>"Добавить карты"</item>
+    </string-array>
     <string name="cancel">Отмена</string>
     <string name="game_finish_final_score">Итоговый счёт:</string>
     <string name="game_finish_ratings">Рейтинги:</string>
@@ -34,12 +33,10 @@
     <string name="registration_password_text">Пароль:</string>
     <string name="registration_repeat_password_text">Повторите пароль:</string>
     <string name="registration_register_button_text">Зарегистрироваться</string>
-
     <string-array name="settings_options">
         <item>"Изменить пароль"</item>
         <item>"Выйти"</item>
     </string-array>
-
     <string name="login_password_error">"Неправильный пароль."</string>
     <string name="login_nickname_error">"Неправильный логин."</string>
     <string name="login_network_error">"Ошибка сети."</string>

@@ -4,51 +4,10 @@
     android:id="@+id/activity_list_of_sets"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="ru.spbau.resemblance.ListOfSetsActivity">
 
-    <LinearLayout
+    <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/createSetCardsLinearLayout">
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:text="@string/card_sets_sets_list_button_text"
-            android:id="@+id/ListOfSets"
-            android:onClick="onListOfSetsClick"/>
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:text="@string/card_sets_add_set_button_text"
-            android:id="@+id/AddSetsCards"
-            android:onClick="onAddSetsCardsClick"/>
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:text="@string/card_sets_cards_list_button_text"
-            android:id="@+id/ListOfCards"
-            android:onClick="onListOfCardsClick"/>
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:text="@string/card_sets_add_cards_button_text"
-            android:id="@+id/onAddCardsClick"
-            android:onClick="onAddCardsClick"/>
-
-    </LinearLayout>
-
+        android:id="@+id/cardSetsOptionsList" />
 </RelativeLayout>
