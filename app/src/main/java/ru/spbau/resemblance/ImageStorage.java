@@ -45,8 +45,8 @@ public class ImageStorage {
             imageBuffer = new byte[context.getResources().getInteger(R.integer.max_image_size)];
         }
 
-        addTestSet(context, "Set1", "a", 8);
-        addTestSet(context, "Set2", "b", 37);
+        addTestSet(context, "Set1", "a", 45);
+        addTestSet(context, "Set2", "b", 50);
 
         printToLogAll(IMAGE_TABLE);
         printToLogAll(SET_CARDS_TABLE);
