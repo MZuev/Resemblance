@@ -12,11 +12,13 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 public class GamePreparationActivity extends AppCompatActivity implements
         Message.FriendGamePreparationListener, AdapterView.OnItemClickListener {
+    private static final int MIN_PLAYERS_NUMBER = 2;
     private ArrayAdapter<String> playersAdapter;
     private ArrayList<String> players;
 
@@ -36,11 +38,15 @@ public class GamePreparationActivity extends AppCompatActivity implements
     }
 
     public void onStartClick(View v) {
-        Message.sendStartFriendGameMessage();
+        if (players.size() + 1 >= MIN_PLAYERS_NUMBER) {
+            Message.sendStartFriendGameMessage();
 
-        Intent expectGame = new Intent(this, GameExpectationActivity.class);
-        startActivity(expectGame);
-        finish();
+            Intent expectGame = new Intent(this, GameExpectationActivity.class);
+            startActivity(expectGame);
+            finish();
+        } else {
+            Toast.makeText(this, R.string.not_enough_players, Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void onCancelClick(View v) {

@@ -69,4 +69,5 @@
     <string name="seconds">"сек."</string>
     <string name="chat_title">"Чат"</string>
     <string name="sets_title">"Наборы"</string>
+    <string name="not_enough_players">"Недостаточно игроков."</string>
 </resources>
