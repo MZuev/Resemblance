@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -69,9 +70,7 @@ public class GameFinishActivity extends AppCompatActivity {
     }
     
     private void showResults(View[] viewsArray, ArrayList<PlayerResult> playerResults) {
-        viewsArray[0] = new TextView(this);
-        ((TextView)viewsArray[0]).setText(R.string.results);
-        ((TextView)viewsArray[0]).setTextAppearance(this, android.R.style.TextAppearance_DeviceDefault_Large);
+        viewsArray[0] = inflater.inflate(R.layout.results_header, resultsList);
         for (int i = 0; i < playerResults.size(); i++) {
             View playerResultView = inflater.inflate(R.layout.result_list_item, resultsList, false);
             ((TextView)playerResultView.findViewById(R.id.player)).setText(playerResults.get(i).getName());

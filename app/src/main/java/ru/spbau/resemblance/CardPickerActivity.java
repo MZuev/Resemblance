@@ -77,7 +77,7 @@ public class CardPickerActivity extends AppCompatActivity implements AdapterView
         if (leading) {
             Intent showPicture = new Intent(this, LeadingAssociationActivity.class);
             showPicture.putExtra(LeadingAssociationActivity.IMAGE_PARAM, id);
-            startActivityForResult(showPicture, GameIntermediateActivity.LEADING_ASSOCIATION_REQUEST);
+            startActivityForResult(showPicture, LEADING_CARD_REQUEST);
         } else {
             Intent showPicture = new Intent(this, CardViewerActivity.class);
             showPicture.putExtra(LeadingAssociationActivity.IMAGE_PARAM, id);

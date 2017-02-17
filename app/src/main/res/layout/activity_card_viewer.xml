@@ -27,11 +27,15 @@
 
         <ImageButton
             android:layout_width="match_parent"
-            android:layout_height="60dp"
             app:srcCompat="@drawable/ok"
             android:id="@+id/imageButton"
             android:background="@android:color/transparent"
             android:scaleType="centerInside"
-            android:onClick="onDoneClick" />
+            android:onClick="onDoneClick"
+            android:layout_height="70dp" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
     </LinearLayout>
 </RelativeLayout>

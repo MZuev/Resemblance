@@ -54,14 +54,6 @@ public class Message {
         this.type = type;
     }
 
-    public int getType() {
-        return type;
-    }
-
-    public void setType(int newType) {
-        type = newType;
-    }
-
     public void readMessage(DataInputStream in) {
         switch (type) {
             case TEST_TYPE:

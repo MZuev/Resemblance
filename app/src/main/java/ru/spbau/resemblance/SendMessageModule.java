@@ -8,6 +8,8 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class SendMessageModule {
     final private static String LOG_TAG = "Messenger log";
@@ -27,12 +29,16 @@ public class SendMessageModule {
     final private static int STATUS_OPEN = 2;
     final private static int STATUS_CLOSE = 3;
 
-    private static Integer connectionStatus = STATUS_NOT_OPEN;
-    private static Executor messageWriter;
+    private static int connectionStatus = STATUS_NOT_OPEN;
+    private static final Lock STATUS_LOCK = new ReentrantLock();
+    private static final Executor messageWriter = Executors.newSingleThreadExecutor();
 
     public static boolean isAlive() {
-        synchronized (connectionStatus) {
+        STATUS_LOCK.lock();
+        try {
             return connectionStatus == STATUS_OPEN;
+        } finally {
+            STATUS_LOCK.unlock();
         }
     }
 
@@ -41,13 +47,16 @@ public class SendMessageModule {
         public void run() {
             while (true) {
                 while (true) {
-                    synchronized (connectionStatus) {
+                    STATUS_LOCK.lock();
+                    try {
                         if (connectionStatus == STATUS_OPEN) {
                             break;
                         }
                         if (connectionStatus == STATUS_CLOSE) {
                             return;
                         }
+                    } finally {
+                        STATUS_LOCK.unlock();
                     }
                 }
                 int messageType = -1;
@@ -63,8 +72,11 @@ public class SendMessageModule {
                     }
                 }
                 if (messageType == -1) {
-                    synchronized (connectionStatus) {
+                    STATUS_LOCK.lock();
+                    try {
                         connectionStatus = STATUS_CLOSE;
+                    } finally {
+                        STATUS_LOCK.unlock();
                     }
                 }
             }
@@ -75,7 +87,8 @@ public class SendMessageModule {
         Thread initThread = new Thread() {
             @Override
             public void run() {
-                synchronized (connectionStatus) {
+                STATUS_LOCK.lock();
+                try {
                     connectionStatus = STATUS_IS_OPENING;
                     for (int i = 0; i < maxCntToReconnect; i++) {
                         if (tryToConnect()) {
@@ -94,11 +107,12 @@ public class SendMessageModule {
                     else {
                         readThread.start();
                     }
+                } finally {
+                    STATUS_LOCK.unlock();
                 }
             }
         };
         initThread.start();
-        messageWriter = Executors.newSingleThreadExecutor();
     }
 
     private static boolean tryToConnect() {
@@ -115,7 +129,7 @@ public class SendMessageModule {
     }
 
     private static boolean tryToSendMessage(byte[] message) {
-        try{
+        try {
             out.write(message);
             out.flush();
         }
@@ -131,13 +145,16 @@ public class SendMessageModule {
             @Override
             public void run() {
                 while (true) {
-                    synchronized (connectionStatus) {
+                    STATUS_LOCK.lock();
+                    try {
                         if (connectionStatus == STATUS_OPEN) {
                             break;
                         }
                         if (connectionStatus == STATUS_CLOSE) {
                             return;
                         }
+                    } finally {
+                        STATUS_LOCK.unlock();
                     }
                 }
                 boolean messageIsSent = false;
@@ -145,8 +162,11 @@ public class SendMessageModule {
                     messageIsSent = tryToSendMessage(message);
                 }
                 if (!messageIsSent) {
-                    synchronized (connectionStatus) {
+                    STATUS_LOCK.lock();
+                    try {
                         connectionStatus = STATUS_CLOSE;
+                    } finally {
+                        STATUS_LOCK.unlock();
                     }
                 }
             }

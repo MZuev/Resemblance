@@ -71,4 +71,6 @@
     <string name="sets_title">"Наборы"</string>
     <string name="not_enough_players">"Недостаточно игроков."</string>
     <string name="results">"Результаты:"</string>
+    <string name="player">Игрок</string>
+    <string name="rating">Рейтинг</string>
 </resources>
