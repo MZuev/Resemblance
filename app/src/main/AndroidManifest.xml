@@ -54,9 +54,6 @@
             android:name=".GameIntermediateActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".LeadingCardsGridActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".LeadingAssociationActivity"
             android:screenOrientation="portrait" />
         <activity

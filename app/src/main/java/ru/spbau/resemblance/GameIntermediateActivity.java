@@ -22,6 +22,8 @@ public class GameIntermediateActivity extends AppCompatActivity implements Messa
     public static final int LEADING_ASSOCIATION_REQUEST = 1;
     public static final int CHOICE_REQUEST = 2;
     public static final int VOTE_REQUEST = 3;
+    public static final String ASSOCIATION_PARAM = "association";
+    public static final String PICTURE_PARAM = "picture_id";
 
     private final ArrayList<Long> cards = new ArrayList<>();
     private int roundsNumber = -1;
@@ -62,11 +64,6 @@ public class GameIntermediateActivity extends AppCompatActivity implements Messa
 
     @Override
     public void onLeadRequest() {
-        /*
-        Intent lead = new Intent(this, LeadingCardsGridActivity.class);
-        lead.putExtra(LeadingCardsGridActivity.OUR_CARDS_PARAM, getCardsArr());
-        startActivityForResult(lead, LEADING_ASSOCIATION_REQUEST);
-        */
         Intent lead = new Intent(this, CardPickerActivity.class);
         lead.putExtra(CardPickerActivity.LEADING_PARAM, true);
         lead.putExtra(CardPickerActivity.SUGGESTION_PARAM,
@@ -123,12 +120,12 @@ public class GameIntermediateActivity extends AppCompatActivity implements Messa
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        long pictureId = data.getLongExtra(LeadingCardsGridActivity.PICTURE_PARAM, -1L);
+        long pictureId = data.getLongExtra(PICTURE_PARAM, -1L);
         if (pictureId >= 0) {
             switch (requestCode) {
                 case LEADING_ASSOCIATION_REQUEST: {
                     //Now we need to send the association and remove the card fom our cards list.
-                    String association = data.getStringExtra(LeadingCardsGridActivity.ASSOCIATION_PARAM);
+                    String association = data.getStringExtra(ASSOCIATION_PARAM);
 
                     synchronized (cards) {
                         cards.remove(pictureId);

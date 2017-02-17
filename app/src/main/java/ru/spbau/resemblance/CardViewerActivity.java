@@ -25,7 +25,7 @@ public class CardViewerActivity extends AppCompatActivity {
 
     public void onDoneClick(View v) {
         Intent ret = new Intent();
-        ret.putExtra(LeadingCardsGridActivity.PICTURE_PARAM, (long)image.getIdImage());
+        ret.putExtra(GameIntermediateActivity.PICTURE_PARAM, (long)image.getIdImage());
         setResult(RESULT_OK, ret);
         finish();
     }
@@ -33,7 +33,7 @@ public class CardViewerActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         Intent ret = new Intent();
-        ret.putExtra(LeadingCardsGridActivity.PICTURE_PARAM, -1);
+        ret.putExtra(GameIntermediateActivity.PICTURE_PARAM, -1);
         setResult(RESULT_OK, ret);
         finish();
     }

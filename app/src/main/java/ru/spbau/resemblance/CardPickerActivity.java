@@ -87,27 +87,16 @@ public class CardPickerActivity extends AppCompatActivity implements AdapterView
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case CARD_REQUEST: {
-                long pictureId = data.getLongExtra(PICTURE_PARAM, -1L);
-                if (pictureId >= 0) {
-                    Intent ret = new Intent();
-                    ret.putExtra(LeadingCardsGridActivity.PICTURE_PARAM, pictureId);
-                    setResult(RESULT_OK, ret);
-                    timer.cancel();
-                    finish();
-                }
-                break;
-            }
-            case LEADING_CARD_REQUEST: {
-                long pictureId = data.getLongExtra(PICTURE_PARAM, -1L);
-                if (pictureId >= 0) {
-                    setResult(RESULT_OK, data);
-                    finish();
-                }
-                break;
-            }
+        long pictureId = data.getLongExtra(PICTURE_PARAM, -1L);
+        Intent ret = new Intent();
+        ret.putExtra(GameIntermediateActivity.PICTURE_PARAM, pictureId);
+        if (leading) {
+            ret.putExtra(GameIntermediateActivity.ASSOCIATION_PARAM,
+                    data.getStringExtra(GameIntermediateActivity.ASSOCIATION_PARAM));
         }
+        setResult(RESULT_OK, ret);
+        timer.cancel();
+        finish();
     }
 
     private class TimeUpdater extends TimerTask {
@@ -120,7 +109,7 @@ public class CardPickerActivity extends AppCompatActivity implements AdapterView
                 public void run() {
                     if (System.currentTimeMillis() > deadline) {
                         Intent ret = new Intent();
-                        ret.putExtra(LeadingCardsGridActivity.PICTURE_PARAM, -1L);
+                        ret.putExtra(GameIntermediateActivity.PICTURE_PARAM, -1L);
                         setResult(RESULT_OK, ret);
                         timer.cancel();
                         finish();

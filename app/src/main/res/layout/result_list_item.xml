@@ -2,13 +2,13 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent" >
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/player"
-        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:layout_gravity="start" />
 
     <LinearLayout
@@ -19,15 +19,21 @@
         android:gravity="end" >
 
         <TextView
-            android:layout_width="50dp"
+            android:layout_width="60dp"
             android:layout_height="wrap_content"
-            android:id="@+id/oldRating"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+            android:id="@+id/finalScore"
+            android:textAppearance="@style/TextAppearance.AppCompat" />
 
         <TextView
-            android:layout_width="50dp"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/oldRating"
+            android:textAppearance="@style/TextAppearance.AppCompat" />
+
+        <TextView
+            android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:id="@+id/newRating"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+            android:textAppearance="@style/TextAppearance.AppCompat" />
     </LinearLayout>
 </FrameLayout>

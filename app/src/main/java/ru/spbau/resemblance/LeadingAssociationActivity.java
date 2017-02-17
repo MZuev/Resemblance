@@ -28,8 +28,8 @@ public class LeadingAssociationActivity extends AppCompatActivity {
 
     public void onDoneClick(View v) {
         Intent ret = new Intent();
-        ret.putExtra(LeadingCardsGridActivity.PICTURE_PARAM, (long)image.getIdImage());
-        ret.putExtra(LeadingCardsGridActivity.ASSOCIATION_PARAM, associationField.getText().toString());
+        ret.putExtra(GameIntermediateActivity.PICTURE_PARAM, (long)image.getIdImage());
+        ret.putExtra(GameIntermediateActivity.ASSOCIATION_PARAM, associationField.getText().toString());
         setResult(RESULT_OK, ret);
         finish();
     }
@@ -37,8 +37,8 @@ public class LeadingAssociationActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         Intent ret = new Intent();
-        ret.putExtra(LeadingCardsGridActivity.PICTURE_PARAM, -1);
-        ret.putExtra(LeadingCardsGridActivity.ASSOCIATION_PARAM, (String)null);
+        ret.putExtra(GameIntermediateActivity.PICTURE_PARAM, -1);
+        ret.putExtra(GameIntermediateActivity.ASSOCIATION_PARAM, (String)null);
         setResult(RESULT_OK, ret);
         finish();
     }
