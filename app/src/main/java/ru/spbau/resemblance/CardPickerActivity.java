@@ -22,14 +22,16 @@ public class CardPickerActivity extends AppCompatActivity implements AdapterView
     public static final String SUGGESTION_PARAM = "suggestion";
     public static final String TITLE_PARAM = "title";
     public static final String EXPECTATION_TIME_PARAM = "expectation_time";
-
+    public static final String LEADING_PARAM = "leading";
     private final static int COLUMNS_NUMBER = 2;
     private final static int CARD_REQUEST = 1;
+    private final static int LEADING_CARD_REQUEST = 2;
     private final static long SECOND = 1000;
 
     private TextView timeView;
     private Timer timer;
     private long deadline;
+    private boolean leading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +44,7 @@ public class CardPickerActivity extends AppCompatActivity implements AdapterView
 
         Intent callingIntent = getIntent();
 
+        leading = callingIntent.getBooleanExtra(LEADING_PARAM, false);
         suggestion.setText(callingIntent.getStringExtra(SUGGESTION_PARAM));
         setTitle(callingIntent.getStringExtra(TITLE_PARAM));
         long timeout = callingIntent.getLongExtra(EXPECTATION_TIME_PARAM, -1);
@@ -71,25 +74,41 @@ public class CardPickerActivity extends AppCompatActivity implements AdapterView
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent showPicture = new Intent(this, CardViewerActivity.class);
-        showPicture.putExtra(LeadingAssociationActivity.IMAGE_PARAM, id);
-        startActivityForResult(showPicture, CARD_REQUEST);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        long pictureId = data.getLongExtra(PICTURE_PARAM, -1L);
-        if (pictureId >= 0) {
-            Intent ret = new Intent();
-            ret.putExtra(LeadingCardsGridActivity.PICTURE_PARAM, pictureId);
-            setResult(RESULT_OK, ret);
-            timer.cancel();
-            finish();
+        if (leading) {
+            Intent showPicture = new Intent(this, LeadingAssociationActivity.class);
+            showPicture.putExtra(LeadingAssociationActivity.IMAGE_PARAM, id);
+            startActivityForResult(showPicture, GameIntermediateActivity.LEADING_ASSOCIATION_REQUEST);
+        } else {
+            Intent showPicture = new Intent(this, CardViewerActivity.class);
+            showPicture.putExtra(LeadingAssociationActivity.IMAGE_PARAM, id);
+            startActivityForResult(showPicture, CARD_REQUEST);
         }
     }
 
     @Override
-    public void onBackPressed() {}
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case CARD_REQUEST: {
+                long pictureId = data.getLongExtra(PICTURE_PARAM, -1L);
+                if (pictureId >= 0) {
+                    Intent ret = new Intent();
+                    ret.putExtra(LeadingCardsGridActivity.PICTURE_PARAM, pictureId);
+                    setResult(RESULT_OK, ret);
+                    timer.cancel();
+                    finish();
+                }
+                break;
+            }
+            case LEADING_CARD_REQUEST: {
+                long pictureId = data.getLongExtra(PICTURE_PARAM, -1L);
+                if (pictureId >= 0) {
+                    setResult(RESULT_OK, data);
+                    finish();
+                }
+                break;
+            }
+        }
+    }
 
     private class TimeUpdater extends TimerTask {
         final int MINUTE = 60;
@@ -125,5 +144,10 @@ public class CardPickerActivity extends AppCompatActivity implements AdapterView
         Intent chatIntent = new Intent(this, ChatActivity.class);
         startActivity(chatIntent);
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        //Doing nothing. Player should submit an association.
     }
 }

@@ -35,6 +35,10 @@
             android:id="@+id/cardPickerTimeView"
             android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="16dp" />
+
         <GridView
             android:layout_width="match_parent"
             android:layout_height="match_parent"

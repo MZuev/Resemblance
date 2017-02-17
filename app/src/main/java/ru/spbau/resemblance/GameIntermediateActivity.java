@@ -62,14 +62,25 @@ public class GameIntermediateActivity extends AppCompatActivity implements Messa
 
     @Override
     public void onLeadRequest() {
+        /*
         Intent lead = new Intent(this, LeadingCardsGridActivity.class);
         lead.putExtra(LeadingCardsGridActivity.OUR_CARDS_PARAM, getCardsArr());
+        startActivityForResult(lead, LEADING_ASSOCIATION_REQUEST);
+        */
+        Intent lead = new Intent(this, CardPickerActivity.class);
+        lead.putExtra(CardPickerActivity.LEADING_PARAM, true);
+        lead.putExtra(CardPickerActivity.SUGGESTION_PARAM,
+                getString(R.string.leading_cards_grid_card_invitation));
+        lead.putExtra(CardPickerActivity.TITLE_PARAM, getString(R.string.leading_grid_title));
+        lead.putExtra(CardPickerActivity.OUR_CARDS_PARAM, getCardsArr());
+        lead.putExtra(CardPickerActivity.EXPECTATION_TIME_PARAM, expectationTime);
         startActivityForResult(lead, LEADING_ASSOCIATION_REQUEST);
     }
 
     @Override
     public void onChoiceRequest(String association) {
         Intent choose = new Intent(this, CardPickerActivity.class);
+        choose.putExtra(CardPickerActivity.LEADING_PARAM, false);
         choose.putExtra(CardPickerActivity.SUGGESTION_PARAM,
                 String.format(getString(R.string.game_association_suggestion), association));
         choose.putExtra(CardPickerActivity.TITLE_PARAM, getString(R.string.choice_title));
