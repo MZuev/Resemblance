@@ -33,7 +33,7 @@ public class CardViewerActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         Intent ret = new Intent();
-        ret.putExtra(GameIntermediateActivity.PICTURE_PARAM, -1);
+        ret.putExtra(GameIntermediateActivity.PICTURE_PARAM, -1L);
         setResult(RESULT_OK, ret);
         finish();
     }

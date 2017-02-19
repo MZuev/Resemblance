@@ -20,7 +20,6 @@ public class SendMessageModule {
 
     private final static int sleepTime = 1000;
 
-    private static Socket socket = null;
     private static DataInputStream in = null;
     private static DataOutputStream out = null;
 
@@ -118,7 +117,7 @@ public class SendMessageModule {
     private static boolean tryToConnect() {
         try {
             InetAddress ipAddress = InetAddress.getByName(serverIP);
-            socket = new Socket(ipAddress, serverPort);
+            Socket socket = new Socket(ipAddress, serverPort);
             in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
             out = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
             return true;
