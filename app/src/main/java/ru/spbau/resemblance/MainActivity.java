@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity implements Message.LoginMess
         ratingText = (TextView)findViewById(R.id.mainRatingText);
 
         ImageStorage.createImageStorage(this);
-        SendMessageModule.connectToServer();
+        SendMessageModule.connectToServer(SendMessageModule.getServerIP(this));
 
         Message.setRatingListener(this);
 

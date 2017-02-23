@@ -1,5 +1,8 @@
 package ru.spbau.resemblance;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
@@ -11,11 +14,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class SendMessageModule {
     final private static String LOG_TAG = "Messenger log";
     final private static int maxCntToReconnect = 20;
 
-    final private static String serverIP = "192.168.1.180";
+    final private static String DEFAULT_IP = "192.168.1.180";
     final private static int serverPort = 6662;
 
     private final static int sleepTime = 1000;
@@ -39,6 +44,28 @@ public class SendMessageModule {
         } finally {
             STATUS_LOCK.unlock();
         }
+    }
+
+    public static String getServerIP(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(SettingsActivity.PREFERENCES,
+                MODE_PRIVATE);
+        if (!preferences.contains(SettingsActivity.IP_PREF)) {
+            resetIP(context);
+            return DEFAULT_IP;
+        }
+        return preferences.getString(SettingsActivity.IP_PREF, DEFAULT_IP);
+    }
+
+    public static void resetIP(Context context) {
+        setIP(context, DEFAULT_IP);
+    }
+
+    public static void setIP(Context context, String newServerIP) {
+        SharedPreferences preferences = context.getSharedPreferences(SettingsActivity.PREFERENCES,
+                MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(SettingsActivity.IP_PREF, newServerIP);
+        editor.apply();
     }
 
     private static Thread readThread = new Thread() {
@@ -82,7 +109,7 @@ public class SendMessageModule {
         }
     };
 
-    public static void connectToServer() {
+    public static void connectToServer(final String serverIP) {
         Thread initThread = new Thread() {
             @Override
             public void run() {
@@ -90,7 +117,7 @@ public class SendMessageModule {
                 try {
                     connectionStatus = STATUS_IS_OPENING;
                     for (int i = 0; i < maxCntToReconnect; i++) {
-                        if (tryToConnect()) {
+                        if (tryToConnect(serverIP)) {
                             connectionStatus = STATUS_OPEN;
                             break;
                         }
@@ -114,7 +141,7 @@ public class SendMessageModule {
         initThread.start();
     }
 
-    private static boolean tryToConnect() {
+    private static boolean tryToConnect(String serverIP) {
         try {
             InetAddress ipAddress = InetAddress.getByName(serverIP);
             Socket socket = new Socket(ipAddress, serverPort);

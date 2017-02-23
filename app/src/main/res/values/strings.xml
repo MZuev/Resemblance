@@ -36,6 +36,7 @@
     <string-array name="settings_options">
         <item>"Изменить пароль"</item>
         <item>"Выйти"</item>
+        <item>"Изменить IP сервера."</item>
     </string-array>
     <string name="login_password_error">"Неправильный пароль."</string>
     <string name="login_nickname_error">"Неправильный логин."</string>
@@ -73,4 +74,7 @@
     <string name="results">"Результаты:"</string>
     <string name="player">Игрок</string>
     <string name="rating">Рейтинг</string>
+    <string name="new_ip">"IP-адрес сервера."</string>
+    <string name="ip">IP</string>
+    <string name="restore">"Сбросить"</string>
 </resources>
