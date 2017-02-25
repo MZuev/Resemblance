@@ -15,6 +15,7 @@ import android.widget.ImageView;
 
 import java.io.BufferedInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -114,7 +115,8 @@ public class ImageStorage {
             }
             //TODO
         }
-        catch (Exception e) {
+        catch (IOException e) {
+            e.printStackTrace();
             return 0;
         }
 
@@ -142,17 +144,12 @@ public class ImageStorage {
     }
 
     public static ImageWrapped addImageByUri(String uriImage, Context context) {
-        ImageWrapped newImage = new ImageWrapped();
-        long hashImage = 0;
-        for (int cnt = 0; cnt < 3 && hashImage == 0; cnt++) {
-            hashImage = calcHashByUri(uriImage, context);
-        }
+        long hashImage = calcHashByUri(uriImage, context);
         if (hashImage == 0) {
             Log.d(LOG_TAG, " -- Bad Uri: " + uriImage + " -- ");
             return null;
         }
-        newImage.setHashImage(hashImage);
-        newImage.setUriImage(uriImage);
+        ImageWrapped newImage = new ImageWrapped(hashImage, uriImage);
         newImage.addImage();
         newImage.setNotEmpty();
         return newImage;
@@ -248,19 +245,16 @@ public class ImageStorage {
             hashImage = newHash;
         }
 
+        public ImageWrapped(long hash, String uri) {
+            hashImage = hash;
+            uriImage = uri;
+        }
+
         private ImageWrapped(Cursor c) {
             hashImage = c.getLong(c.getColumnIndex("hash"));
             uriImage = c.getString(c.getColumnIndex("uri"));
             idImage = c.getLong(c.getColumnIndex("id"));
             isEmptyImage = false;
-        }
-
-        public  void setHashImage(long newHash) {
-            hashImage = newHash;
-        }
-
-        public void setUriImage(String add) {
-            uriImage = add;
         }
 
         public void setIdImage(long id) {
@@ -341,6 +335,7 @@ public class ImageStorage {
         }
 
         public ImageView getPreview(Context context, int size) throws FileNotFoundException {
+            final double EPS = 0.50001;
             if (isEmptyImage) {
                 setImageInfo();
             }
@@ -350,7 +345,7 @@ public class ImageStorage {
             sizeOptions.inJustDecodeBounds = true;
             BitmapFactory.decodeStream(fileStream, null, sizeOptions);
             int realSize = Math.min(sizeOptions.outHeight, sizeOptions.outWidth);
-            int scale = (int)((double)realSize / size + 0.50001);
+            int scale = (int)((double)realSize / size + EPS);
 
             BitmapFactory.Options readOptions = new BitmapFactory.Options();
             readOptions.inSampleSize = scale;

@@ -66,9 +66,8 @@ public class CardSetsActivity extends AppCompatActivity implements AdapterView.O
                 break;
             }
             case 2: {
-                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-                photoPickerIntent.setType("image/*");
-                startActivityForResult(photoPickerIntent, GALLERY_REQUEST);
+                Intent createSet = new Intent(this, CreateSetActivity.class);
+                startActivity(createSet);
                 break;
             }
         }

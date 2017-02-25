@@ -13,7 +13,7 @@
     <string-array name="cards_control_options">
         <item>"Список наборов"</item>
         <item>"Список карт"</item>
-        <item>"Добавить карты"</item>
+        <item>"Добавить набор"</item>
     </string-array>
     <string name="cancel">Отмена</string>
     <string name="game_finish_final_score">Итоговый счёт:</string>
@@ -77,4 +77,6 @@
     <string name="new_ip">"IP-адрес сервера."</string>
     <string name="ip">IP</string>
     <string name="restore">"Сбросить"</string>
+    <string name="addCard">Добавить карту</string>
+    <string name="set_name">Имя набора</string>
 </resources>

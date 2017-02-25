@@ -55,9 +55,9 @@ public class CardPickerActivity extends AppCompatActivity implements AdapterView
             cardIds.add(card);
         }
 
-        ImageStorage.ImageWrapped[] cardViews = new ImageStorage.ImageWrapped[cardIds.size()];
+        ArrayList<ImageStorage.ImageWrapped> cardViews = new ArrayList<>();
         for (int i = 0; i < cardIds.size(); i++) {
-            cardViews[i] = ImageStorage.ImageWrapped.createById((int)(long)cardIds.get(i));
+            cardViews.add(ImageStorage.ImageWrapped.createById((int)(long)cardIds.get(i)));
         }
 
         ListAdapter cardsAdapter = new CardsAdapter(this, cardViews,

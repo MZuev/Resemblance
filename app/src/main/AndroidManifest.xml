@@ -71,12 +71,16 @@
         <activity
             android:name=".GameFinishActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".GalleryActivity"
+        <activity
+            android:name=".GalleryActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".GalleryCardViewerActivity"
+        <activity
+            android:name=".GalleryCardViewerActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".ChatActivity"
+        <activity
+            android:name=".ChatActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".CreateSetActivity"></activity>
     </application>
 
 </manifest>
