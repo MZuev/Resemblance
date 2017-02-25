@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
@@ -16,6 +17,9 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import java.net.URI;
+import java.util.regex.Pattern;
 
 public class SettingsActivity extends AppCompatActivity implements ListView.OnItemClickListener {
     public static final String PREFERENCES = "preferences.xml";
@@ -89,8 +93,18 @@ public class SettingsActivity extends AppCompatActivity implements ListView.OnIt
                     .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            final String IP_PATTERN =
+                                    "^(([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.){3}" +
+                                            "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$";
+                            Pattern pattern = Pattern.compile(IP_PATTERN);
+
                             EditText ipField = (EditText) field.findViewById(R.id.serverIPField);
-                            SendMessageModule.setIP(getActivity(), ipField.getText().toString());
+                            String ip = ipField.getText().toString();
+                            if (pattern.matcher(ip).matches()) {
+                                SendMessageModule.setIP(getActivity(), ip);
+                            } else {
+                                Toast.makeText(getActivity(), "Непрвильный IP.", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     });
             return builder.create();
