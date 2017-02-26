@@ -374,10 +374,6 @@ public class ImageStorage {
 
         SetCardsWrapped(){}
 
-        SetCardsWrapped(long newHash) {
-            hashSetCards = newHash;
-        }
-
         private SetCardsWrapped(Cursor c) {
             Log.d(LOG_TAG, "q");
             hashSetCards = c.getLong(c.getColumnIndex("hash"));
@@ -387,8 +383,8 @@ public class ImageStorage {
             isEmptySetCards = false;
         }
 
-        public  void setHashSetCards(long newHash) {
-            hashSetCards = newHash;
+        public long getHash() {
+            return hashSetCards;
         }
 
         public void setIdSetCards(long id) {
@@ -397,10 +393,6 @@ public class ImageStorage {
 
         public void setName(String name) {
             nameSetCards = name;
-        }
-
-        public void setSizeSetCards(int size) {
-            sizeSetCards = size;
         }
 
         public void setNotEmpty() { isEmptySetCards = false; }
@@ -413,14 +405,14 @@ public class ImageStorage {
             return sizeSetCards;
         }
 
-        public int getIdSetCards() {
-            return (int)idSetCards;
-        }
-
         public boolean checkExistenceSet() {
-            return checkExistenceByHash(hashSetCards, SET_CARDS_TABLE)
+            return ImageStorage.checkExistenceByHash(hashSetCards, SET_CARDS_TABLE)
                             || checkExistenceByStringField(nameSetCards, "name", SET_CARDS_TABLE)
                             || checkExistenceByStringField(String.valueOf(idSetCards), "id", SET_CARDS_TABLE);
+        }
+
+        public static boolean checkExistenceByHash(long hash) {
+            return ImageStorage.checkExistenceByHash(hash, SET_CARDS_TABLE);
         }
 
         public void setSetCardsInfo() {

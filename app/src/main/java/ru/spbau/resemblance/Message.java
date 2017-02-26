@@ -416,7 +416,7 @@ public class Message {
     }
 
     public static void sendCreateGameMessage(int roundsNumber, ArrayList<ImageStorage.ImageWrapped> cards,
-                                             long expectationTime) {
+                                             long expectationTime, long cardSetHash) {
         ByteArrayOutputStream byteOS = new ByteArrayOutputStream(150);
         DataOutputStream out = new DataOutputStream(byteOS);
         try {
@@ -427,6 +427,7 @@ public class Message {
                 out.writeLong(image.getIdImage());
             }
             out.writeLong(expectationTime);
+            out.writeLong(cardSetHash);
             out.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -593,7 +594,7 @@ public class Message {
 
     protected interface GameExpectationMessageListener {
         void onStartGameMessage(int roundsNumber, int playersNumber, ArrayList<String> names,
-                                long expectatioTime);
+                                long expectationTime);
 
         void onGameCancelled();
     }

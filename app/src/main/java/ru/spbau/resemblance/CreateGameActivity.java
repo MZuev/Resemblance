@@ -13,8 +13,6 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import static ru.spbau.resemblance.R.id.createGameRoundsText;
-
 public class CreateGameActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener,
         AdapterView.OnItemSelectedListener {
     private static final int MINUTE = 60;
@@ -99,7 +97,7 @@ public class CreateGameActivity extends AppCompatActivity implements SeekBar.OnS
             Toast.makeText(this, R.string.create_game_choose_card_set, Toast.LENGTH_SHORT).show();
         } else {
             Message.sendCreateGameMessage(roundsNumber, sets.get(chosenSet).getListOfCards(),
-                    expectationTimeSeconds * SECOND);
+                    expectationTimeSeconds * SECOND, sets.get(chosenSet).getHash());
             Intent prepareGame = new Intent(this, GamePreparationActivity.class);
             startActivity(prepareGame);
         }

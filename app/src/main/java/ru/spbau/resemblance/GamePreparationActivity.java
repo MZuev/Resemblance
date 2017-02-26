@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 public class GamePreparationActivity extends AppCompatActivity implements
         Message.FriendGamePreparationListener, AdapterView.OnItemClickListener {
-    private static final int MIN_PLAYERS_NUMBER = 2;
+    private static final int MIN_PLAYERS_NUMBER = 3;
     private ArrayAdapter<String> playersAdapter;
     private ArrayList<String> players;
 
