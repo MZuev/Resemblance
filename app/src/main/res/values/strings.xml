@@ -1,3 +1,82 @@
 <resources>
     <string name="app_name">Resemblance</string>
+    <string name="title_activity_settings">Настройки</string>
+    <string name="main_random_game_button_text">Простая игра</string>
+    <string name="main_create_game_button_text">Создать игру</string>
+    <string name="main_join_game_button_text">Присоединиться к игре</string>
+    <string name="main_card_sets_button_text">Наборы карт</string>
+    <string name="main_settings_button_text">Настройки</string>
+    <string name="ok">OK</string>
+    <string name="create_game_card_set_text">Набор карт:</string>
+    <string name="create_game_rounds_number_text">Число раундов: 3</string>
+    <string name="create_game_create_button_text">Создать</string>
+    <string-array name="cards_control_options">
+        <item>"Список наборов"</item>
+        <item>"Список карт"</item>
+        <item>"Добавить набор"</item>
+    </string-array>
+    <string name="cancel">Отмена</string>
+    <string name="game_finish_final_score">Итоговый счёт:</string>
+    <string name="game_finish_ratings">Рейтинги:</string>
+    <string name="game_finish_last_association">Последняя ассоциация:</string>
+    <string name="score">Счёт</string>
+    <string name="game_intermediate_round_text">Раунд 0/N</string>
+    <string name="play">Играть</string>
+    <string name="join_game_creator_name_invitation">Имя создателя игры:</string>
+    <string name="join">Присоединиться</string>
+    <string name="leading_association_text_invitation">Ваша ассоциация:</string>
+    <string name="ready">Готово</string>
+    <string name="leading_cards_grid_card_invitation">Ваша карта:</string>
+    <string name="login_activity_login_button_text">Войти</string>
+    <string name="login_activity_registration_button_text">Регистрация</string>
+    <string name="registration_choose_nickname_text">Выберите имя пользователя:</string>
+    <string name="registration_password_text">Пароль:</string>
+    <string name="registration_repeat_password_text">Повторите пароль:</string>
+    <string name="registration_register_button_text">Зарегистрироваться</string>
+    <string-array name="settings_options">
+        <item>"Изменить пароль"</item>
+        <item>"Выйти"</item>
+        <item>"Изменить IP сервера."</item>
+    </string-array>
+    <string name="login_password_error">"Неправильный пароль."</string>
+    <string name="login_nickname_error">"Неправильный логин."</string>
+    <string name="login_network_error">"Ошибка сети."</string>
+    <string name="password_change_wrong_old_password">"Старый пароль введён неверно."</string>
+    <string name="password_change_waiting">"Ожидание ответа."</string>
+    <string name="passwords_differ">"Первый и второй пароль не совпадают."</string>
+    <string name="registration_nickname_used_error">"Имя пользователя занято."</string>
+    <string name="registration_unknown_error">"Ошибка"</string>
+    <string name="registration_success">"Регистрация успешно завершена."</string>
+    <string name="card_picker_time">"Время: %1$s"</string>
+    <string name="leading_grid_title">"Вы водите"</string>
+    <string name="create_game_title">"Новая игра"</string>
+    <string name="create_game_rounds">"Число раундов: %1$d"</string>
+    <string name="create_game_choose_card_set">"Выберите набор карт."</string>
+    <string name="game_expectation_title">"Ожидание игры"</string>
+    <string name="game_finish_title">"Игра закончена."</string>
+    <string name="main_rating_text">"Рейтинг: %1$d"</string>
+    <string name="choice_title">"Ваша карта"</string>
+    <string name="vote_title">"Голосование"</string>
+    <string name="game_association_suggestion">"Ассоциация: %1$s"</string>
+    <string name="game_score_prefix">"Счёт:"</string>
+    <string name="game_round_text">"Раунд: %1$s"</string>
+    <string name="delete_player">"Удалить игрока?"</string>
+    <string name="yes">"Да"</string>
+    <string name="no">"Нет"</string>
+    <string name="authorisation_required">"Необходимо авторизоваться."</string>
+    <string name="list_of_sets_item">"%1$s, %2$d карт(ы)"</string>
+    <string name="create_game_choice_time_text">"Время на выбор: %1$s"</string>
+    <string name="minutes">"мин."</string>
+    <string name="seconds">"сек."</string>
+    <string name="chat_title">"Чат"</string>
+    <string name="sets_title">"Наборы"</string>
+    <string name="not_enough_players">"Недостаточно игроков."</string>
+    <string name="results">"Результаты:"</string>
+    <string name="player">Игрок</string>
+    <string name="rating">Рейтинг</string>
+    <string name="new_ip">"IP-адрес сервера."</string>
+    <string name="ip">IP</string>
+    <string name="restore">"Сбросить"</string>
+    <string name="addCard">Добавить карту</string>
+    <string name="set_name">Имя набора</string>
 </resources>
