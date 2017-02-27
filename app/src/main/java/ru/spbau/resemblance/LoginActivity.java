@@ -101,4 +101,9 @@ public class LoginActivity extends AppCompatActivity implements Message.LoginMes
             }
         });
     }
+
+    public void onIPChangeClick(View v) {
+        SettingsActivity.SetServerIPDialog dialog = new SettingsActivity.SetServerIPDialog();
+        dialog.show(getSupportFragmentManager(), "DeletePlayerDialog");
+    }
 }

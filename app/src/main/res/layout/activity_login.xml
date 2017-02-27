@@ -47,5 +47,13 @@
             android:id="@+id/loginRegisterButton"
             style="@style/Widget.AppCompat.Button"
             android:onClick="onRegisterClick" />
+
+        <Button
+            android:text="@string/ip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/loginIPButton"
+            style="@style/Widget.AppCompat.Button"
+            android:onClick="onIPChangeClick" />
     </LinearLayout>
 </RelativeLayout>
